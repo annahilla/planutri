@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily:{
+        balginLight: ["Balgin-Light"],
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",

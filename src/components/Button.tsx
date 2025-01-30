@@ -1,9 +1,19 @@
-const Button = ({ children }: { children: React.ReactNode }) => {
-    return (
-      <button className="border px-3 py-2 text-neutral-600 border-neutral-500">
-        {children}
-      </button>
-    );
-  };
-  
-  export default Button;
+const Button = ({
+  children,
+  filled,
+}: {
+  children: React.ReactNode;
+  filled?: boolean;
+}) => {
+  return (
+    <button
+      className={`${
+        filled && `bg-black`
+      } text-white border border-white px-3 py-2 w-full tracking-wider hover:opacity-70`}
+    >
+      {children}
+    </button>
+  );
+};
+
+export default Button;

@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
 
 const poppins = Poppins({
   weight: ["100", "300", "400"],
   subsets: ["latin"],
-  variable: "--font-poppins"
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
-  title: "Plantry",
+  title: "Plantry | Plan your meals and fill your pantry",
   description: "Plan your meals and fill your pantry",
 };
 
@@ -21,12 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} antialiased`}
-      >
-        <Navbar />
-        {children}
-      </body>
+      <body className={`${poppins.variable} antialiased`}>{children}</body>
     </html>
   );
 }
