@@ -1,45 +1,38 @@
 "use client";
 
 import { useState } from "react";
-import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-} from "firebase/auth";
-import { auth } from "@/lib/firebase";
 import Link from "next/link";
 import Button from "./Button";
 import Logo from "./Logo";
 import GoogleButton from "./GoogleButton";
+import { loginUser, signUpUser } from "@/lib/features/auth/authActions";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useRouter } from "next/navigation";
 
 const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const error = useAppSelector((state) => state.auth.error);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
 
   const inputStyles =
     "px-5 py-3 outline-none border border-neutral-300 placeholder:font-light";
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
 
     try {
       if (formType === "Log In") {
-        await signInWithEmailAndPassword(auth, email, password);
+        await dispatch(loginUser({ email, password })).unwrap();
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        await dispatch(signUpUser({ email, password })).unwrap();
+        await dispatch(loginUser({ email, password })).unwrap();
       }
+      router.push("/dashboard");
     } catch (err) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred.");
-      }
+      console.error("Error during authentication:", err);
     }
-  };
-
-  const handleClick = () => {
-    console.log(123);
   };
 
   return (
@@ -72,11 +65,36 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
             required
           />
           <div className="mt-4 w-full flex flex-col gap-4">
-            <GoogleButton onClick={handleClick} />
-            <Button filled>{formType}</Button>
+            <GoogleButton />
+            <Button type="submit" filled>
+              {formType}
+            </Button>
           </div>
         </form>
         {error && <p className="text-red-500 mt-4 text-xs">{error}</p>}
+        <div className="mt-4 text-sm">
+          {formType === "Log In" ? (
+            <p>
+              Don&apos;t have an account?{" "}
+              <Link
+                className="text-neutral-500 hover:underline"
+                href={"/signup"}
+              >
+                Sign Up here
+              </Link>
+            </p>
+          ) : (
+            <p>
+              Already have an account?{" "}
+              <Link
+                className="text-neutral-500 hover:underline"
+                href={"/login"}
+              >
+                Log In here
+              </Link>
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );
