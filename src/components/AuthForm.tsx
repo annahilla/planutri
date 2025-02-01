@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Button from "./Button";
+import Button from "./ui/Button";
 import Logo from "./Logo";
-import GoogleButton from "./GoogleButton";
+import GoogleButton from "./ui/GoogleButton";
 import { loginUser, signUpUser } from "@/lib/features/auth/authActions";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { useRouter } from "next/navigation";

@@ -1,5 +1,7 @@
+import MenuPlanner from "@/components/menu-planner/MenuPlanner";
+
 const page = () => {
-  return <div>page</div>;
+  return <MenuPlanner />;
 };
 
 export default page;

@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-import Button from "@/components/Button";
+import Button from "@/components/ui/Button";
 import Link from "next/link";
 
 export default function Home() {
@@ -17,7 +17,7 @@ export default function Home() {
             Plan your meals and fill your pantry
           </p>
           <div className="w-40 m-auto lg:m-0">
-            <Link href={"/login"}>
+            <Link href={"/signup"}>
               <Button>Get Started</Button>
             </Link>
           </div>
