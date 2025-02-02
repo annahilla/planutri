@@ -12,7 +12,7 @@ const Week = () => {
   ];
 
   return (
-    <div className="grid grid-row w-full md:grid-cols-[auto_1fr_1fr_1fr_1fr_1fr_1fr_1fr]">
+    <div className="flex flex-col md:flex-row">
       {days.map((day) => (
         <Day key={day} name={day} />
       ))}

@@ -12,7 +12,7 @@ const GoogleButton = () => {
   const handleGoogleSignIn = async () => {
     try {
       await dispatch(loginUserWithGoogle()).unwrap();
-      router.push("/dashboard");
+      router.push("/dashboard/menu");
     } catch (err) {
       console.error("Error during Google sign-in:", err);
     }
