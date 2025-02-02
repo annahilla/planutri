@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { loginUser, loginUserWithGoogle, logoutUser, signUpUser } from "@/lib/features/auth/authActions";
+import { loginUser, loginUserWithGoogle, logoutUser, signUpUser } from "@/lib/store/auth/authActions";
 import { AuthUser } from "@/types/types";
 
 interface AuthState {

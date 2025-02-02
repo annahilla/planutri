@@ -5,8 +5,8 @@ import Link from "next/link";
 import Button from "./ui/Button";
 import Logo from "./Logo";
 import GoogleButton from "./ui/GoogleButton";
-import { loginUser, signUpUser } from "@/lib/features/auth/authActions";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { loginUser, signUpUser } from "@/lib/store/auth/authActions";
+import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { useRouter } from "next/navigation";
 
 const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {

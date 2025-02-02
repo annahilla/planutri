@@ -1,6 +1,7 @@
 export interface AuthUser  {
-     email: string;
-    token: string;
+  name?:string | null;
+  email: string | null;
+  token: string;
 }
 
 export interface User {

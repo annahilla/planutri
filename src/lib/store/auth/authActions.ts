@@ -39,6 +39,7 @@ export const loginUser = createAsyncThunk(
       const user = userCredential.user;
       const token = await user.getIdToken();
       const userData: AuthUser = { email: user.email!, token };
+      thunkAPI.dispatch(setUser(userData));
       return userData;
     } catch (error) {
       return thunkAPI.rejectWithValue(handleAuthError(error));
@@ -52,8 +53,10 @@ export const loginUserWithGoogle = createAsyncThunk(
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+      console.log(user);
       const token = await user.getIdToken();
-      const userData = { email: user.email!, token };
+      const userData = { name: user.displayName, email: user.email, token };
+      thunkAPI.dispatch(setUser(userData));
       return userData;
     } catch (error) {
       return thunkAPI.rejectWithValue(handleAuthError(error));

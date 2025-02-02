@@ -1,7 +1,7 @@
 "use client";
 
-import { loginUserWithGoogle } from "@/lib/features/auth/authActions";
-import { useAppDispatch } from "@/lib/hooks";
+import { loginUserWithGoogle } from "@/lib/store/auth/authActions";
+import { useAppDispatch } from "@/lib/store/reduxHooks";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
 
