@@ -6,7 +6,7 @@ const Day = ({ name }: { name: string }) => {
       <div
         className={`my-2 ${
           name === "Monday" ? "md:ml-14" : ""
-        } text-center font-bold text-sm`}
+        } text-center font-bold text-sm text-neutral-500`}
       >
         {name}
       </div>
@@ -25,6 +25,7 @@ const Day = ({ name }: { name: string }) => {
             <input
               className="outline-none w-full p-2 border text-xs md:w-[8.5rem]"
               type="text"
+              placeholder={`Add a recipe`}
             />
           </div>
         ))}
