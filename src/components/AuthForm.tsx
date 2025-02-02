@@ -29,7 +29,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
         await dispatch(signUpUser({ email, password })).unwrap();
         await dispatch(loginUser({ email, password })).unwrap();
       }
-      router.push("/dashboard");
+      router.push("/dashboard/menu");
     } catch (err) {
       console.error("Error during authentication:", err);
     }

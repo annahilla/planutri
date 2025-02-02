@@ -14,7 +14,7 @@
     - Asignar recepta a un dia (click + modal picker)
 - Crear y modificar les meves receptes
   - Llista de receptes
-  - Formulari per crear
+  - Formulari per crear: nom, ingredients, textarea (descripció)
   - Formulari per modificar
   - Delete
 - Generar la llista de la compra

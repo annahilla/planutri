@@ -1,3 +1,5 @@
+import { IoAddOutline } from "react-icons/io5";
+
 const Day = ({ name }: { name: string }) => {
   const meals = ["breakfast", "lunch", "snack", "dinner"];
 
@@ -22,11 +24,12 @@ const Day = ({ name }: { name: string }) => {
             >
               {meal}
             </span>
-            <input
-              className="outline-none w-full p-2 border text-xs md:w-[8.5rem]"
-              type="text"
-              placeholder={`Add a recipe`}
-            />
+            <div className="outline-none w-full flex items-center justify-center text-neutral-300 text-[0.65rem] md:w-[8.5rem]">
+              <button className="flex gap-1 items-center hover:bg-neutral-50 p-2 rounded">
+                <IoAddOutline />
+                <p>Add recipe</p>
+              </button>
+            </div>
           </div>
         ))}
       </div>

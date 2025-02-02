@@ -22,7 +22,7 @@ const AsideNavbar = () => {
         <ul className="flex text-neutral-500 w-full md:flex-col md:my-10">
           <AsideNavbarItem
             name="Menu"
-            href="/dashboard"
+            href="/dashboard/menu"
             icon={<CiCalendar />}
           />
           <AsideNavbarItem
@@ -42,15 +42,15 @@ const AsideNavbar = () => {
           />
         </ul>
       </div>
-      <div className="flex gap-3 items-center px-5 py-5 w-full text-neutral-500 cursor-pointer hover:bg-neutral-100">
+      <div className="flex gap-3 items-center px-5 py-5 text-neutral-500 cursor-pointer hover:bg-neutral-100 md:w-full">
         <CiUser className="md:text-3xl" />
         <div>
-          <p className="text-sm hidden md:block">
+          <div className="text-sm hidden md:block">
             {user && user.name ? user.name : ""}
-          </p>
-          <p className="text-xs hidden md:block">
+          </div>
+          <div className="text-xs hidden md:block">
             {user ? user.email : "User"}
-          </p>
+          </div>
         </div>
       </div>
     </nav>
