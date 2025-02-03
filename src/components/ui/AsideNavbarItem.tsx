@@ -19,9 +19,7 @@ const AsideNavbarItem = ({
       <Link
         href={`${href}`}
         className={`py-4 px-5 flex gap-3 items-center cursor-pointer ${
-          isActive
-            ? "bg-neutral-100 hover:bg-neutral-200"
-            : "hover:bg-neutral-100"
+          isActive ? "bg-neutral-100 hover:opacity-65" : "hover:bg-neutral-100"
         }`}
       >
         {icon}

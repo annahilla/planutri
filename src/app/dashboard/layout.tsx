@@ -6,7 +6,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="flex flex-col md:flex-row overflow-x-hidden">
+    <main className="flex flex-col md:flex-row">
       <AsideNavbar />
       <div className="mb-16 md:mb-0">{children}</div>
     </main>
