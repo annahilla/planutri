@@ -1,5 +1,5 @@
-import connect from "@/lib/db";
-import Ingredient from "@/lib/models/ingredients";
+import connect from "@/lib/database/db";
+import Ingredient from "@/lib/database/models/ingredients";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {
