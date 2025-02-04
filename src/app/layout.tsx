@@ -3,6 +3,7 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "./(providers)/StoreProvider";
 import AuthProvider from "./(providers)/AuthProvider";
+import { ToastContainer } from "react-toastify";
 
 const poppins = Poppins({
   weight: ["100", "300", "400"],
@@ -26,6 +27,7 @@ export default function RootLayout({
         <StoreProvider>
           <AuthProvider>{children}</AuthProvider>
         </StoreProvider>
+        <ToastContainer />
       </body>
     </html>
   );

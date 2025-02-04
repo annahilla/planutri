@@ -3,16 +3,14 @@ import { Schema, model, models } from "mongoose";
 const RecipesSchema = new Schema(
   {
     name: { type: String, required: true },
-    ingredients: { type: [
+    ingredients: [
         { 
-            ingredient: { type: Schema.Types.ObjectId, ref: "Ingredient", required: true }, 
+            ingredient: { type: String, required: true }, 
             quantity: { type: Number, required: true}, 
-            unit: { type: Schema.Types.ObjectId, ref: "Unit", required: true }  
+            unit: { type: String, required: true }  
         }
-    ], 
-    required: true 
-    },
-    description: { type: String }
+    ],
+    description: { type: String, required: false }
   },
   { timestamps: true }
 );

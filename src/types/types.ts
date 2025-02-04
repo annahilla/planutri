@@ -8,3 +8,15 @@ export interface User {
   email:string;
   password: string;
 }
+
+export interface IngredientInterface {
+  ingredient: string,
+  quantity: number,
+  unit: string
+}
+
+export interface Recipe {
+  name: string;
+  ingredients: IngredientInterface[],
+  description?:string
+}

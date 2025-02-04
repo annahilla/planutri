@@ -2,19 +2,24 @@
 
 import Button from "@/components/ui/Button";
 import { useIngredients } from "@/hooks/useIngredients";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { IoIosClose } from "react-icons/io";
 import { useUnits } from "@/hooks/useUnits";
+import { IngredientInterface } from "@/types/types";
+import { addRecipe } from "@/services/recipeService";
 
 const CreateRecipe = () => {
-  const ingredients = useIngredients();
+  const allIngredients = useIngredients();
   const units = useUnits();
   const [ingredientInputValue, setIngredientInputValue] = useState<string>("");
   const [filteredIngredients, setFilteredIngredients] = useState<string[]>([]);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [error, setError] = useState("");
+  const [recipeName, setRecipeName] = useState("");
+  const [description, setDescription] = useState("");
+  const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIngredientInputValue(e.target.value);
@@ -29,13 +34,65 @@ const CreateRecipe = () => {
     } else {
       setIngredientInputValue("");
       setSelectedIngredients((prev) => [...prev, ingredient]);
+      setIngredients((prev) => [
+        ...prev,
+        {
+          ingredient: ingredient,
+          quantity: 0,
+          unit: "g",
+        },
+      ]);
       setIsDropdownOpen(false);
     }
   };
 
-  const deleteIngredient = (ingredient: string) => {
+  const deleteIngredient = (ingredientName: string) => {
     setSelectedIngredients((prev) =>
-      prev.filter((item) => item !== ingredient)
+      prev.filter((item) => item !== ingredientName)
+    );
+    setIngredients((prev) =>
+      prev.filter((item) => item.ingredient !== ingredientName)
+    );
+  };
+
+  const handleCreateRecipe = (event: FormEvent) => {
+    event.preventDefault();
+
+    const formattedIngredients = ingredients.map(
+      (ing: IngredientInterface) => ({
+        ingredient: ing.ingredient,
+        quantity: Number(ing.quantity),
+        unit: ing.unit,
+      })
+    );
+
+    const newRecipe = {
+      name: recipeName,
+      ingredients: formattedIngredients,
+      description,
+    };
+
+    try {
+      addRecipe(newRecipe);
+      setSelectedIngredients([]);
+      setRecipeName("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleCreateIngredient = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    ingredientName: string
+  ) => {
+    const { name, value } = event.target;
+
+    setIngredients((prevIngredients) =>
+      prevIngredients.map((ingredient) =>
+        ingredient.ingredient === ingredientName
+          ? { ...ingredient, [name]: value }
+          : ingredient
+      )
     );
   };
 
@@ -45,12 +102,12 @@ const CreateRecipe = () => {
       setFilteredIngredients([]);
     } else {
       setIsDropdownOpen(true);
-      const filtered = ingredients.filter((ingredient) =>
+      const filtered = allIngredients.filter((ingredient) =>
         ingredient.toLowerCase().startsWith(ingredientInputValue.toLowerCase())
       );
       setFilteredIngredients(filtered);
     }
-  }, [ingredientInputValue, ingredients]);
+  }, [ingredientInputValue, allIngredients]);
 
   useEffect(() => {
     setIsDropdownOpen(false);
@@ -59,18 +116,28 @@ const CreateRecipe = () => {
   return (
     <div className="flex flex-col items-center mx-10 my-6 md:ml-[20rem] md:items-start md:w-2/3">
       <h2 className="mb-6 text-2xl md:mb-10">Create a Recipe</h2>
-      <form className="flex flex-col gap-5 w-full">
+      <form
+        onSubmit={handleCreateRecipe}
+        className="flex flex-col gap-5 w-full"
+      >
         <div className="flex flex-col gap-1">
-          <label htmlFor="name">Recipe name</label>
+          <label htmlFor="name">
+            Recipe name <span className="text-red-600">*</span>
+          </label>
           <input
             className="border py-2 px-4 rounded outline-none"
             name="name"
             type="text"
+            value={recipeName}
+            onChange={(event) => setRecipeName(event.target.value)}
+            required
           />
         </div>
         <div className="flex flex-col justify-between items-start gap-10 sm:flex-row">
           <div className="relative flex-1 flex flex-col gap-1 w-full">
-            <label htmlFor="name">Ingredients</label>
+            <label htmlFor="name">
+              Ingredients <span className="text-red-600">*</span>
+            </label>
             <input
               className="border py-2 px-4 rounded outline-none"
               type="text"
@@ -101,8 +168,25 @@ const CreateRecipe = () => {
                     type="number"
                     name="quantity"
                     placeholder="0"
+                    value={
+                      ingredients.find((item) => item.ingredient === ingredient)
+                        ?.quantity || ""
+                    }
+                    onChange={(event) =>
+                      handleCreateIngredient(event, ingredient)
+                    }
                   />
-                  <select className="text-xs outline-none" name="unity" id="">
+                  <select
+                    className="text-xs outline-none"
+                    name="unit"
+                    value={
+                      ingredients.find((item) => item.ingredient === ingredient)
+                        ?.unit || ""
+                    }
+                    onChange={(event) =>
+                      handleCreateIngredient(event, ingredient)
+                    }
+                  >
                     {units.map((unit) => (
                       <option key={unit} value={unit}>
                         {unit}
@@ -125,6 +209,8 @@ const CreateRecipe = () => {
               className="border py-2 px-4 rounded outline-none"
               name="description"
               rows={15}
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
             />
           </div>
         </div>

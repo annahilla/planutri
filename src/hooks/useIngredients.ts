@@ -5,7 +5,7 @@ export const useIngredients = () => {
 
     useEffect(() => {
         const fetchIngredients = async () => {
-          const response = await fetch("http://localhost:3000/api/ingredients");
+          const response = await fetch("/api/ingredients");
           const data = await response.json();
           const ingredients = data[0].ingredients;
           setIngredients(ingredients);

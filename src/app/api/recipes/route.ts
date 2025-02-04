@@ -36,7 +36,8 @@ export const POST = async (req: Request) => {
         return new NextResponse(JSON.stringify(newRecipe), { status: 201 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
-        return new NextResponse("There was an error creating the recipe: " + error.message, {
+        console.error("Error creating recipe:", error); 
+        return new NextResponse(JSON.stringify({ message: error.message, stack: error.stack }), {
             status: 500,
         });
     }
