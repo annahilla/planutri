@@ -21,8 +21,17 @@ const CreateRecipe = () => {
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIngredientInputValue(e.target.value);
+  const handleRecipeNameChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRecipeName(event.target.value);
+    setError("");
+  };
+
+  const handleIngredientChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setIngredientInputValue(event.target.value);
     setError("");
   };
 
@@ -57,6 +66,26 @@ const CreateRecipe = () => {
 
   const handleCreateRecipe = (event: FormEvent) => {
     event.preventDefault();
+    setError("");
+
+    if (!recipeName.trim()) {
+      setError("Please enter a recipe name");
+      return;
+    }
+
+    if (ingredients.length === 0) {
+      setError("Please enter at least one ingredient");
+      return;
+    }
+
+    if (ingredients.length > 0) {
+      for (const ing of ingredients) {
+        if (ing.quantity <= 0 || isNaN(ing.quantity)) {
+          setError(`Please enter a valid quantity for ${ing.ingredient}`);
+          return;
+        }
+      }
+    }
 
     const formattedIngredients = ingredients.map(
       (ing: IngredientInterface) => ({
@@ -76,6 +105,8 @@ const CreateRecipe = () => {
       addRecipe(newRecipe);
       setSelectedIngredients([]);
       setRecipeName("");
+      setDescription("");
+      setIngredients([]);
     } catch (error) {
       console.log(error);
     }
@@ -119,6 +150,7 @@ const CreateRecipe = () => {
       <form
         onSubmit={handleCreateRecipe}
         className="flex flex-col gap-5 w-full"
+        noValidate
       >
         <div className="flex flex-col gap-1">
           <label htmlFor="name">
@@ -129,7 +161,7 @@ const CreateRecipe = () => {
             name="name"
             type="text"
             value={recipeName}
-            onChange={(event) => setRecipeName(event.target.value)}
+            onChange={handleRecipeNameChange}
             required
           />
         </div>
@@ -142,7 +174,8 @@ const CreateRecipe = () => {
               className="border py-2 px-4 rounded outline-none"
               type="text"
               value={ingredientInputValue}
-              onChange={handleInputChange}
+              onChange={handleIngredientChange}
+              required
             />
             {isDropdownOpen && (
               <ul className="z-[1000] absolute top-20 w-full bg-white border border-t-0 rounded-b max-h-40 overflow-y-auto [&::-webkit-scrollbar]:hidden">
@@ -175,6 +208,7 @@ const CreateRecipe = () => {
                     onChange={(event) =>
                       handleCreateIngredient(event, ingredient)
                     }
+                    required
                   />
                   <select
                     className="text-xs outline-none"
@@ -186,6 +220,7 @@ const CreateRecipe = () => {
                     onChange={(event) =>
                       handleCreateIngredient(event, ingredient)
                     }
+                    required
                   >
                     {units.map((unit) => (
                       <option key={unit} value={unit}>
