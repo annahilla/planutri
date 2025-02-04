@@ -8,7 +8,7 @@ export default function DashboardLayout({
   return (
     <main className="flex flex-col md:flex-row">
       <AsideNavbar />
-      <div className="mb-16 md:mb-0">{children}</div>
+      <div className="mb-16 md:mb-0 md:w-2/3">{children}</div>
     </main>
   );
 }
