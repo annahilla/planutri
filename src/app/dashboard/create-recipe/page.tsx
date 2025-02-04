@@ -2,12 +2,19 @@
 
 import Button from "@/components/ui/Button";
 import { useIngredients } from "@/hooks/useIngredients";
-import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
+import React, {
+  useState,
+  useEffect,
+  FormEvent,
+  ChangeEvent,
+  useRef,
+} from "react";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { IoIosClose } from "react-icons/io";
 import { useUnits } from "@/hooks/useUnits";
 import { IngredientInterface } from "@/types/types";
 import { addRecipe } from "@/services/recipeService";
+import useClickOutside from "@/hooks/useClickOutside";
 
 const CreateRecipe = () => {
   const allIngredients = useIngredients();
@@ -20,6 +27,8 @@ const CreateRecipe = () => {
   const [recipeName, setRecipeName] = useState("");
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
+  const dropdownRef = useRef<HTMLUListElement>(null!);
+  useClickOutside(dropdownRef, () => setIsDropdownOpen(false));
 
   const handleRecipeNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -178,7 +187,10 @@ const CreateRecipe = () => {
               required
             />
             {isDropdownOpen && (
-              <ul className="z-[1000] absolute top-20 w-full bg-white border border-t-0 rounded-b max-h-40 overflow-y-auto [&::-webkit-scrollbar]:hidden">
+              <ul
+                ref={dropdownRef}
+                className="z-[1000] absolute top-20 w-full bg-white border border-t-0 rounded-b max-h-40 overflow-y-auto [&::-webkit-scrollbar]:hidden"
+              >
                 {filteredIngredients.map((ingredient) => (
                   <li
                     key={ingredient}
