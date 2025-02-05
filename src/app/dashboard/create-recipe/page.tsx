@@ -1,34 +1,24 @@
 "use client";
 
 import Button from "@/components/ui/Button";
-import { useIngredients } from "@/hooks/useIngredients";
-import React, {
-  useState,
-  useEffect,
-  FormEvent,
-  ChangeEvent,
-  useRef,
-} from "react";
+import React, { useState, useEffect, FormEvent, ChangeEvent } from "react";
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { IoIosClose } from "react-icons/io";
-import { useUnits } from "@/hooks/useUnits";
 import { IngredientInterface } from "@/types/types";
 import { addRecipe } from "@/services/recipeService";
-import useClickOutside from "@/hooks/useClickOutside";
+import { useAppSelector } from "@/lib/store/reduxHooks";
+import IngredientDropdown from "@/components/ui/IngredientDropdown";
 
 const CreateRecipe = () => {
-  const allIngredients = useIngredients();
-  const units = useUnits();
+  const units = useAppSelector((state) => state.units.units);
   const [ingredientInputValue, setIngredientInputValue] = useState<string>("");
-  const [filteredIngredients, setFilteredIngredients] = useState<string[]>([]);
+
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [error, setError] = useState("");
   const [recipeName, setRecipeName] = useState("");
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
-  const dropdownRef = useRef<HTMLUListElement>(null!);
-  useClickOutside(dropdownRef, () => setIsDropdownOpen(false));
 
   const handleRecipeNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -137,19 +127,6 @@ const CreateRecipe = () => {
   };
 
   useEffect(() => {
-    if (ingredientInputValue === "") {
-      setIsDropdownOpen(false);
-      setFilteredIngredients([]);
-    } else {
-      setIsDropdownOpen(true);
-      const filtered = allIngredients.filter((ingredient) =>
-        ingredient.toLowerCase().startsWith(ingredientInputValue.toLowerCase())
-      );
-      setFilteredIngredients(filtered);
-    }
-  }, [ingredientInputValue, allIngredients]);
-
-  useEffect(() => {
     setIsDropdownOpen(false);
   }, [selectedIngredients]);
 
@@ -175,33 +152,25 @@ const CreateRecipe = () => {
           />
         </div>
         <div className="flex flex-col justify-between items-start gap-10 sm:flex-row">
-          <div className="relative flex-1 flex flex-col gap-1 w-full">
+          <div className="flex-1 flex flex-col gap-1 w-full">
             <label htmlFor="name">
               Ingredients <span className="text-red-600">*</span>
             </label>
-            <input
-              className="border py-2 px-4 rounded outline-none"
-              type="text"
-              value={ingredientInputValue}
-              onChange={handleIngredientChange}
-              required
-            />
-            {isDropdownOpen && (
-              <ul
-                ref={dropdownRef}
-                className="z-[1000] absolute top-20 w-full bg-white border border-t-0 rounded-b max-h-40 overflow-y-auto [&::-webkit-scrollbar]:hidden"
-              >
-                {filteredIngredients.map((ingredient) => (
-                  <li
-                    key={ingredient}
-                    className="py-2 px-4 cursor-pointer hover:bg-gray-50"
-                    onClick={() => handleIngredientSelect(ingredient)}
-                  >
-                    {ingredient}
-                  </li>
-                ))}
-              </ul>
-            )}
+            <div className="relative w-full">
+              <input
+                className="w-full border py-2 px-4 rounded outline-none"
+                type="text"
+                value={ingredientInputValue}
+                onChange={handleIngredientChange}
+                required
+              />
+              <IngredientDropdown
+                ingredientInputValue={ingredientInputValue}
+                isDropdownOpen={isDropdownOpen}
+                handleIngredientSelect={handleIngredientSelect}
+                setIsDropdownOpen={setIsDropdownOpen}
+              />
+            </div>
             <div className="mt-2 border py-2 px-4 rounded outline-none min-h-80 flex flex-col gap-3">
               {selectedIngredients.map((ingredient) => (
                 <div

@@ -9,12 +9,12 @@
 
 - Una pagina on fer els menús
   - Calendari custom (mockups)
-    - 2 setmanes
-    - Modo agenda (mobile)
+    [x] 2 setmanes
+    [x] Modo agenda (mobile)
     - Asignar recepta a un dia (click + modal picker)
 - Crear y modificar les meves receptes
-  - Llista de receptes
-  - Formulari per crear: nom, ingredients, textarea (descripció)
+  [x] Llista de receptes
+  [x] Formulari per crear: nom, ingredients, textarea (descripció)
   - Formulari per modificar
   - Delete
 - Generar la llista de la compra

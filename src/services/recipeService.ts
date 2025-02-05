@@ -39,3 +39,53 @@ export const addRecipe = async (recipe: Recipe) => {
     throw error;
   }
 };
+
+export const updateRecipe = async (recipe: Partial<Recipe>) => {
+  const id = recipe._id;
+  try {
+    const response = await fetch(`/api/recipes/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, ...recipe }),
+    });
+
+    if (!response.ok) {
+      toast.error("There was an error updating the recipe");
+      throw new Error("Error updating recipe");
+    }
+
+    const updatedRecipe = await response.json();
+    toast.success("The recipe was updated successfully");
+    return updatedRecipe;
+  } catch (error) {
+    console.error("Error updating recipe:", error);
+    throw error;
+  }
+};
+
+
+export const deleteRecipe = async (id: string) => {
+    const confirmed = window.confirm("Are you sure you want to delete this recipe?");
+    if (!confirmed) return;
+
+    try {
+        const response = await fetch("/api/recipes", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+        });
+
+        if (!response.ok) {
+            toast.error("There was an error deleting the recipe");
+            throw new Error("Failed to delete the recipe");
+        }
+
+        toast.success("Recipe deleted successfully");
+    } catch (error) {
+        console.error("Error deleting recipe:", error);
+    }
+};

@@ -6,7 +6,7 @@ export const GET = async () => {
     try {
         await connect();
         const recipes = await Recipe.find();
-        return new NextResponse(JSON.stringify(recipes));
+        return new NextResponse(JSON.stringify(recipes), { status: 200 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {
         return new NextResponse("Error fetching ingredients" + error.message, {
@@ -37,6 +37,31 @@ export const POST = async (req: Request) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error("Error creating recipe:", error); 
+        return new NextResponse(JSON.stringify({ message: error.message, stack: error.stack }), {
+            status: 500,
+        });
+    }
+};
+
+export const DELETE = async (req: Request) => {
+    try {
+        await connect();
+        const { id } = await req.json();
+
+        if (!id) {
+            return new NextResponse("Recipe ID is required", { status: 400 });
+        }
+
+        const deletedRecipe = await Recipe.findByIdAndDelete(id);
+
+        if (!deletedRecipe) {
+            return new NextResponse("Recipe not found", { status: 404 });
+        }
+
+        return new NextResponse("Recipe deleted successfully", { status: 200 });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+        console.error("Error deleting recipe:", error);
         return new NextResponse(JSON.stringify({ message: error.message, stack: error.stack }), {
             status: 500,
         });
