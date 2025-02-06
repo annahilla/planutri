@@ -9,6 +9,7 @@ import { ChangeEvent, useState } from "react";
 import IngredientDropdown from "./ui/IngredientDropdown";
 import { IoIosClose } from "react-icons/io";
 import ErrorMessage from "./ui/ErrorMessage";
+import Modal from "./ui/Modal";
 
 const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   const units = useAppSelector((state) => state.units.units);
@@ -21,6 +22,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   const [activeIngredientDropdown, setActiveIngredientDropdown] = useState<
     string | null
   >(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const saveRecipe = async () => {
     if (!currentRecipe) return;
@@ -142,11 +144,15 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
     );
   }
 
+  const openDeleteRecipe = () => {
+    setIsModalOpen(true);
+  }
+
   const handleDeleteRecipe = async () => {
     if (currentRecipe && currentRecipe._id) {
       try {
-        await deleteRecipe(currentRecipe._id);
         router.push("/dashboard/recipes");
+        await deleteRecipe(currentRecipe._id);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.log(error);
@@ -155,7 +161,8 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   };
 
   return (
-    <div className="my-5 w-full md:w-2/3">
+    <>
+          <div className="my-5 w-full md:w-2/3">
       <div className="flex flex-col gap-5">
         <div>
           <h5 className="text-xl my-4">Recipe Name</h5>
@@ -249,18 +256,30 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
 
         {error && <ErrorMessage message={error} />}
 
-        <div className="flex gap-4 items-center">
-          <Button handleClick={saveRecipe} filled>
+        <div className="flex gap-4 items-center w-1/2">
+          <Button handleClick={saveRecipe} filled  type="button">
             Save
           </Button>
           {currentRecipe && currentRecipe._id && (
-            <Button handleClick={handleDeleteRecipe} color="black">
+            <Button handleClick={openDeleteRecipe} color="black"  type="button">
               Delete
             </Button>
           )}
         </div>
       </div>
     </div>
+    {
+      isModalOpen && (
+        <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
+          <p className="text-center mt-8">Are you sure you want to delete this recipe?</p>
+          <div className="flex gap-10 w-2/3 my-8 m-auto">
+            <Button handleClick={handleDeleteRecipe} type="button" filled>Yes</Button>
+            <Button handleClick={() => setIsModalOpen(false)} type="button" color="black">No</Button>
+          </div>
+        </Modal>
+      )
+    }
+    </>
   );
 };
 

@@ -67,9 +67,6 @@ export const updateRecipe = async (recipe: Partial<Recipe>) => {
 
 
 export const deleteRecipe = async (id: string) => {
-    const confirmed = window.confirm("Are you sure you want to delete this recipe?");
-    if (!confirmed) return;
-
     try {
         const response = await fetch("/api/recipes", {
             method: "DELETE",
