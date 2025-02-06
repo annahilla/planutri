@@ -25,11 +25,13 @@ export default function DashboardLayout({
       <div className="w-full md:w-64">
         <AsideNavbar />
       </div>
-      <div className="flex-1 mx-10 my-6">
+      
       <Suspense fallback={<Loading />}>
-        <div className="mb-16 md:mb-0 md:w-full">{children}</div>
+        <div className="flex-1 mx-10 my-6">
+          <div className="mb-16 md:mb-0 md:w-full">{children}</div>
+        </div>
       </Suspense>
-      </div>
+      
     </main>
   );
 }
