@@ -3,14 +3,17 @@
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import Button from "./ui/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
-import { Recipe } from "@/types/types";
+import { IngredientInterface, Recipe } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import IngredientDropdown from "./ui/IngredientDropdown";
+import { IoIosClose } from "react-icons/io";
+import ErrorMessage from "./ui/ErrorMessage";
 
 const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   const units = useAppSelector((state) => state.units.units);
   const router = useRouter();
+  const [error, setError] = useState("");
   const [recipeName, setRecipeName] = useState(currentRecipe.name);
   const [description, setDescription] = useState(currentRecipe.description);
   const [ingredients, setIngredients] = useState(currentRecipe.ingredients);
@@ -19,26 +22,39 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
     string | null
   >(null);
 
-  const handleCreateIngredient = (
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    id: string
-  ) => {
-    const { name, value } = event.target;
-
-    setIngredients((prevIngredients) =>
-      prevIngredients.map((ingredient) =>
-        ingredient._id === id ? { ...ingredient, [name]: value } : ingredient
-      )
-    );
-  };
-
   const saveRecipe = async () => {
     if (!currentRecipe) return;
+
+    const emptyIngredients = ingredients.filter(ingredient => ingredient.ingredient === "");
+    
+
+    if (!recipeName.trim()) {
+      setError("Please enter a recipe name");
+      return;
+    }
+
+    if (ingredients.length === 0) {
+      setError("Please enter at least one ingredient");
+      return;
+    }
+
+    if (ingredients.length > 0 && emptyIngredients.length === 0) {
+      for (const ing of ingredients) {
+        if (ing.quantity <= 0 || isNaN(ing.quantity)) {
+          setError(`Please enter a valid quantity for ${ing.ingredient}`);
+          return;
+        }
+      }
+    }
+
+    emptyIngredients.map(ingredient => deleteIngredient(ingredient._id!));
+    const ingredientsForDB = ingredients.map(({ _id, ...ingredient }) => ingredient);
+
 
     const updatedRecipe = {
       _id: currentRecipe._id,
       name: recipeName,
-      ingredients,
+      ingredients: ingredientsForDB,
       description,
     };
 
@@ -50,6 +66,25 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
     }
 
     router.push("/dashboard/recipes");
+  };
+
+  const changeRecipeName = (event: ChangeEvent<HTMLInputElement>) => {
+    setRecipeName(event.target.value)
+    setError("");
+  }
+
+  const handleCreateIngredient = (
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    id: string
+  ) => {
+    const { name, value } = event.target;
+    setError("");
+
+    setIngredients((prevIngredients) =>
+      prevIngredients.map((ingredient) =>
+        ingredient._id === id ? { ...ingredient, [name]: value } : ingredient
+      )
+    );
   };
 
   const handleIngredientChange = (
@@ -84,6 +119,29 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
     setIsDropdownOpen(false);
   };
 
+  const addIngredientInput = () => {
+    const newEmptyIngredient: IngredientInterface = {
+      _id: crypto.randomUUID(),
+      ingredient: "",
+      quantity: 0,
+      unit: "g"
+    }
+    setIngredients((prevIngredients) => {
+      return [...prevIngredients, newEmptyIngredient]
+    })
+  };
+
+  const deleteIngredient = (id:string) => {
+    if(ingredients.length <= 1) {
+      setError("You can delete all ingredients");
+      return;
+    } 
+    setError("");
+    setIngredients((prevIngredients) => 
+      prevIngredients.filter(ingredient => ingredient._id !== id)
+    );
+  }
+
   const handleDeleteRecipe = async () => {
     if (currentRecipe && currentRecipe._id) {
       try {
@@ -106,20 +164,20 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
             type="text"
             value={recipeName}
             name="name"
-            onChange={(event) => setRecipeName(event.target.value)}
+            onChange={changeRecipeName}
           />
         </div>
         <div>
           <h5 className="text-xl my-4">Ingredients</h5>
-          <ul className="flex flex-col gap-8  md:gap-3">
+          <ul className="flex flex-col gap-8 md:gap-3">
             {ingredients.map((ingredient) => (
               <li
                 key={ingredient._id}
-                className="relative flex flex-col gap-4 md:flex-row"
+                className="relative flex flex-col gap-4 md:flex-row md:items-center"
               >
                 <div className="flex gap-2">
                   <input
-                    className="border py-2 px-4 rounded w-full outline-none"
+                    className="border py-2 px-4 rounded outline-none w-full md:w-24"
                     name="quantity"
                     type="number"
                     value={ingredient.quantity}
@@ -142,7 +200,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
                     ))}
                   </select>
                 </div>
-                <div className="relative flex-1">
+                <div className="relative w-full md:flex-1">
                   <input
                     className="border py-2 px-4 rounded outline-none w-full"
                     type="text"
@@ -150,7 +208,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
                     onChange={(event) =>
                       handleIngredientChange(event, ingredient._id!)
                     }
-                  />
+                  />      
                   {activeIngredientDropdown === ingredient._id &&
                     isDropdownOpen && (
                       <IngredientDropdown
@@ -170,9 +228,15 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
                       />
                     )}
                 </div>
+                <button onClick={() => deleteIngredient(ingredient._id!)}>
+                  <IoIosClose size={24} />
+                </button>
               </li>
             ))}
           </ul>
+          <button onClick={addIngredientInput} className="mt-8 bg-neutral-50 text-neutral-500 text-sm p-2 rounded hover:opacity-80">
+            + Add ingredient
+          </button>
         </div>
         <div>
           <h5 className="text-xl my-4">Description</h5>
@@ -182,6 +246,9 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
             onChange={(event) => setDescription(event.target.value)}
           />
         </div>
+
+        {error && <ErrorMessage message={error} />}
+
         <div className="flex gap-4 items-center">
           <Button handleClick={saveRecipe} filled>
             Save
