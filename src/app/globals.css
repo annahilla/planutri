@@ -27,3 +27,7 @@ body {
   background: var(--background);
   font-family: var(--font-poppins), sans-serif;
 }
+
+.invisible-scrollbar::-webkit-scrollbar {
+  display: none;
+}

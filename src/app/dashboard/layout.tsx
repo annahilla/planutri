@@ -21,17 +21,16 @@ export default function DashboardLayout({
   }, [dispatch]);
 
   return (
-    <main className="flex flex-col md:flex-row w-screen">
+    <main className="flex flex-col md:flex-row h-screen">
       <div className="w-full md:w-64">
         <AsideNavbar />
       </div>
-      
+
       <Suspense fallback={<Loading />}>
-        <div className="flex-1 mx-10 my-6">
-          <div className="mb-16 md:mb-0 md:w-full">{children}</div>
+        <div className="flex-1 mx-10 my-6 h-full">
+          <div className="mb-16 md:mb-0 h-full md:w-full">{children}</div>
         </div>
       </Suspense>
-      
     </main>
   );
 }

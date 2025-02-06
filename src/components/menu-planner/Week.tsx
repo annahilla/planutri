@@ -12,32 +12,15 @@ const Week = () => {
   ];
 
   return (
-    <div>
-      <table>
-        <thead>
-          <tr>
-          <th></th>
-          {days.map(day => (
-            <th className="px-6 py-3 font-lighter text-neutral-800">{day}</th>
-          ))}
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="text-neutral-600 font-light px-6 py-3">Breakfast</td>
-          </tr>
-          <tr>
-            <td className="text-neutral-600 font-light px-6 py-3">Lunck</td>
-          </tr>
-          <tr>
-            <td className="text-neutral-600 font-light px-6 py-3">Snack</td>
-          </tr>
-          <tr>
-            <td className="text-neutral-600 font-light px-6 py-3">Dinner</td>
-          </tr>
-        </tbody>
-      </table>
- 
+    <div className="h-full invisible-scrollbar flex overflow-x-auto scrollbar-none snap-x snap-mandatory w-full md:grid md:grid-cols-2 ld:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 md:overflow-x-hidden gap-3">
+      {days.map((day) => (
+        <div
+          key={day}
+          className="flex flex-col h-full justify-between min-w-full snap-start md:h-auto md:min-w-0"
+        >
+          <Day name={day} />
+        </div>
+      ))}
     </div>
   );
 };

@@ -1,37 +1,23 @@
-import { IoAddOutline } from "react-icons/io5";
-
 const Day = ({ name }: { name: string }) => {
-  const meals = ["breakfast", "lunch", "snack", "dinner"];
+  const meals = ["Breakfast", "Lunch", "Snack", "Dinner"];
 
   return (
-    <div className="flex flex-col">
-      <div
-        className={`my-2 ${
-          name === "Monday" ? "md:ml-14" : ""
-        } text-center font-bold text-sm text-neutral-500`}
-      >
-        {name}
-      </div>
-      <div className="h-[0.5px] w-full bg-neutral-400 hidden md:block"></div>
-
-      <div className="p-4 flex flex-col items-center gap-2 w-full md:mt-2 md:items-start">
-        {meals.map((meal) => (
-          <div key={meal} className="flex items-center gap-2 w-full">
-            <span
-              className={`text-xs capitalize w-20 md:w-14 ${
-                name === "Monday" ? "md:block" : "md:hidden"
-              }`}
+    <div className="w-auto">
+      <h5 className="my-2 text-sm font-bold text-left">{name}</h5>
+      <div className="bg-neutral-50 px-3 py-4 rounded text-center">
+        <div className="flex flex-col items-center gap-4">
+          {meals.map((meal) => (
+            <div
+              className="flex flex-col items-start gap-1 rounded w-full text-left"
+              key={meal}
             >
-              {meal}
-            </span>
-            <div className="flex flex-1 w-full items-center justify-center text-neutral-300 text-[0.65rem] md:w-[8.5rem]">
-              <button className="flex flex-1 w-full gap-1 justify-center items-center hover:bg-neutral-50 p-2 rounded">
-                <IoAddOutline />
-                <p>Add recipe</p>
+              <p className="text-sm">{meal}</p>
+              <button className="text-left text-neutral-300 text-xs bg-white w-full p-2 border border-white hover:text-neutral-400 hover:border-neutral-300 rounded">
+                + Add recipe
               </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
