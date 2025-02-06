@@ -97,7 +97,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   };
 
   return (
-    <div className="my-5">
+    <div className="my-5 w-full md:w-2/3">
       <div className="flex flex-col gap-5">
         <div>
           <h5 className="text-xl my-4">Recipe Name</h5>
@@ -119,7 +119,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
               >
                 <div className="flex gap-2">
                   <input
-                    className="border py-2 px-4 rounded w-full outline-none md:w-24"
+                    className="border py-2 px-4 rounded w-full outline-none"
                     name="quantity"
                     type="number"
                     value={ingredient.quantity}
@@ -142,7 +142,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
                     ))}
                   </select>
                 </div>
-                <div className="relative">
+                <div className="relative flex-1">
                   <input
                     className="border py-2 px-4 rounded outline-none w-full"
                     type="text"

@@ -14,7 +14,7 @@ const RecipeDetailsPage = async ({ params }: { params: { id: string } }) => {
   const recipe: Recipe = await fetchRecipe(id);
 
   return (
-    <div className="flex flex-col mx-10 my-6 md:ml-[20rem] md:items-start md:w-full">
+    <div className="flex flex-col md:items-start md:w-full">
       <div className="flex gap-3 items-center mb-5">
         <Link href={"/dashboard/recipes"} className="text-neutral-400">
           <IoMdArrowBack size={24} />

@@ -31,7 +31,7 @@ const AsideNavbar = () => {
   };
 
   return (
-    <nav className="z-[1000] fixed justify-center items-center flex bottom-0 bg-neutral-50 shrink-0 w-full md:h-full md:w-64 md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start">
+    <nav className="z-[1000] fixed justify-center items-center flex bottom-0 bg-neutral-50 shrink-0 w-full md:w-auto md:h-full md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start">
       <div className="md:w-full">
         <Link href={"/"} className="text-2xl align-self-center hidden md:block">
           <Logo color="black" />

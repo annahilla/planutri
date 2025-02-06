@@ -131,7 +131,7 @@ const CreateRecipe = () => {
   }, [selectedIngredients]);
 
   return (
-    <div className="flex flex-col items-center mx-10 my-6 md:ml-[20rem] md:items-start md:w-2/3">
+    <div className="flex flex-col items-center w-full md:items-start xl:w-2/3">
       <h2 className="mb-6 text-2xl md:mb-10">Create a Recipe</h2>
       <form
         onSubmit={handleCreateRecipe}
