@@ -5,40 +5,29 @@ import Button from "./ui/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
 import { Recipe } from "@/types/types";
 import { useRouter } from "next/navigation";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import IngredientDropdown from "./ui/IngredientDropdown";
 
 const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   const units = useAppSelector((state) => state.units.units);
   const router = useRouter();
-  const [recipeName, setRecipeName] = useState(currentRecipe?.name || "");
-  const [description, setDescription] = useState(
-    currentRecipe?.description || ""
-  );
-  const [ingredients, setIngredients] = useState(
-    currentRecipe?.ingredients || []
-  );
+  const [recipeName, setRecipeName] = useState(currentRecipe.name);
+  const [description, setDescription] = useState(currentRecipe.description);
+  const [ingredients, setIngredients] = useState(currentRecipe.ingredients);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    if (currentRecipe) {
-      setRecipeName(currentRecipe.name || "");
-      setDescription(currentRecipe.description || "");
-      setIngredients(currentRecipe.ingredients || []);
-    }
-  }, [currentRecipe]);
+  const [activeIngredientDropdown, setActiveIngredientDropdown] = useState<
+    string | null
+  >(null);
 
   const handleCreateIngredient = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    ingredientName: string
+    id: string
   ) => {
     const { name, value } = event.target;
 
     setIngredients((prevIngredients) =>
       prevIngredients.map((ingredient) =>
-        ingredient.ingredient === ingredientName
-          ? { ...ingredient, [name]: value }
-          : ingredient
+        ingredient._id === id ? { ...ingredient, [name]: value } : ingredient
       )
     );
   };
@@ -59,18 +48,26 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
     } catch (error: any) {
       console.log(error);
     }
+
+    router.push("/dashboard/recipes");
   };
 
   const handleIngredientChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     id: string
   ) => {
-    console.log(event.target.value);
-  };
+    setIsDropdownOpen(true);
+    setActiveIngredientDropdown(id);
+    const currentIngredientName = event.target.value;
 
-  useEffect(() => {
-    console.log(ingredients);
-  }, [ingredients]);
+    setIngredients((prevIngredients) =>
+      prevIngredients.map((ingredient) =>
+        ingredient._id === id
+          ? { ...ingredient, ingredient: currentIngredientName }
+          : ingredient
+      )
+    );
+  };
 
   const handleIngredientSelect = (
     selectedIngredient: string,
@@ -115,7 +112,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
         <div>
           <h5 className="text-xl my-4">Ingredients</h5>
           <ul className="flex flex-col gap-8  md:gap-3">
-            {currentRecipe.ingredients.map((ingredient) => (
+            {ingredients.map((ingredient) => (
               <li
                 key={ingredient._id}
                 className="relative flex flex-col gap-4 md:flex-row"
@@ -125,25 +122,17 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
                     className="border py-2 px-4 rounded w-full outline-none md:w-24"
                     name="quantity"
                     type="number"
-                    value={
-                      ingredients.find(
-                        (ing) => ing.ingredient === ingredient.ingredient
-                      )?.quantity || ""
-                    }
+                    value={ingredient.quantity}
                     onChange={(event) =>
-                      handleCreateIngredient(event, ingredient.ingredient)
+                      handleCreateIngredient(event, ingredient._id!)
                     }
                   />
                   <select
                     className="border py-2 px-4 rounded outline-none"
                     name="unit"
-                    value={
-                      ingredients.find(
-                        (ing) => ing.ingredient === ingredient.ingredient
-                      )?.unit || ""
-                    }
+                    value={ingredient.unit}
                     onChange={(event) =>
-                      handleCreateIngredient(event, ingredient.ingredient)
+                      handleCreateIngredient(event, ingredient._id!)
                     }
                   >
                     {units.map((unit: string) => (
@@ -157,30 +146,29 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
                   <input
                     className="border py-2 px-4 rounded outline-none w-full"
                     type="text"
-                    value={
-                      ingredients.find(
-                        (ing) => ing.ingredient === ingredient.ingredient
-                      )?.ingredient || ""
-                    }
+                    value={ingredient.ingredient}
                     onChange={(event) =>
                       handleIngredientChange(event, ingredient._id!)
                     }
                   />
-                  <IngredientDropdown
-                    ingredientInputValue={
-                      ingredients.find(
-                        (ing) => ing.ingredient === ingredient.ingredient
-                      )?.ingredient || ""
-                    }
-                    isDropdownOpen={isDropdownOpen}
-                    setIsDropdownOpen={setIsDropdownOpen}
-                    handleIngredientSelect={(selectedIngredient) =>
-                      handleIngredientSelect(
-                        selectedIngredient,
-                        ingredient.ingredient
-                      )
-                    }
-                  />
+                  {activeIngredientDropdown === ingredient._id &&
+                    isDropdownOpen && (
+                      <IngredientDropdown
+                        ingredientInputValue={
+                          ingredients.find(
+                            (ing) => ing.ingredient === ingredient.ingredient
+                          )?.ingredient || ""
+                        }
+                        isDropdownOpen={isDropdownOpen}
+                        setIsDropdownOpen={setIsDropdownOpen}
+                        handleIngredientSelect={(selectedIngredient) =>
+                          handleIngredientSelect(
+                            selectedIngredient,
+                            ingredient.ingredient
+                          )
+                        }
+                      />
+                    )}
                 </div>
               </li>
             ))}
