@@ -23,7 +23,7 @@ const SideNavbarItem = ({
         className={`py-4 px-5 h-16 flex items-center cursor-pointer ${
           collapsedStyles ? "justify-center" : "gap-3"
         } ${
-          isActive ? "bg-neutral-100 hover:opacity-65" : "hover:bg-neutral-100"
+          isActive ? "bg-lightBrown hover:opacity-65" : "hover:bg-lightBrown"
         }`}
       >
         {icon}

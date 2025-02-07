@@ -14,7 +14,15 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        brown: "#545046",
+        lightBrown: "#635f53"
       },
+      opacity: {
+        '80': '0.8',
+      },
+       backgroundOpacity: {
+        '80': '0.8',
+        }
     },
   },
   plugins: [],

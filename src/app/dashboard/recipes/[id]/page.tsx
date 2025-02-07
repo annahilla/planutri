@@ -16,7 +16,10 @@ const RecipeDetailsPage = async ({ params }: { params: { id: string } }) => {
   return (
     <div className="flex flex-col md:items-start md:w-full">
       <div className="flex gap-3 items-center mb-5">
-        <Link href={"/dashboard/recipes"} className="text-neutral-400">
+        <Link
+          href={"/dashboard/recipes"}
+          className="text-lightBrown hover:opacity-80"
+        >
           <IoMdArrowBack size={24} />
         </Link>
         <h2 className="text-2xl">{recipe.name}</h2>

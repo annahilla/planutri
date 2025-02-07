@@ -45,14 +45,14 @@ const SideNavbar = ({
   };
 
   return (
-    <nav className="z-[1000] fixed justify-center items-center flex bottom-0 bg-neutral-50 shrink-0 w-full md:w-auto md:h-full md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start">
+    <nav className="z-[1000] fixed justify-center items-center flex bottom-0 bg-brown text-neutral-300 shrink-0 w-full md:w-auto md:h-full md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start">
       <div className="md:w-full">
         <button
           onClick={toggleNavbar}
           type="button"
           className={`${
             isNavbarCollapsed ? "justify-center mb-6" : "justify-end"
-          } mb-2 w-full text-neutral-500 px-3 hover:opacity-70 hidden outline-none md:flex`}
+          } mb-2 w-full px-3 hover:opacity-70 hidden outline-none md:flex`}
         >
           {isNavbarCollapsed ? (
             <BsBoxArrowRight size={14} />
@@ -62,15 +62,15 @@ const SideNavbar = ({
         </button>
         <Link
           href={"/"}
-          className="flex justify-center m-auto text-2xl w-fit hidden md:block"
+          className="flex justify-center text-white m-auto text-2xl w-fit hidden md:block"
         >
           {isNavbarCollapsed ? (
-            <Logo color="black" minified />
+            <Logo color="white" minified />
           ) : (
-            <Logo color="black" />
+            <Logo color="white" />
           )}
         </Link>
-        <ul className="flex text-neutral-500 w-full md:flex-col md:my-10">
+        <ul className="flex w-full md:flex-col md:my-10">
           <SideNavbarItem
             name="Menu"
             href="/dashboard/menu"
@@ -99,7 +99,7 @@ const SideNavbar = ({
       </div>
       <div
         onClick={toggleDropdown}
-        className="flex flex-col text-neutral-500 cursor-pointer min-h-16 justify-center md:w-full"
+        className="flex flex-col cursor-pointer min-h-16 justify-center md:w-full"
       >
         {isDropdownOpen && (
           <button
@@ -114,7 +114,7 @@ const SideNavbar = ({
             </div>
           </button>
         )}
-        <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-neutral-100 px-5 py-4 md:py-5 md:justify-start">
+        <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-lightBrown px-5 py-4 md:py-5 md:justify-start">
           <CiUser className="md:text-3xl" />
           {!isNavbarCollapsed && (
             <>
