@@ -18,7 +18,7 @@ const Week = () => {
           key={day}
           className="flex flex-col h-full justify-between min-w-full snap-start md:h-auto md:min-w-0"
         >
-          <Day name={day} />
+          <Day dayOfTheWeek={day} />
         </div>
       ))}
     </div>

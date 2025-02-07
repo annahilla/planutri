@@ -1,9 +1,12 @@
 import { Recipe } from "@/types/types";
 import { toast } from "react-toastify";
 
+const baseUrl =
+      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+
 export const getRecipes = async () => {
   try {
-    const response = await fetch("/api/recipes");
+    const response = await fetch(`${baseUrl}/api/recipes`);
 
     if (!response.ok) {
       toast.error("There was an error fetching the recipes");
@@ -19,7 +22,7 @@ export const getRecipes = async () => {
 
 export const addRecipe = async (recipe: Recipe) => {
     try {
-    const response = await fetch("/api/recipes", {
+    const response = await fetch(`${baseUrl}/api/recipes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +46,7 @@ export const addRecipe = async (recipe: Recipe) => {
 export const updateRecipe = async (recipe: Partial<Recipe>) => {
   const id = recipe._id;
   try {
-    const response = await fetch(`/api/recipes/${id}`, {
+    const response = await fetch(`${baseUrl}/api/recipes/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +71,7 @@ export const updateRecipe = async (recipe: Partial<Recipe>) => {
 
 export const deleteRecipe = async (id: string) => {
     try {
-        const response = await fetch("/api/recipes", {
+        const response = await fetch(`${baseUrl}/api/recipes`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
