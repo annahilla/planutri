@@ -52,7 +52,7 @@ const SideNavbar = ({
           type="button"
           className={`${
             isNavbarCollapsed ? "justify-center mb-6" : "justify-end"
-          } mb-2 w-full text-neutral-500 px-3 hover:opacity-70 hidden md:flex`}
+          } mb-2 w-full text-neutral-500 px-3 hover:opacity-70 hidden outline-none md:flex`}
         >
           {isNavbarCollapsed ? (
             <BsBoxArrowRight size={14} />
@@ -99,20 +99,22 @@ const SideNavbar = ({
       </div>
       <div
         onClick={toggleDropdown}
-        className="flex flex-col text-neutral-500 cursor-pointer md:w-full"
+        className="flex flex-col text-neutral-500 cursor-pointer min-h-16 justify-center md:w-full"
       >
         {isDropdownOpen && (
           <button
             onClick={handleLogout}
-            className="text-sm py-4 pl-9 hidden hover:opacity-75 md:block"
+            className={`${
+              isNavbarCollapsed ? "m-auto" : "pl-9"
+            } text-sm py-4 px-5 hidden hover:opacity-75 md:block`}
           >
-            <div className="flex items-center gap-1">
+            <div className="flex items-center h-full gap-1">
               <CiLogout size={22} />
-              Log Out
+              {!isNavbarCollapsed && "Log Out"}
             </div>
           </button>
         )}
-        <div className="flex gap-3 items-center justify-center hover:bg-neutral-100 px-5 py-4 md:py-5 md:justify-start">
+        <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-neutral-100 px-5 py-4 md:py-5 md:justify-start">
           <CiUser className="md:text-3xl" />
           {!isNavbarCollapsed && (
             <>
@@ -122,11 +124,15 @@ const SideNavbar = ({
                 </div>
                 <div className="text-xs">{user ? user.email : "User"}</div>
               </div>
-              <div className="hidden md:block">
-                {isDropdownOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
-              </div>
             </>
           )}
+          <div
+            className={`${
+              isNavbarCollapsed ? "absolute right-2 top-4 text-xs" : ""
+            } hidden md:block`}
+          >
+            {isDropdownOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
+          </div>
         </div>
       </div>
     </nav>
