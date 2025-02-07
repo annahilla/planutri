@@ -1,12 +1,12 @@
 "use client";
 
-import AsideNavbar from "@/components/AsideNavbar";
 import { fetchIngredients } from "@/lib/store/apis/ingredientsSlice";
 import { fetchUnits } from "@/lib/store/apis/unitsSlice";
 import { useAppDispatch } from "@/lib/store/reduxHooks";
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useEffect } from "react";
 import Loading from "@/components/ui/Loading";
+import SideNavbar from "@/components/SideNavbar";
 
 export default function DashboardLayout({
   children,
@@ -14,6 +14,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const dispatch = useAppDispatch();
+  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUnits());
@@ -22,8 +23,15 @@ export default function DashboardLayout({
 
   return (
     <main className="flex flex-col md:flex-row h-screen">
-      <div className="w-full md:w-64">
-        <AsideNavbar />
+      <div
+        className={`transition-all duration-300 ${
+          isNavbarCollapsed ? "md:w-16" : "md:w-64"
+        }`}
+      >
+        <SideNavbar
+          isNavbarCollapsed={isNavbarCollapsed}
+          setIsNavbarCollapsed={setIsNavbarCollapsed}
+        />
       </div>
 
       <Suspense fallback={<Loading />}>
