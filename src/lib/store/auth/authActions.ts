@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { createUserWithEmailAndPassword, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";
 import { setUser, setError, logout } from "./authSlice";
 import { sendTokenToBackend } from "@/services/authService";
@@ -7,23 +7,6 @@ import { getUserToken } from "./authHelpers";
 import { validateUserInput } from "@/utils/validation";
 import { handleAuthError } from "./errorUtils";
 import { AuthUser, User } from "@/types/types";
-
-export const checkAuthState = createAsyncThunk(
-  "auth/checkAuthState",
-  async (_, thunkAPI) => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const token = await user.getIdToken();
-        const userData: AuthUser = { email: user.email!, token };
-        thunkAPI.dispatch(setUser(userData));
-      } else {
-        thunkAPI.dispatch(logout());
-      }
-    });
-
-    return unsubscribe;
-  }
-);
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",

@@ -1,5 +1,5 @@
-import connect from "@/lib/database/db";
-import Unit from "@/lib/database/models/units";
+import connect from "@/database/db";
+import Unit from "@/database/models/units";
 import { NextResponse } from "next/server";
 
 export const GET = async () => {

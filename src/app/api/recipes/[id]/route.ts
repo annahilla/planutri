@@ -1,5 +1,5 @@
-import connect from "@/lib/database/db";
-import Recipe from "@/lib/database/models/recipes";
+import connect from "@/database/db";
+import Recipe from "@/database/models/recipes";
 import { NextResponse } from "next/server";
 
 export const GET = async (req: Request, { params }: { params: { id: string } }) => {
