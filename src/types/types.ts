@@ -22,3 +22,21 @@ export interface Recipe {
   ingredients: IngredientInterface[],
   description?:string
 }
+
+export type DayOfTheWeek =
+  "Monday"
+  | "Tuesday"
+  | "Wednesday"
+  | "Thursday"
+  | "Friday"
+  | "Saturday"
+  | "Sunday"
+
+
+export type Meal = "Breakfast" | "Lunch" | "Snack" | "Dinner";
+
+export interface Menu {
+  recipe: Recipe | string,
+  dayOfTheWeek: DayOfTheWeek,
+  meal: Meal
+}

@@ -36,7 +36,6 @@ export const loginUserWithGoogle = createAsyncThunk(
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log(user);
       const token = await user.getIdToken();
       const userData = { name: user.displayName, email: user.email, token };
       thunkAPI.dispatch(setUser(userData));

@@ -13,7 +13,8 @@ const RecipesSchema = new Schema(
     description: { type: String, required: false },
     userId: {
         type: String,
-        ref: 'User'
+        ref: "User",
+        required: true
     }
   },
   { timestamps: true }

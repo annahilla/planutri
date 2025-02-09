@@ -2,9 +2,8 @@
 
 import { ChangeEvent, JSX, useEffect, useState } from "react";
 import Modal from "../ui/Modal";
-import { Recipe } from "@/types/types";
+import { DayOfTheWeek, Meal, Menu, Recipe } from "@/types/types";
 import RecipesList from "../RecipesList";
-import { getRecipes } from "@/services/recipeService";
 import { CiSearch } from "react-icons/ci";
 import {
   PiCoffeeThin,
@@ -13,17 +12,43 @@ import {
   PiOrangeThin,
 } from "react-icons/pi";
 import { useAppSelector } from "@/lib/store/reduxHooks";
+import { addRecipeToMenu } from "@/services/menuService";
 
-const Day = ({ dayOfTheWeek }: { dayOfTheWeek: string }) => {
-  const meals = ["Breakfast", "Lunch", "Snack", "Dinner"];
+const Day = ({
+  dayOfTheWeek,
+  recipes,
+  menu,
+}: {
+  dayOfTheWeek: DayOfTheWeek;
+  recipes: Recipe[];
+  menu: Menu[];
+}) => {
+  const meals: Meal[] = ["Breakfast", "Lunch", "Snack", "Dinner"];
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
-  const [selectedMeal, setSelectedMeal] = useState<string>("");
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
   const [selectedRecipes, setSelectedRecipes] = useState<{
     [meal: string]: Recipe | null;
   }>({});
   const token = useAppSelector((state) => state.auth.user?.token);
+
+  useEffect(() => {
+    const newSelectedRecipes = menu.reduce((acc, menuItem: Menu) => {
+      const selectedRecipe = recipes.find(
+        (recipe: Recipe) => recipe._id === menuItem.recipe
+      );
+      if (selectedRecipe) {
+        acc[menuItem.meal] = selectedRecipe;
+      }
+      return acc;
+    }, {} as { [meal: string]: Recipe | null });
+
+    setSelectedRecipes(newSelectedRecipes);
+  }, [menu, recipes]);
+
+  useEffect(() => {
+    setFilteredRecipes(recipes);
+  }, [recipes]);
 
   const mealIcons: { [key: string]: JSX.Element } = {
     Breakfast: <PiCoffeeThin />,
@@ -34,24 +59,13 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: string }) => {
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setSelectedMeal("");
+    setSelectedMeal(null);
   };
 
-  const openModal = (meal: string) => {
+  const openModal = (meal: Meal) => {
     setIsModalOpen(true);
     setSelectedMeal(meal);
   };
-
-  useEffect(() => {
-    const fetchRecipes = async () => {
-      if (token) {
-        const data = await getRecipes(token);
-        setRecipes(data);
-        setFilteredRecipes(data);
-      }
-    };
-    fetchRecipes();
-  }, []);
 
   const searchRecipe = (event: ChangeEvent<HTMLInputElement>) => {
     const query = event.target.value.toLowerCase();
@@ -64,11 +78,24 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: string }) => {
     }
   };
 
-  const selectRecipe = (recipe: Recipe, selectedMeal: string) => {
-    setSelectedRecipes((prev) => ({
-      ...prev,
-      [selectedMeal]: recipe,
-    }));
+  const selectRecipe = (recipe: Recipe, selectedMeal: Meal) => {
+    try {
+      const newMenu: Menu = {
+        recipe,
+        dayOfTheWeek,
+        meal: selectedMeal,
+      };
+      if (token) {
+        addRecipeToMenu(newMenu, token);
+        setSelectedRecipes((prev) => ({
+          ...prev,
+          [selectedMeal]: recipe,
+        }));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
     closeModal();
   };
 
@@ -121,7 +148,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: string }) => {
         <RecipesList
           recipes={filteredRecipes}
           showLinks={false}
-          onSelect={(recipe) => selectRecipe(recipe, selectedMeal)}
+          onSelect={(recipe) => selectRecipe(recipe, selectedMeal!)}
         />
       </Modal>
     </>

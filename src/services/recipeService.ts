@@ -3,7 +3,7 @@
 import { Recipe } from "@/types/types";
 import { toast } from "react-toastify";
 
-const baseUrl =
+export const baseUrl =
       process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export const getRecipes = async (token: string) => {
