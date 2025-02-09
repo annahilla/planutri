@@ -15,7 +15,8 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         brown: "#545046",
-        lightBrown: "#635f53"
+        lightBrown: "#635F53",
+        beige: "#DCDCDA"
       },
       opacity: {
         '80': '0.8',

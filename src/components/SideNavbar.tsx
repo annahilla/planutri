@@ -72,9 +72,15 @@ const SideNavbar = ({
         </Link>
         <ul className="flex w-full md:flex-col md:my-10">
           <SideNavbarItem
-            name="Menu"
+            name="Meal Plan"
             href="/dashboard/menu"
             icon={<CiCalendar size={22} />}
+            collapsedStyles={isNavbarCollapsed}
+          />
+          <SideNavbarItem
+            name="Shopping List"
+            href="/dashboard/shopping-list"
+            icon={<CiBoxList size={22} />}
             collapsedStyles={isNavbarCollapsed}
           />
           <SideNavbarItem
@@ -87,12 +93,6 @@ const SideNavbar = ({
             name="Create Recipe"
             href="/dashboard/create-recipe"
             icon={<IoCreateOutline size={22} />}
-            collapsedStyles={isNavbarCollapsed}
-          />
-          <SideNavbarItem
-            name="Shopping List"
-            href="/dashboard/shopping-list"
-            icon={<CiBoxList size={22} />}
             collapsedStyles={isNavbarCollapsed}
           />
         </ul>

@@ -86,7 +86,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: string }) => {
               >
                 <div className="flex items-center gap-2 text-neutral-600">
                   {mealIcons[meal]}
-                  <p className="text-sm">{meal}</p>
+                  <p className="text-xs">{meal}</p>
                 </div>
                 {selectedRecipes[meal] ? (
                   <button className="text-left text-sm text-neutral-800 bg-white w-full p-2 border border-white rounded shadow-sm outline-none">
