@@ -1,11 +1,18 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import { NextResponse } from "next/server";
+import { verifyToken } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
     try {
+        const userId = await verifyToken(req);
+
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         await connect();
-        const recipes = await Recipe.find();
+        const recipes = await Recipe.find({ userId: userId });
         return new NextResponse(JSON.stringify(recipes), { status: 200 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {
@@ -15,8 +22,14 @@ export const GET = async () => {
     }
 }
 
-export const POST = async (req: Request) => {
+export const POST = async (req: NextRequest) => { 
     try {
+        const userId = await verifyToken(req);
+
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         await connect();
         const body = await req.json();
         const { name, ingredients, description } = body;
@@ -29,6 +42,7 @@ export const POST = async (req: Request) => {
             name,
             ingredients,
             description,
+            userId
         });
 
         await newRecipe.save();
@@ -43,8 +57,14 @@ export const POST = async (req: Request) => {
     }
 };
 
-export const DELETE = async (req: Request) => {
+export const DELETE = async (req: NextRequest) => {
     try {
+        const userId = await verifyToken(req);
+
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         await connect();
         const { id } = await req.json();
 
@@ -52,11 +72,17 @@ export const DELETE = async (req: Request) => {
             return new NextResponse("Recipe ID is required", { status: 400 });
         }
 
-        const deletedRecipe = await Recipe.findByIdAndDelete(id);
+        const recipe = await Recipe.findById(id);
 
-        if (!deletedRecipe) {
+        if (!recipe) {
             return new NextResponse("Recipe not found", { status: 404 });
         }
+
+        if (recipe.userId.toString() !== userId.toString()) {
+            return new NextResponse("Unauthorized: You can only delete your own recipes", { status: 403 });
+        }
+
+        await Recipe.findByIdAndDelete(id);
 
         return new NextResponse("Recipe deleted successfully", { status: 200 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

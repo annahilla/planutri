@@ -1,15 +1,22 @@
+"use client"
+
 import { Recipe } from "@/types/types";
 import { toast } from "react-toastify";
 
 const baseUrl =
       process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
-export const getRecipes = async () => {
+export const getRecipes = async (token: string) => {
   try {
-    const response = await fetch(`${baseUrl}/api/recipes`);
+    const response = await fetch(`${baseUrl}/api/recipes`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      }
+    });
 
     if (!response.ok) {
-      toast.error("There was an error fetching the recipes");
       throw new Error("Error fetching recipes");
     }
 
@@ -20,12 +27,25 @@ export const getRecipes = async () => {
   }
 };
 
-export const addRecipe = async (recipe: Recipe) => {
+export const getRecipe = async (id: string, token: string) => {
+  const response = await fetch(`http://localhost:3000/api/recipes/${id}`, {
+    method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      }
+  });
+  const recipe = await response.json();
+  return recipe;
+}
+
+export const addRecipe = async (recipe: Recipe, token: string) => {
     try {
     const response = await fetch(`${baseUrl}/api/recipes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify(recipe),
     });
@@ -43,13 +63,14 @@ export const addRecipe = async (recipe: Recipe) => {
   }
 };
 
-export const updateRecipe = async (recipe: Partial<Recipe>) => {
+export const updateRecipe = async (recipe: Partial<Recipe>, token: string) => {
   const id = recipe._id;
   try {
     const response = await fetch(`${baseUrl}/api/recipes/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
       },
       body: JSON.stringify({ id, ...recipe }),
     });
@@ -69,12 +90,13 @@ export const updateRecipe = async (recipe: Partial<Recipe>) => {
 };
 
 
-export const deleteRecipe = async (id: string) => {
+export const deleteRecipe = async (id: string, token:string) => {
     try {
         const response = await fetch(`${baseUrl}/api/recipes`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
             },
             body: JSON.stringify({ id }),
         });

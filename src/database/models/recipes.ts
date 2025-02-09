@@ -10,7 +10,11 @@ const RecipesSchema = new Schema(
             unit: { type: String, required: true }  
         }
     ],
-    description: { type: String, required: false }
+    description: { type: String, required: false },
+    userId: {
+        type: String,
+        ref: 'User'
+    }
   },
   { timestamps: true }
 );

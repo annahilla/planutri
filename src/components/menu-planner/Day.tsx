@@ -12,6 +12,7 @@ import {
   PiBowlSteamThin,
   PiOrangeThin,
 } from "react-icons/pi";
+import { useAppSelector } from "@/lib/store/reduxHooks";
 
 const Day = ({ dayOfTheWeek }: { dayOfTheWeek: string }) => {
   const meals = ["Breakfast", "Lunch", "Snack", "Dinner"];
@@ -22,6 +23,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: string }) => {
   const [selectedRecipes, setSelectedRecipes] = useState<{
     [meal: string]: Recipe | null;
   }>({});
+  const token = useAppSelector((state) => state.auth.user?.token);
 
   const mealIcons: { [key: string]: JSX.Element } = {
     Breakfast: <PiCoffeeThin />,
@@ -42,9 +44,11 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: string }) => {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      const data = await getRecipes();
-      setRecipes(data);
-      setFilteredRecipes(data);
+      if (token) {
+        const data = await getRecipes(token);
+        setRecipes(data);
+        setFilteredRecipes(data);
+      }
     };
     fetchRecipes();
   }, []);

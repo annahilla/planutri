@@ -1,9 +1,16 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import { NextResponse } from "next/server";
+import { verifyToken } from "@/lib/auth";
+import { NextRequest, NextResponse } from "next/server";
 
-export const GET = async (req: Request, { params }: { params: { id: string } }) => {
+export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
     try {
+        const userId = await verifyToken(req);
+
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         await connect();
 
         const recipe = await Recipe.findById(params.id);
@@ -18,15 +25,21 @@ export const GET = async (req: Request, { params }: { params: { id: string } }) 
     }
 };
 
-export const PUT = async (req: Request, { params }: { params: { id: string } }) => {
+export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
     try {
+        const userId = await verifyToken(req);
+
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
         await connect();
         const body = await req.json();
         const { name, ingredients, description } = body;
 
         const updatedRecipe = await Recipe.findByIdAndUpdate(
             params.id,
-            { name, ingredients, description },
+            { name, ingredients, description, userId },
             { new: true }
         );
 

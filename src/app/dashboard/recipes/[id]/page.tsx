@@ -1,17 +1,29 @@
+"use client";
+
 import RecipeDetails from "@/components/RecipeDetails";
 import { Recipe } from "@/types/types";
 import { IoMdArrowBack } from "react-icons/io";
 import Link from "next/link";
+import { getRecipe } from "@/services/recipeService";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "@/lib/store/reduxHooks";
+import { useParams } from "next/navigation";
 
-async function fetchRecipe(id: string) {
-  const response = await fetch(`http://localhost:3000/api/recipes/${id}`);
-  const recipe = await response.json();
-  return recipe;
-}
+const RecipeDetailsPage = () => {
+  const params = useParams();
+  const id = params?.id;
+  const token = useAppSelector((state) => state.auth.user?.token);
+  const [recipe, setRecipe] = useState<Recipe | null>(null);
 
-const RecipeDetailsPage = async ({ params }: { params: { id: string } }) => {
-  const { id } = await params;
-  const recipe: Recipe = await fetchRecipe(id);
+  useEffect(() => {
+    if (token && id !== undefined) {
+      getRecipe(id?.toString(), token).then((data) => setRecipe(data));
+    }
+  }, []);
+
+  if (!recipe) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex flex-col md:items-start md:w-full">

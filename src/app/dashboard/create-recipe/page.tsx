@@ -12,13 +12,13 @@ import IngredientDropdown from "@/components/ui/IngredientDropdown";
 const CreateRecipe = () => {
   const units = useAppSelector((state) => state.units.units);
   const [ingredientInputValue, setIngredientInputValue] = useState<string>("");
-
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [error, setError] = useState("");
   const [recipeName, setRecipeName] = useState("");
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
+  const token = useAppSelector((state) => state.auth.user?.token);
 
   const handleRecipeNameChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -101,7 +101,9 @@ const CreateRecipe = () => {
     };
 
     try {
-      addRecipe(newRecipe);
+      if (token) {
+        addRecipe(newRecipe, token);
+      }
       setSelectedIngredients([]);
       setRecipeName("");
       setDescription("");

@@ -7,5 +7,5 @@ export const validateUserInput = (email: string, password: string) => {
     return "Please enter a password";
   }
 
-  return null; // No errors
+  return null;
 };
