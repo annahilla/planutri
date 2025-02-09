@@ -5,21 +5,31 @@ import { getRecipes } from "@/services/recipeService";
 import RecipesList from "@/components/RecipesList";
 import { Recipe } from "@/types/types";
 import { useAppSelector } from "@/lib/store/reduxHooks";
+import { BeatLoader } from "react-spinners";
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const token = useAppSelector((state) => state.auth.user?.token);
 
   useEffect(() => {
     if (token) {
-      getRecipes(token).then((data) => setRecipes(data));
+      getRecipes(token)
+        .then((data) => setRecipes(data))
+        .finally(() => setIsLoading(false));
     }
   }, []);
 
   return (
     <div>
       <h2 className="text-2xl mb-5">Recipes</h2>
-      <RecipesList recipes={recipes} showLinks={true} />
+      {isLoading ? (
+        <div className="flex items-center justify-center h-[80vh] w-full">
+          <BeatLoader color="#545046" />
+        </div>
+      ) : (
+        <RecipesList recipes={recipes} showLinks={true} />
+      )}
     </div>
   );
 };

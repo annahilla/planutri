@@ -3,9 +3,8 @@
 import { fetchIngredients } from "@/lib/store/apis/ingredientsSlice";
 import { fetchUnits } from "@/lib/store/apis/unitsSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
-import { Suspense, useState } from "react";
+import { useState } from "react";
 import { useEffect } from "react";
-import Loading from "@/components/ui/Loading";
 import SideNavbar from "@/components/SideNavbar";
 import ProtectedRoute from "@/utils/ProtectedRoute";
 
@@ -37,13 +36,11 @@ export default function DashboardLayout({
           />
         </div>
 
-        <Suspense fallback={<Loading />}>
-          <div className="flex-1 mx-10 my-6 h-full">
-            <div className="mb-16 md:mb-0 h-[80vh] md:h-auto md:w-full">
-              {children}
-            </div>
+        <div className="flex-1 mx-10 my-6 h-full">
+          <div className="mb-16 md:mb-0 h-[80vh] md:h-full md:w-full">
+            {children}
           </div>
-        </Suspense>
+        </div>
       </main>
     </ProtectedRoute>
   );

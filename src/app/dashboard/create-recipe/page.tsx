@@ -8,8 +8,10 @@ import { IngredientInterface } from "@/types/types";
 import { addRecipe } from "@/services/recipeService";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import IngredientDropdown from "@/components/ui/IngredientDropdown";
+import { useRouter } from "next/navigation";
 
 const CreateRecipe = () => {
+  const router = useRouter();
   const units = useAppSelector((state) => state.units.units);
   const [ingredientInputValue, setIngredientInputValue] = useState<string>("");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
@@ -103,6 +105,7 @@ const CreateRecipe = () => {
     try {
       if (token) {
         addRecipe(newRecipe, token);
+        router.push("/dashboard/recipes");
       }
       setSelectedIngredients([]);
       setRecipeName("");
@@ -173,7 +176,7 @@ const CreateRecipe = () => {
                 setIsDropdownOpen={setIsDropdownOpen}
               />
             </div>
-            <div className="mt-2 border py-2 px-4 rounded outline-none min-h-80 flex flex-col gap-3">
+            <div className="mt-2 border bg-white py-2 px-4 rounded outline-none min-h-80 flex flex-col gap-3">
               {selectedIngredients.map((ingredient) => (
                 <div
                   key={ingredient}

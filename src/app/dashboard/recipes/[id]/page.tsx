@@ -8,6 +8,7 @@ import { getRecipe } from "@/services/recipeService";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { useParams } from "next/navigation";
+import { BeatLoader } from "react-spinners";
 
 const RecipeDetailsPage = () => {
   const params = useParams();
@@ -22,7 +23,11 @@ const RecipeDetailsPage = () => {
   }, []);
 
   if (!recipe) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-[90vh] w-full">
+        <BeatLoader color="#545046" />
+      </div>
+    );
   }
 
   return (
