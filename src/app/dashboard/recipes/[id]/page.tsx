@@ -31,8 +31,8 @@ const RecipeDetailsPage = () => {
   }
 
   return (
-    <div className="flex flex-col md:items-start md:w-full">
-      <div className="flex gap-3 items-center mb-5">
+    <div className="flex flex-col md:items-start md:w-full bg-white py-5 px-8 rounded">
+      <div className="flex gap-3 items-center mb-2">
         <Link
           href={"/dashboard/recipes"}
           className="text-lightBrown hover:opacity-80"

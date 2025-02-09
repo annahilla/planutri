@@ -19,8 +19,8 @@ const RecipesList = ({
       {recipes.map((recipe) => (
         <div
           key={recipe._id}
-          className={`flex-1 my-2 w-full border-l-4 cursor-pointer bg-[#fcfbfb] hover:bg-neutral-50 shadow-sm
-            ${showLinks ? "border-stone-100" : "border-neutral-200"}
+          className={`flex-1 my-2 w-full border-l-4 cursor-pointer hover:bg-neutral-100 shadow-sm
+            border-[#989690] bg-[#F9F9F9]
           `}
           onClick={() => onSelect?.(recipe)}
         >

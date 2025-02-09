@@ -136,11 +136,11 @@ const CreateRecipe = () => {
   }, [selectedIngredients]);
 
   return (
-    <div className="flex flex-col items-center w-full md:items-start xl:w-2/3">
-      <h2 className="mb-6 text-2xl md:mb-10">Create a Recipe</h2>
+    <div className="flex flex-col w-full items-start">
+      <h2 className="mb-4 text-2xl md:mb-5">Create a Recipe</h2>
       <form
         onSubmit={handleCreateRecipe}
-        className="flex flex-col gap-5 w-full"
+        className="bg-white p-8 flex flex-col gap-5 w-full rounded"
         noValidate
       >
         <div className="flex flex-col gap-1">

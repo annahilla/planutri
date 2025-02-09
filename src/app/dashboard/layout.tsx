@@ -24,7 +24,7 @@ export default function DashboardLayout({
 
   return (
     <ProtectedRoute canActivate={isLoggedIn} redirectPath="/login">
-      <main className="flex flex-col md:flex-row min-h-screen h-full bg-beige">
+      <main className="flex flex-col min-h-screen bg-beige md:flex-row">
         <div
           className={`transition-all duration-300 ${
             isNavbarCollapsed ? "md:w-16" : "md:w-64"
@@ -36,8 +36,8 @@ export default function DashboardLayout({
           />
         </div>
 
-        <div className="flex-1 mx-10 my-6 h-full">
-          <div className="mb-16 md:mb-0 h-[80vh] md:h-full md:w-full">
+        <div className="flex-1 mx-10 my-6 h-auto overflow-auto">
+          <div className="mb-16 md:mb-0 h-auto md:h-full md:w-full">
             {children}
           </div>
         </div>
