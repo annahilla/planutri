@@ -14,13 +14,22 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const dispatch = useAppDispatch();
-  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(false);
+  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("isNavbarCollapsed") === "true";
+    }
+    return false;
+  });
   const isLoggedIn = useAppSelector((state) => state.auth.user) ? true : false;
 
   useEffect(() => {
     dispatch(fetchUnits());
     dispatch(fetchIngredients());
   }, [dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem("isNavbarCollapsed", String(isNavbarCollapsed));
+  }, [isNavbarCollapsed]);
 
   return (
     <ProtectedRoute canActivate={isLoggedIn} redirectPath="/login">
