@@ -9,6 +9,7 @@ import { addRecipe } from "@/services/recipeService";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import IngredientDropdown from "@/components/ui/IngredientDropdown";
 import { useRouter } from "next/navigation";
+import PageTitle from "@/components/ui/PageTitle";
 
 const CreateRecipe = () => {
   const router = useRouter();
@@ -137,10 +138,10 @@ const CreateRecipe = () => {
 
   return (
     <div className="flex flex-col w-full items-start">
-      <h2 className="mb-4 text-2xl md:mb-5">Create a Recipe</h2>
+      <PageTitle>Create a Recipe</PageTitle>
       <form
         onSubmit={handleCreateRecipe}
-        className="bg-white p-8 flex flex-col gap-5 w-full rounded"
+        className="bg-white p-8 flex flex-col gap-5 w-full rounded text-black"
         noValidate
       >
         <div className="flex flex-col gap-1">

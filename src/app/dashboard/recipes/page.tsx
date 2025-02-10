@@ -6,6 +6,7 @@ import RecipesList from "@/components/RecipesList";
 import { Recipe } from "@/types/types";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { BeatLoader } from "react-spinners";
+import PageTitle from "@/components/ui/PageTitle";
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -22,7 +23,7 @@ const RecipesPage = () => {
 
   return (
     <div>
-      <h2 className="text-2xl mb-5">Recipes</h2>
+      <PageTitle>Recipes</PageTitle>
       {isLoading ? (
         <div className="flex items-center justify-center h-[80vh] w-full">
           <BeatLoader color="#545046" />
