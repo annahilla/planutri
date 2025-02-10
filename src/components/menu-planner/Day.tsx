@@ -2,7 +2,7 @@
 
 import { ChangeEvent, JSX, useEffect, useState } from "react";
 import Modal from "../ui/Modal";
-import { DayOfTheWeek, Meal, Menu, Recipe } from "@/types/types";
+import { DayOfTheWeek, Meal, MenuInterface, Recipe } from "@/types/types";
 import RecipesList from "../RecipesList";
 import { CiSearch } from "react-icons/ci";
 import {
@@ -12,7 +12,8 @@ import {
   PiOrangeThin,
 } from "react-icons/pi";
 import { useAppSelector } from "@/lib/store/reduxHooks";
-import { addRecipeToMenu } from "@/services/menuService";
+import { addRecipeToMenu, deleteSingleMenu } from "@/services/menuService";
+import { IoMdClose } from "react-icons/io";
 
 const Day = ({
   dayOfTheWeek,
@@ -21,7 +22,7 @@ const Day = ({
 }: {
   dayOfTheWeek: DayOfTheWeek;
   recipes: Recipe[];
-  menu: Menu[];
+  menu: MenuInterface[];
 }) => {
   const meals: Meal[] = ["Breakfast", "Lunch", "Snack", "Dinner"];
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +34,7 @@ const Day = ({
   const token = useAppSelector((state) => state.auth.user?.token);
 
   useEffect(() => {
-    const newSelectedRecipes = menu.reduce((acc, menuItem: Menu) => {
+    const newSelectedRecipes = menu.reduce((acc, menuItem: MenuInterface) => {
       const selectedRecipe = recipes.find(
         (recipe: Recipe) => recipe._id === menuItem.recipe
       );
@@ -80,7 +81,7 @@ const Day = ({
 
   const selectRecipe = (recipe: Recipe, selectedMeal: Meal) => {
     try {
-      const newMenu: Menu = {
+      const newMenu: MenuInterface = {
         recipe,
         dayOfTheWeek,
         meal: selectedMeal,
@@ -99,6 +100,20 @@ const Day = ({
     closeModal();
   };
 
+  const clearSingleRecipe = async (meal: Meal) => {
+    const menuItem = menu.find((menuItem) => menuItem.meal === meal);
+    const recipeId = menuItem ? menuItem._id?.toString() : "";
+    if (token && recipeId) {
+      const isDeleted = await deleteSingleMenu(recipeId, token);
+      if (isDeleted) {
+        setSelectedRecipes((prev) => ({
+          ...prev,
+          [meal]: null,
+        }));
+      }
+    }
+  };
+
   return (
     <>
       <div className="w-auto">
@@ -107,7 +122,6 @@ const Day = ({
           <div className="flex flex-col items-center gap-4">
             {meals.map((meal) => (
               <div
-                onClick={() => openModal(meal)}
                 className="flex flex-col items-start gap-1 rounded w-full text-left"
                 key={meal}
               >
@@ -116,11 +130,25 @@ const Day = ({
                   <p className="text-xs">{meal}</p>
                 </div>
                 {selectedRecipes[meal] ? (
-                  <button className="text-left text-sm text-neutral-800 bg-white w-full p-2 border border-white rounded shadow-sm outline-none">
-                    {selectedRecipes[meal]?.name}
-                  </button>
+                  <div className="flex justify-between bg-white w-full p-2 items-center rounded shadow-sm">
+                    <button
+                      onClick={() => openModal(meal)}
+                      className="text-left text-sm text-neutral-800  border border-white  outline-none"
+                    >
+                      {selectedRecipes[meal]?.name}
+                    </button>
+                    <button
+                      onClick={() => clearSingleRecipe(meal)}
+                      className="hover:opacity-70 text-xs"
+                    >
+                      <IoMdClose />
+                    </button>
+                  </div>
                 ) : (
-                  <button className="text-left text-neutral-300 text-xs bg-white w-full p-2 border border-white hover:text-neutral-400 hover:border-neutral-100 rounded shadow-sm outline-none">
+                  <button
+                    onClick={() => openModal(meal)}
+                    className="text-left text-neutral-300 text-xs bg-white w-full p-2 border border-white hover:text-neutral-400 hover:border-neutral-100 rounded shadow-sm outline-none"
+                  >
                     + Add recipe
                   </button>
                 )}

@@ -3,6 +3,7 @@ import { NextRequest } from 'next/server';
 
 export const verifyToken = async (req: NextRequest) => {    
   const authHeader = req.headers.get("Authorization");
+
   if (!authHeader?.startsWith("Bearer ")) {
     return null;
   }

@@ -36,6 +36,7 @@ export type DayOfTheWeek =
 export type Meal = "Breakfast" | "Lunch" | "Snack" | "Dinner";
 
 export interface MenuInterface {
+  _id?: string;
   recipe: Recipe | string,
   dayOfTheWeek: DayOfTheWeek,
   meal: Meal

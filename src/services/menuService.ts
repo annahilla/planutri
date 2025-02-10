@@ -51,7 +51,6 @@ export const deleteFullMenu = async (token: string) => {
     const response = await fetch(`${baseUrl}/api/menu`, {
       method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`,
       }
     });
@@ -69,4 +68,24 @@ export const deleteFullMenu = async (token: string) => {
     console.error(error);
     toast.error("An unexpected error occurred. Please try again later.");
   }
+};
+
+export const deleteSingleMenu = async (id: string, token: string) => {
+    try {
+        const response = await fetch(`${baseUrl}/api/menu/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            }
+        });
+
+        if (!response.ok) {
+            toast.error("There was an error deleting this recipe");
+            throw new Error("Failed to delete the recipe");
+        }
+
+        return true;
+    } catch (error) {
+        console.error("Error deleting recipe:", error);
+    }
 };
