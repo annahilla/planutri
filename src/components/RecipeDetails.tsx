@@ -19,8 +19,8 @@ const RecipeDetails = ({
 }: {
   currentRecipe: Recipe;
   isModal?: boolean;
-  closeModal: () => void;
-  clearRecipe: (id: string) => void;
+  closeModal?: () => void;
+  clearRecipe?: (id: string) => void;
 }) => {
   const units = useAppSelector((state) => state.units.units);
   const router = useRouter();
@@ -84,7 +84,7 @@ const RecipeDetails = ({
     }
 
     if (isModal) {
-      closeModal();
+      closeModal?.();
     } else {
       router.push("/dashboard/recipes");
     }
@@ -172,8 +172,8 @@ const RecipeDetails = ({
     if (currentRecipe && currentRecipe._id) {
       try {
         if (isModal) {
-          clearRecipe(currentRecipe._id);
-          closeModal();
+          clearRecipe?.(currentRecipe._id);
+          closeModal?.();
         } else {
           router.push("/dashboard/recipes");
         }

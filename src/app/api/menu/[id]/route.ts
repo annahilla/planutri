@@ -3,7 +3,7 @@ import Menu from "@/database/models/menu";
 import { verifyToken } from "@/lib/auth";
 import { NextRequest, NextResponse } from "next/server";
 
-export const DELETE = async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const DELETE = async (req: NextRequest, context: { params: Promise<{ id: string }>}) => {
     try {
         const userId = await verifyToken(req);
         
@@ -14,7 +14,8 @@ export const DELETE = async (req: NextRequest, { params }: { params: { id: strin
         console.log("User id: ", userId);
 
         await connect();
-        const { id } = await params;
+        const id = (await context.params).id;
+
         const menu = await Menu.findById(id);
 
         if (!menu) {
@@ -28,7 +29,6 @@ export const DELETE = async (req: NextRequest, { params }: { params: { id: strin
         await Menu.findByIdAndDelete(id);
 
         return new NextResponse("Menu deleted successfully", { status: 200 });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error("Error deleting menu:", error);
         return new NextResponse(JSON.stringify({ message: error.message, stack: error.stack }), {
