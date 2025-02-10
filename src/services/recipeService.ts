@@ -3,12 +3,10 @@
 import { Recipe } from "@/types/types";
 import { toast } from "react-toastify";
 
-export const baseUrl =
-      process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 export const getRecipes = async (token: string) => {
   try {
-    const response = await fetch(`${baseUrl}/api/recipes`, {
+    const response = await fetch(`/api/recipes`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +26,7 @@ export const getRecipes = async (token: string) => {
 };
 
 export const getRecipe = async (id: string, token: string) => {
-  const response = await fetch(`http://localhost:3000/api/recipes/${id}`, {
+  const response = await fetch(`/api/recipes/${id}`, {
     method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -41,7 +39,7 @@ export const getRecipe = async (id: string, token: string) => {
 
 export const addRecipe = async (recipe: Recipe, token: string) => {
     try {
-    const response = await fetch(`${baseUrl}/api/recipes`, {
+    const response = await fetch(`/api/recipes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +64,7 @@ export const addRecipe = async (recipe: Recipe, token: string) => {
 export const updateRecipe = async (recipe: Partial<Recipe>, token: string) => {
   const id = recipe._id;
   try {
-    const response = await fetch(`${baseUrl}/api/recipes/${id}`, {
+    const response = await fetch(`/api/recipes/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +90,7 @@ export const updateRecipe = async (recipe: Partial<Recipe>, token: string) => {
 
 export const deleteRecipe = async (id: string, token:string) => {
     try {
-        const response = await fetch(`${baseUrl}/api/recipes`, {
+        const response = await fetch(`/api/recipes`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",

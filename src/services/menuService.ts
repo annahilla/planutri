@@ -1,10 +1,9 @@
 import { MenuInterface } from "@/types/types";
-import { baseUrl } from "./recipeService";
 import { toast } from "react-toastify";
 
 export const getMenu = async (token: string) => {
   try {
-    const response = await fetch(`${baseUrl}/api/menu`, {
+    const response = await fetch(`/api/menu`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +24,7 @@ export const getMenu = async (token: string) => {
 
 export const addRecipeToMenu = async (menu: MenuInterface, token: string) => {
     try {
-    const response = await fetch(`${baseUrl}/api/menu`, {
+    const response = await fetch(`/api/menu`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -48,7 +47,7 @@ export const addRecipeToMenu = async (menu: MenuInterface, token: string) => {
 
 export const deleteFullMenu = async (token: string) => {
   try {
-    const response = await fetch(`${baseUrl}/api/menu`, {
+    const response = await fetch(`/api/menu`, {
       method: "DELETE",
       headers: {
         "Authorization": `Bearer ${token}`,
@@ -72,7 +71,7 @@ export const deleteFullMenu = async (token: string) => {
 
 export const deleteSingleMenu = async (id: string, token: string) => {
     try {
-        const response = await fetch(`${baseUrl}/api/menu/${id}`, {
+        const response = await fetch(`/api/menu/${id}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${token}`,
