@@ -1,15 +1,19 @@
 "use client";
 
-import { DayOfTheWeek, Menu, Recipe } from "@/types/types";
+import { DayOfTheWeek, MenuInterface, Recipe } from "@/types/types";
 import Day from "./Day";
 import { useEffect, useState } from "react";
 import { getRecipes } from "@/services/recipeService";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { getMenu } from "@/services/menuService";
 
-const Week = () => {
+interface WeekProps {
+  menu: MenuInterface[];
+  setMenu: React.Dispatch<React.SetStateAction<MenuInterface[]>>;
+}
+
+const Week = ({ menu, setMenu }: WeekProps) => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [menu, setMenu] = useState<Menu[]>([]);
   const token = useAppSelector((state) => state.auth.user?.token);
   const days: DayOfTheWeek[] = [
     "Monday",
@@ -33,7 +37,7 @@ const Week = () => {
 
   useEffect(() => {
     const fetchMenu = async () => {
-      if (token && menu.length === 0) {
+      if (token) {
         const data = await getMenu(token);
         setMenu(data);
       }

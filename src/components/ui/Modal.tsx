@@ -17,7 +17,7 @@ const Modal = ({ isOpen, closeModal, children }: ModalProps) => {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[11000]">
         <div
           ref={modalRef}
-          className="w-11/12 max-w-2xl relative bg-white p-7 rounded flex flex-col items-center justify-start lg:w-1/2 max-h-[90vh]"
+          className="w-11/12 max-w-2xl relative bg-white p-2 rounded flex flex-col items-center justify-start lg:w-1/2 max-h-[90vh]"
         >
           <button className="absolute right-5 top-5" onClick={closeModal}>
             <IoMdClose />

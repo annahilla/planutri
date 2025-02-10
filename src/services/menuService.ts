@@ -1,4 +1,4 @@
-import { Menu } from "@/types/types";
+import { MenuInterface } from "@/types/types";
 import { baseUrl } from "./recipeService";
 import { toast } from "react-toastify";
 
@@ -23,7 +23,7 @@ export const getMenu = async (token: string) => {
   }
 };
 
-export const addRecipeToMenu = async (menu: Menu, token: string) => {
+export const addRecipeToMenu = async (menu: MenuInterface, token: string) => {
     try {
     const response = await fetch(`${baseUrl}/api/menu`, {
       method: "POST",
@@ -43,5 +43,30 @@ export const addRecipeToMenu = async (menu: Menu, token: string) => {
   } catch (error) {
     console.error(error);
     throw error;
+  }
+};
+
+export const deleteFullMenu = async (token: string) => {
+  try {
+    const response = await fetch(`${baseUrl}/api/menu`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      }
+    });
+
+    if (!response.ok) {
+      toast.error("Failed to clear the menu. Please try again.");
+      return;
+    }
+
+    const data = await response.json();
+    toast.success("The menu was cleared successfully");
+    return data;
+
+  } catch (error) {
+    console.error(error);
+    toast.error("An unexpected error occurred. Please try again later.");
   }
 };

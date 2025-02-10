@@ -9,7 +9,7 @@ import { ChangeEvent, useState } from "react";
 import IngredientDropdown from "./ui/IngredientDropdown";
 import { IoIosClose } from "react-icons/io";
 import ErrorMessage from "./ui/ErrorMessage";
-import Modal from "./ui/Modal";
+import DeleteConfirmationModal from "./ui/DeleteConfirmationModal";
 
 const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   const units = useAppSelector((state) => state.units.units);
@@ -52,9 +52,10 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
     }
 
     emptyIngredients.map((ingredient) => deleteIngredient(ingredient._id!));
-    const ingredientsForDB = ingredients.map(
-      ({ _id, ...ingredient }) => ingredient
-    );
+    const ingredientsForDB = ingredients.map((ingredient) => {
+      const { ...rest } = ingredient;
+      return rest;
+    });
 
     const updatedRecipe = {
       _id: currentRecipe._id,
@@ -283,23 +284,12 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
         </div>
       </div>
       {isModalOpen && (
-        <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
-          <p className="text-center mt-8">
-            Are you sure you want to delete this recipe?
-          </p>
-          <div className="flex gap-10 w-2/3 my-8 m-auto">
-            <Button handleClick={handleDeleteRecipe} type="button" filled>
-              Yes
-            </Button>
-            <Button
-              handleClick={() => setIsModalOpen(false)}
-              type="button"
-              color="black"
-            >
-              No
-            </Button>
-          </div>
-        </Modal>
+        <DeleteConfirmationModal
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+          handleDelete={handleDeleteRecipe}
+          thingToDelete="this recipe"
+        />
       )}
     </>
   );

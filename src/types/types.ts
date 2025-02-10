@@ -35,7 +35,7 @@ export type DayOfTheWeek =
 
 export type Meal = "Breakfast" | "Lunch" | "Snack" | "Dinner";
 
-export interface Menu {
+export interface MenuInterface {
   recipe: Recipe | string,
   dayOfTheWeek: DayOfTheWeek,
   meal: Meal
