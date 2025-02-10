@@ -115,7 +115,7 @@ const SideNavbar = ({
           </button>
         )}
         <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-lightBrown px-5 py-4 md:py-5 md:justify-start">
-          <CiUser className="md:text-3xl" />
+          <CiUser className="text-xl md:text-3xl" />
           {!isNavbarCollapsed && (
             <>
               <div className="hidden md:block">
