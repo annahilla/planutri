@@ -11,7 +11,17 @@ import { IoIosClose } from "react-icons/io";
 import ErrorMessage from "./ui/ErrorMessage";
 import DeleteConfirmationModal from "./ui/DeleteConfirmationModal";
 
-const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
+const RecipeDetails = ({
+  currentRecipe,
+  isModal = false,
+  closeModal,
+  clearRecipe,
+}: {
+  currentRecipe: Recipe;
+  isModal?: boolean;
+  closeModal: () => void;
+  clearRecipe: (id: string) => void;
+}) => {
   const units = useAppSelector((state) => state.units.units);
   const router = useRouter();
   const [error, setError] = useState("");
@@ -73,7 +83,11 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
       console.log(error);
     }
 
-    router.push("/dashboard/recipes");
+    if (isModal) {
+      closeModal();
+    } else {
+      router.push("/dashboard/recipes");
+    }
   };
 
   const changeRecipeName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -141,7 +155,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
 
   const deleteIngredient = (id: string) => {
     if (ingredients.length <= 1) {
-      setError("You can delete all ingredients");
+      setError("You can't delete all ingredients");
       return;
     }
     setError("");
@@ -157,7 +171,12 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   const handleDeleteRecipe = async () => {
     if (currentRecipe && currentRecipe._id) {
       try {
-        router.push("/dashboard/recipes");
+        if (isModal) {
+          clearRecipe(currentRecipe._id);
+          closeModal();
+        } else {
+          router.push("/dashboard/recipes");
+        }
         if (token) {
           await deleteRecipe(currentRecipe._id, token);
         }
@@ -169,8 +188,8 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
   };
 
   return (
-    <>
-      <div className="my-5 w-full md:w-2/3">
+    <div>
+      <div className="my-5 w-full">
         <div className="flex flex-col gap-5">
           <div>
             <h5 className="text-xl my-4">Recipe Name</h5>
@@ -291,7 +310,7 @@ const RecipeDetails = ({ currentRecipe }: { currentRecipe: Recipe }) => {
           thingToDelete="this recipe"
         />
       )}
-    </>
+    </div>
   );
 };
 

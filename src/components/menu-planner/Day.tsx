@@ -14,42 +14,60 @@ import {
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { addRecipeToMenu, deleteSingleMenu } from "@/services/menuService";
 import { IoMdClose } from "react-icons/io";
+import { LiaExchangeAltSolid } from "react-icons/lia";
+import RecipeDetails from "../RecipeDetails";
 
 const Day = ({
   dayOfTheWeek,
   recipes,
-  menu,
+  dayMenu,
+  fullMenu,
+  setMenu,
 }: {
   dayOfTheWeek: DayOfTheWeek;
   recipes: Recipe[];
-  menu: MenuInterface[];
+  dayMenu: MenuInterface[];
+  fullMenu: MenuInterface[];
+  setMenu: (menu: MenuInterface[]) => void;
 }) => {
   const meals: Meal[] = ["Breakfast", "Lunch", "Snack", "Dinner"];
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>([]);
+  const [isSelectRecipeModalOpen, setIsSelectRecipeModalOpen] = useState(false);
+  const [isRecipeDetailsModalOpen, setIsRecipeDetailsModalOpen] =
+    useState(false);
+  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [selectedRecipes, setSelectedRecipes] = useState<{
     [meal: string]: Recipe | null;
   }>({});
   const token = useAppSelector((state) => state.auth.user?.token);
 
   useEffect(() => {
-    const newSelectedRecipes = menu.reduce((acc, menuItem: MenuInterface) => {
-      const selectedRecipe = recipes.find(
-        (recipe: Recipe) => recipe._id === menuItem.recipe
-      );
-      if (selectedRecipe) {
-        acc[menuItem.meal] = selectedRecipe;
-      }
-      return acc;
-    }, {} as { [meal: string]: Recipe | null });
-
-    setSelectedRecipes(newSelectedRecipes);
-  }, [menu, recipes]);
-
-  useEffect(() => {
     setFilteredRecipes(recipes);
   }, [recipes]);
+
+  useEffect(() => {
+    const newSelectedRecipes = dayMenu.reduce(
+      (acc, menuItem: MenuInterface) => {
+        const selectedRecipe = recipes.find(
+          (recipe: Recipe) => recipe._id === menuItem.recipe
+        );
+        if (selectedRecipe) {
+          acc[menuItem.meal] = selectedRecipe;
+        }
+        return acc;
+      },
+      {} as { [meal: string]: Recipe | null }
+    );
+
+    setSelectedRecipes(newSelectedRecipes);
+  }, [recipes]);
+
+  useEffect(() => {
+    if (fullMenu.length === 0) {
+      setSelectedRecipes({});
+    }
+  }, [fullMenu]);
 
   const mealIcons: { [key: string]: JSX.Element } = {
     Breakfast: <PiCoffeeThin />,
@@ -58,14 +76,26 @@ const Day = ({
     Dinner: <PiBowlSteamThin />,
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeSelectRecipeModal = () => {
+    setIsSelectRecipeModalOpen(false);
     setSelectedMeal(null);
   };
 
-  const openModal = (meal: Meal) => {
-    setIsModalOpen(true);
+  const openSelectRecipeModal = (meal: Meal) => {
+    setIsSelectRecipeModalOpen(true);
     setSelectedMeal(meal);
+  };
+
+  const closeRecipeDetailsModal = () => {
+    setIsRecipeDetailsModalOpen(false);
+    setSelectedMeal(null);
+  };
+
+  const openRecipeDetailsModal = (currentRecipe: Recipe) => {
+    setIsRecipeDetailsModalOpen(true);
+    if (currentRecipe !== null) {
+      setSelectedRecipe(currentRecipe);
+    }
   };
 
   const searchRecipe = (event: ChangeEvent<HTMLInputElement>) => {
@@ -92,16 +122,17 @@ const Day = ({
           ...prev,
           [selectedMeal]: recipe,
         }));
+        setMenu([...fullMenu, newMenu]);
       }
     } catch (error) {
       console.log(error);
     }
 
-    closeModal();
+    closeSelectRecipeModal();
   };
 
   const clearSingleRecipe = async (meal: Meal) => {
-    const menuItem = menu.find((menuItem) => menuItem.meal === meal);
+    const menuItem = dayMenu.find((menuItem) => menuItem.meal === meal);
     const recipeId = menuItem ? menuItem._id?.toString() : "";
     if (token && recipeId) {
       const isDeleted = await deleteSingleMenu(recipeId, token);
@@ -112,6 +143,18 @@ const Day = ({
         }));
       }
     }
+  };
+
+  const handleClearRecipe = async (recipeId: string) => {
+    setSelectedRecipes((prev) => {
+      const updatedRecipes = { ...prev };
+      Object.keys(updatedRecipes).forEach((meal) => {
+        if (updatedRecipes[meal]?._id === recipeId) {
+          updatedRecipes[meal] = null;
+        }
+      });
+      return updatedRecipes;
+    });
   };
 
   return (
@@ -132,21 +175,32 @@ const Day = ({
                 {selectedRecipes[meal] ? (
                   <div className="flex justify-between bg-white w-full p-2 items-center rounded shadow-sm">
                     <button
-                      onClick={() => openModal(meal)}
+                      onClick={() =>
+                        selectedRecipes[meal] &&
+                        openRecipeDetailsModal(selectedRecipes[meal])
+                      }
                       className="text-left text-sm text-neutral-800  border border-white  outline-none"
                     >
                       {selectedRecipes[meal]?.name}
                     </button>
-                    <button
-                      onClick={() => clearSingleRecipe(meal)}
-                      className="hover:opacity-70 text-xs"
-                    >
-                      <IoMdClose />
-                    </button>
+                    <div className="flex items-center gap-1 text-neutral-600">
+                      <button
+                        onClick={() => openSelectRecipeModal(meal)}
+                        className="hover:bg-neutral-100 rounded-full p-1 text-xs"
+                      >
+                        <LiaExchangeAltSolid />
+                      </button>
+                      <button
+                        onClick={() => clearSingleRecipe(meal)}
+                        className="hover:bg-neutral-100 rounded-full p-1 text-xs"
+                      >
+                        <IoMdClose />
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <button
-                    onClick={() => openModal(meal)}
+                    onClick={() => openSelectRecipeModal(meal)}
                     className="text-left text-neutral-300 text-xs bg-white w-full p-2 border border-white hover:text-neutral-400 hover:border-neutral-100 rounded shadow-sm outline-none"
                   >
                     + Add recipe
@@ -157,7 +211,10 @@ const Day = ({
           </div>
         </div>
       </div>
-      <Modal isOpen={isModalOpen} closeModal={closeModal}>
+      <Modal
+        isOpen={isSelectRecipeModalOpen}
+        closeModal={closeSelectRecipeModal}
+      >
         <h3 className="text-xl">
           Choose a recipe for {selectedMeal} on {dayOfTheWeek}
         </h3>
@@ -178,6 +235,19 @@ const Day = ({
           showLinks={false}
           onSelect={(recipe) => selectRecipe(recipe, selectedMeal!)}
         />
+      </Modal>
+      <Modal
+        isOpen={isRecipeDetailsModalOpen}
+        closeModal={closeRecipeDetailsModal}
+      >
+        <div className="px-5 w-full">
+          <RecipeDetails
+            isModal={true}
+            closeModal={closeRecipeDetailsModal}
+            currentRecipe={selectedRecipe ?? ({} as Recipe)}
+            clearRecipe={handleClearRecipe}
+          />
+        </div>
       </Modal>
     </>
   );

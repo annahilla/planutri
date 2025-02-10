@@ -33,7 +33,7 @@ const Week = ({ menu, setMenu }: WeekProps) => {
       }
     };
     fetchRecipes();
-  }, [token, recipes.length]);
+  }, [token]);
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -55,7 +55,9 @@ const Week = ({ menu, setMenu }: WeekProps) => {
           <Day
             dayOfTheWeek={day}
             recipes={recipes}
-            menu={menu.filter((menu) => menu.dayOfTheWeek === day)}
+            dayMenu={menu.filter((menu) => menu.dayOfTheWeek === day)}
+            fullMenu={menu}
+            setMenu={setMenu}
           />
         </div>
       ))}
