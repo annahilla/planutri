@@ -114,7 +114,9 @@ const SideNavbar = ({
           >
             <div className="flex items-center h-full gap-1">
               <CiLogout size={22} />
-              {!isNavbarCollapsed && "Log Out"}
+              <p className="hidden md:block">
+                {!isNavbarCollapsed && "Log Out"}
+              </p>
             </div>
           </button>
         )}

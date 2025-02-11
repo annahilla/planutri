@@ -163,7 +163,7 @@ const Day = ({
           {dayOfTheWeek}
         </h5>
         <div className="bg-neutral-50 px-3 py-4 rounded text-center shadow-sm">
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-6 h-full">
             {meals.map((meal) => (
               <div
                 className="flex flex-col items-start gap-1 rounded w-full text-left"
