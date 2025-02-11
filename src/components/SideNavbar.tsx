@@ -113,7 +113,7 @@ const SideNavbar = ({
             } absolute bottom-16 rounded-t bg-lightBrown w-[3.75rem] text-sm py-4 px-5 hover:opacity-75 md:rounded-none md:w-full md:bg-brown md:bottom-20`}
           >
             <div className="flex items-center h-full gap-1">
-              <CiLogout size={22} />
+              <CiLogout className="text-xl md:text-3xl" />
               <p className="hidden md:block">
                 {!isNavbarCollapsed && "Log Out"}
               </p>
