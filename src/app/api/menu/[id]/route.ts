@@ -29,6 +29,7 @@ export const DELETE = async (req: NextRequest, context: { params: Promise<{ id: 
         await Menu.findByIdAndDelete(id);
 
         return new NextResponse("Menu deleted successfully", { status: 200 });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error("Error deleting menu:", error);
         return new NextResponse(JSON.stringify({ message: error.message, stack: error.stack }), {
