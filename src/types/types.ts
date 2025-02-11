@@ -41,3 +41,7 @@ export interface MenuInterface {
   dayOfTheWeek: DayOfTheWeek,
   meal: Meal
 }
+
+export type SelectedRecipesState = {
+  [meal: string]: Recipe | null;
+};

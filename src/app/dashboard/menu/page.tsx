@@ -5,14 +5,12 @@ import { useAppSelector } from "@/lib/store/reduxHooks";
 import { deleteFullMenu } from "@/services/menuService";
 import { useState } from "react";
 import { MdOutlineCleaningServices } from "react-icons/md";
-import { MenuInterface } from "@/types/types";
 import DeleteConfirmationModal from "@/components/ui/DeleteConfirmationModal";
 import PageTitle from "@/components/ui/PageTitle";
 
 const Menu = () => {
-  const token = useAppSelector((state) => state.auth.user?.token);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [menu, setMenu] = useState<MenuInterface[]>([]);
+  const token = useAppSelector((state) => state.auth.user?.token);
 
   const handleClear = () => {
     setIsModalOpen(true);
@@ -22,7 +20,6 @@ const Menu = () => {
     if (token) {
       deleteFullMenu(token);
       setIsModalOpen(false);
-      setMenu([]);
     }
   };
 
@@ -38,7 +35,7 @@ const Menu = () => {
             <MdOutlineCleaningServices />
           </button>
         </div>
-        <Week menu={menu} setMenu={setMenu} />
+        <Week />
       </div>
       <DeleteConfirmationModal
         isModalOpen={isModalOpen}

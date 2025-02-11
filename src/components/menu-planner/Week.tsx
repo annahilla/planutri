@@ -1,18 +1,12 @@
 "use client";
 
-import { DayOfTheWeek, MenuInterface, Recipe } from "@/types/types";
+import { DayOfTheWeek, Recipe } from "@/types/types";
 import Day from "./Day";
 import { useEffect, useState } from "react";
 import { getRecipes } from "@/services/recipeService";
 import { useAppSelector } from "@/lib/store/reduxHooks";
-import { getMenu } from "@/services/menuService";
 
-interface WeekProps {
-  menu: MenuInterface[];
-  setMenu: React.Dispatch<React.SetStateAction<MenuInterface[]>>;
-}
-
-const Week = ({ menu, setMenu }: WeekProps) => {
+const Week = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const token = useAppSelector((state) => state.auth.user?.token);
   const days: DayOfTheWeek[] = [
@@ -33,17 +27,7 @@ const Week = ({ menu, setMenu }: WeekProps) => {
       }
     };
     fetchRecipes();
-  }, [token]);
-
-  useEffect(() => {
-    const fetchMenu = async () => {
-      if (token) {
-        const data = await getMenu(token);
-        setMenu(data);
-      }
-    };
-    fetchMenu();
-  }, [token, menu.length]);
+  }, [recipes.length, token]);
 
   return (
     <div className="h-[80vh] invisible-scrollbar flex overflow-x-auto scrollbar-none snap-x snap-mandatory w-full md:grid md:grid-cols-2 ld:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 md:overflow-x-hidden gap-3">
@@ -52,13 +36,7 @@ const Week = ({ menu, setMenu }: WeekProps) => {
           key={day}
           className="flex flex-col h-full justify-between min-w-full snap-start md:h-auto md:min-w-0"
         >
-          <Day
-            dayOfTheWeek={day}
-            recipes={recipes}
-            dayMenu={menu.filter((menu) => menu.dayOfTheWeek === day)}
-            fullMenu={menu}
-            setMenu={setMenu}
-          />
+          <Day dayOfTheWeek={day} recipes={recipes} />
         </div>
       ))}
     </div>

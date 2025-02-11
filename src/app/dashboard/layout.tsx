@@ -7,6 +7,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import SideNavbar from "@/components/SideNavbar";
 import ProtectedRoute from "@/utils/ProtectedRoute";
+import { fetchMenu } from "@/lib/store/menu/menuSlice";
 
 export default function DashboardLayout({
   children,
@@ -25,6 +26,7 @@ export default function DashboardLayout({
   useEffect(() => {
     dispatch(fetchUnits());
     dispatch(fetchIngredients());
+    dispatch(fetchMenu());
   }, [dispatch]);
 
   useEffect(() => {

@@ -20,15 +20,9 @@ import RecipeDetails from "../RecipeDetails";
 const Day = ({
   dayOfTheWeek,
   recipes,
-  dayMenu,
-  fullMenu,
-  setMenu,
 }: {
   dayOfTheWeek: DayOfTheWeek;
   recipes: Recipe[];
-  dayMenu: MenuInterface[];
-  fullMenu: MenuInterface[];
-  setMenu: (menu: MenuInterface[]) => void;
 }) => {
   const meals: Meal[] = ["Breakfast", "Lunch", "Snack", "Dinner"];
   const [isSelectRecipeModalOpen, setIsSelectRecipeModalOpen] = useState(false);
@@ -37,37 +31,40 @@ const Day = ({
   const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const token = useAppSelector((state) => state.auth.user?.token);
+  const menuStatus = useAppSelector((state) => state.menu.status);
+  const fullMenu = useAppSelector((state) => state.menu.menu);
+  const dayMenu = fullMenu.filter(
+    (fullMenu) => fullMenu.dayOfTheWeek === dayOfTheWeek
+  );
   const [selectedRecipes, setSelectedRecipes] = useState<{
     [meal: string]: Recipe | null;
   }>({});
-  const token = useAppSelector((state) => state.auth.user?.token);
 
   useEffect(() => {
     setFilteredRecipes(recipes);
   }, [recipes]);
 
   useEffect(() => {
-    const newSelectedRecipes = dayMenu.reduce(
-      (acc, menuItem: MenuInterface) => {
-        const selectedRecipe = recipes.find(
-          (recipe: Recipe) => recipe._id === menuItem.recipe
-        );
-        if (selectedRecipe) {
-          acc[menuItem.meal] = selectedRecipe;
-        }
-        return acc;
-      },
-      {} as { [meal: string]: Recipe | null }
-    );
+    if (menuStatus === "succeeded") {
+      console.log("primero", dayMenu);
+      const newSelectedRecipes = dayMenu.reduce(
+        (acc, menuItem: MenuInterface) => {
+          console.log("segundo", dayMenu);
+          const selectedRecipe = recipes.find(
+            (recipe: Recipe) => recipe._id === menuItem.recipe
+          );
+          if (selectedRecipe) {
+            acc[menuItem.meal] = selectedRecipe;
+          }
+          return acc;
+        },
+        {} as { [meal: string]: Recipe | null }
+      );
 
-    setSelectedRecipes(newSelectedRecipes);
-  }, [recipes]);
-
-  useEffect(() => {
-    if (fullMenu.length === 0) {
-      setSelectedRecipes({});
+      setSelectedRecipes(newSelectedRecipes);
     }
-  }, [fullMenu]);
+  }, [menuStatus]);
 
   const mealIcons: { [key: string]: JSX.Element } = {
     Breakfast: <PiCoffeeThin />,
@@ -122,7 +119,6 @@ const Day = ({
           ...prev,
           [selectedMeal]: recipe,
         }));
-        setMenu([...fullMenu, newMenu]);
       }
     } catch (error) {
       console.log(error);

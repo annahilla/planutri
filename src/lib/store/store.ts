@@ -2,13 +2,15 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/authSlice";
 import unitsReducer from "./apis/unitsSlice";
 import ingredientsReducer from "./apis/ingredientsSlice";
+import menuReducer from "./menu/menuSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
         auth: authReducer,
         units: unitsReducer,
-        ingredients: ingredientsReducer
+        ingredients: ingredientsReducer,
+        menu: menuReducer
     }
   })
 };
