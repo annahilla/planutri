@@ -11,11 +11,12 @@ import {
   PiBowlSteamThin,
   PiOrangeThin,
 } from "react-icons/pi";
-import { useAppSelector } from "@/lib/store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { addRecipeToMenu, deleteSingleMenu } from "@/services/menuService";
 import { IoMdClose } from "react-icons/io";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import RecipeDetails from "../RecipeDetails";
+import { setMenu } from "@/lib/store/menu/menuSlice";
 
 const Day = ({
   dayOfTheWeek,
@@ -24,6 +25,7 @@ const Day = ({
   dayOfTheWeek: DayOfTheWeek;
   recipes: Recipe[];
 }) => {
+  const dispatch = useAppDispatch();
   const meals: Meal[] = ["Breakfast", "Lunch", "Snack", "Dinner"];
   const [isSelectRecipeModalOpen, setIsSelectRecipeModalOpen] = useState(false);
   const [isRecipeDetailsModalOpen, setIsRecipeDetailsModalOpen] =
@@ -32,7 +34,6 @@ const Day = ({
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const token = useAppSelector((state) => state.auth.user?.token);
-  const menuStatus = useAppSelector((state) => state.menu.status);
   const fullMenu = useAppSelector((state) => state.menu.menu);
   const dayMenu = fullMenu.filter(
     (fullMenu) => fullMenu.dayOfTheWeek === dayOfTheWeek
@@ -45,26 +46,30 @@ const Day = ({
     setFilteredRecipes(recipes);
   }, [recipes]);
 
-  useEffect(() => {
-    if (menuStatus === "succeeded") {
-      console.log("primero", dayMenu);
-      const newSelectedRecipes = dayMenu.reduce(
-        (acc, menuItem: MenuInterface) => {
-          console.log("segundo", dayMenu);
-          const selectedRecipe = recipes.find(
-            (recipe: Recipe) => recipe._id === menuItem.recipe
-          );
-          if (selectedRecipe) {
-            acc[menuItem.meal] = selectedRecipe;
-          }
-          return acc;
-        },
-        {} as { [meal: string]: Recipe | null }
-      );
+  const updateSelectedRecipes = () => {
+    const newSelectedRecipes = dayMenu.reduce(
+      (acc, menuItem: MenuInterface) => {
+        const selectedRecipe = recipes.find(
+          (recipe: Recipe) => recipe._id === menuItem.recipe
+        );
+        if (selectedRecipe) {
+          acc[menuItem.meal] = selectedRecipe;
+        }
+        return acc;
+      },
+      {} as { [meal: string]: Recipe | null }
+    );
 
+    if (
+      JSON.stringify(selectedRecipes) !== JSON.stringify(newSelectedRecipes)
+    ) {
       setSelectedRecipes(newSelectedRecipes);
     }
-  }, [menuStatus]);
+  };
+
+  useEffect(() => {
+    updateSelectedRecipes();
+  }, [dayMenu]);
 
   const mealIcons: { [key: string]: JSX.Element } = {
     Breakfast: <PiCoffeeThin />,
@@ -106,7 +111,7 @@ const Day = ({
     }
   };
 
-  const selectRecipe = (recipe: Recipe, selectedMeal: Meal) => {
+  const selectRecipe = async (recipe: Recipe, selectedMeal: Meal) => {
     try {
       const newMenu: MenuInterface = {
         recipe,
@@ -114,11 +119,11 @@ const Day = ({
         meal: selectedMeal,
       };
       if (token) {
-        addRecipeToMenu(newMenu, token);
-        setSelectedRecipes((prev) => ({
-          ...prev,
-          [selectedMeal]: recipe,
-        }));
+        const addedMenuItem = await addRecipeToMenu(newMenu, token);
+        if (addedMenuItem) {
+          const updatedMenu = [...fullMenu, addedMenuItem];
+          dispatch(setMenu({ menu: updatedMenu }));
+        }
       }
     } catch (error) {
       console.log(error);
@@ -133,10 +138,8 @@ const Day = ({
     if (token && recipeId) {
       const isDeleted = await deleteSingleMenu(recipeId, token);
       if (isDeleted) {
-        setSelectedRecipes((prev) => ({
-          ...prev,
-          [meal]: null,
-        }));
+        const updatedMenu = fullMenu.filter((item) => item._id !== recipeId);
+        dispatch(setMenu({ menu: updatedMenu }));
       }
     }
   };
