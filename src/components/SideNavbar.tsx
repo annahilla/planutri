@@ -10,12 +10,13 @@ import { CiUser } from "react-icons/ci";
 import Link from "next/link";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
 import { CiLogout } from "react-icons/ci";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { logoutUser } from "@/lib/store/auth/authActions";
 import { useRouter } from "next/navigation";
 import SideNavbarItem from "./ui/SideNavbarItem";
 import { BsBoxArrowLeft } from "react-icons/bs";
 import { BsBoxArrowRight } from "react-icons/bs";
+import useClickOutside from "@/hooks/useClickOutside";
 
 interface SideNavbarProps {
   isNavbarCollapsed: boolean;
@@ -30,6 +31,8 @@ const SideNavbar = ({
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const dropdownRef = useRef<HTMLDivElement>(null!);
+  useClickOutside(dropdownRef, () => setIsDropdownOpen(false));
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
@@ -99,14 +102,15 @@ const SideNavbar = ({
       </div>
       <div
         onClick={toggleDropdown}
-        className="flex flex-col cursor-pointer min-h-16 justify-center md:w-full"
+        ref={dropdownRef}
+        className="relative flex flex-col cursor-pointer min-h-16 justify-center md:w-full"
       >
         {isDropdownOpen && (
           <button
             onClick={handleLogout}
             className={`${
               isNavbarCollapsed ? "m-auto" : "pl-9"
-            } text-sm py-4 px-5 hidden hover:opacity-75 md:block`}
+            } absolute bottom-16 rounded-t bg-lightBrown w-[3.75rem] text-sm py-4 px-5 hover:opacity-75 md:rounded-none md:w-full md:bg-brown md:bottom-20`}
           >
             <div className="flex items-center h-full gap-1">
               <CiLogout size={22} />
