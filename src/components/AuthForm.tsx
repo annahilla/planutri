@@ -17,7 +17,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
   const [password, setPassword] = useState("");
 
   const inputStyles =
-    "px-5 py-3 outline-none border border-neutral-300 placeholder:font-light";
+    "px-5 py-3 outline-none border border-neutral-300 w-full placeholder:font-light";
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +37,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="border border-neutral-700 px-10 py-16 flex flex-col items-center justify-center w-80">
+      <div className="px-10 py-16 flex flex-col items-center justify-center w-80 border border-neutral-700">
         <Link href={"/"} className="text-3xl mb-8">
           <Logo color="black" />
         </Link>
@@ -46,7 +46,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
         </p>
         <form
           onSubmit={handleAuth}
-          className="flex flex-col gap-4 items-center w-70 justify-center mt-8"
+          className="flex flex-col gap-4 items-center w-64 justify-center mt-8"
         >
           <input
             className={inputStyles}
@@ -64,13 +64,11 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <div className="mt-4 w-full">
-            <div className="w-auto flex flex-col gap-4">
-              <GoogleButton />
-              <Button type="submit" filled>
-                {formType}
-              </Button>
-            </div>
+          <div className="mt-4 flex flex-col gap-4 w-full">
+            <GoogleButton />
+            <Button type="submit" filled>
+              {formType}
+            </Button>
           </div>
         </form>
         {error && <p className="text-red-500 mt-4 text-xs">{error}</p>}
