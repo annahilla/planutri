@@ -17,7 +17,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
   const [password, setPassword] = useState("");
 
   const inputStyles =
-    "px-5 py-3 outline-none border border-neutral-300 w-auto placeholder:font-light";
+    "px-5 py-3 outline-none border border-neutral-300 placeholder:font-light";
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +46,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
         </p>
         <form
           onSubmit={handleAuth}
-          className="flex flex-col gap-4 items-center w-auto justify-center mt-8"
+          className="flex flex-col gap-4 items-center w-70 justify-center mt-8"
         >
           <input
             className={inputStyles}
