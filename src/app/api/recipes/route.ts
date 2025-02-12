@@ -14,7 +14,6 @@ export const GET = async (req: NextRequest) => {
         await connect();
         const recipes = await Recipe.find({ userId: userId });
         return new NextResponse(JSON.stringify(recipes), { status: 200 });
-        console.log(recipes);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {
         return new NextResponse("Error fetching ingredients" + error.message, {
