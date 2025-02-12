@@ -67,6 +67,7 @@ const RecipeDetails = ({
       return rest;
     });
 
+    console.log("Ingredients to send", ingredientsForDB);
     const updatedRecipe = {
       _id: currentRecipe._id,
       name: recipeName,
@@ -74,6 +75,7 @@ const RecipeDetails = ({
       description,
     };
 
+    console.log("Updated recipe to send: ", updatedRecipe);
     try {
       if (token) {
         await updateRecipe(updatedRecipe, token);
@@ -102,9 +104,14 @@ const RecipeDetails = ({
     const { name, value } = event.target;
     setError("");
 
+    const updatedValue =
+      name === "quantity" ? (isNaN(Number(value)) ? 0 : Number(value)) : value;
+
     setIngredients((prevIngredients) =>
       prevIngredients.map((ingredient) =>
-        ingredient._id === id ? { ...ingredient, [name]: value } : ingredient
+        ingredient._id === id
+          ? { ...ingredient, [name]: updatedValue }
+          : ingredient
       )
     );
   };
@@ -128,15 +135,17 @@ const RecipeDetails = ({
 
   const handleIngredientSelect = (
     selectedIngredient: string,
-    oldIngredient: string
+    index: number
   ) => {
-    setIngredients((prevIngredients) =>
-      prevIngredients.map((ingredient) =>
-        ingredient.ingredient === oldIngredient
+    setIngredients((prevIngredients) => {
+      const updated = prevIngredients.map((ingredient, i) =>
+        i === index
           ? { ...ingredient, ingredient: selectedIngredient }
           : ingredient
-      )
-    );
+      );
+
+      return updated;
+    });
 
     setIsDropdownOpen(false);
   };
@@ -204,14 +213,14 @@ const RecipeDetails = ({
           <div>
             <h5 className="text-xl my-4">Ingredients</h5>
             <ul className="flex flex-col gap-8 md:gap-3">
-              {ingredients.map((ingredient) => (
+              {ingredients.map((ingredient, index) => (
                 <li
                   key={ingredient._id}
                   className="relative flex flex-col gap-4 md:flex-row md:items-center"
                 >
                   <div className="flex gap-2">
                     <input
-                      className="border py-2 px-4 rounded outline-none w-full md:w-24"
+                      className="border py-2 px-4 rounded outline-none w-full md:w-full"
                       name="quantity"
                       type="number"
                       value={ingredient.quantity}
@@ -234,37 +243,37 @@ const RecipeDetails = ({
                       ))}
                     </select>
                   </div>
-                  <div className="relative w-full md:flex-1">
-                    <input
-                      className="border py-2 px-4 rounded outline-none w-full"
-                      type="text"
-                      value={ingredient.ingredient}
-                      onChange={(event) =>
-                        handleIngredientChange(event, ingredient._id!)
-                      }
-                    />
-                    {activeIngredientDropdown === ingredient._id &&
-                      isDropdownOpen && (
-                        <IngredientDropdown
-                          ingredientInputValue={
-                            ingredients.find(
-                              (ing) => ing.ingredient === ingredient.ingredient
-                            )?.ingredient || ""
-                          }
-                          isDropdownOpen={isDropdownOpen}
-                          setIsDropdownOpen={setIsDropdownOpen}
-                          handleIngredientSelect={(selectedIngredient) =>
-                            handleIngredientSelect(
-                              selectedIngredient,
-                              ingredient.ingredient
-                            )
-                          }
-                        />
-                      )}
+                  <div className="flex gap-2">
+                    <div className="relative w-full md:flex-1">
+                      <input
+                        className="border py-2 px-4 rounded outline-none w-full"
+                        type="text"
+                        value={ingredient.ingredient}
+                        onChange={(event) =>
+                          handleIngredientChange(event, ingredient._id!)
+                        }
+                      />
+                      {activeIngredientDropdown === ingredient._id &&
+                        isDropdownOpen && (
+                          <IngredientDropdown
+                            ingredientInputValue={
+                              ingredients.find(
+                                (ing) =>
+                                  ing.ingredient === ingredient.ingredient
+                              )?.ingredient || ""
+                            }
+                            isDropdownOpen={isDropdownOpen}
+                            setIsDropdownOpen={setIsDropdownOpen}
+                            handleIngredientSelect={(selectedIngredient) =>
+                              handleIngredientSelect(selectedIngredient, index)
+                            }
+                          />
+                        )}
+                    </div>
+                    <button onClick={() => deleteIngredient(ingredient._id!)}>
+                      <IoIosClose size={24} />
+                    </button>
                   </div>
-                  <button onClick={() => deleteIngredient(ingredient._id!)}>
-                    <IoIosClose size={24} />
-                  </button>
                 </li>
               ))}
             </ul>

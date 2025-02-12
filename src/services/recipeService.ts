@@ -81,6 +81,8 @@ export const updateRecipe = async (recipe: Partial<Recipe>, token: string) => {
       body: JSON.stringify({ id, ...recipe }),
     });
 
+    console.log("Recipe recieved: ", recipe);
+
     if (!response.ok) {
       toast.error("There was an error updating the recipe");
       throw new Error("Error updating recipe");

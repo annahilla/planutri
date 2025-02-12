@@ -42,7 +42,7 @@ export const PUT = async (req: NextRequest, context: { params: Promise<{ id: str
 
         const updatedRecipe = await Recipe.findByIdAndUpdate(
             id,
-            { name, ingredients, description, userId },
+            { id, name, ingredients, description, userId },
             { new: true }
         );
 
