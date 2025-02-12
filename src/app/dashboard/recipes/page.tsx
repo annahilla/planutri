@@ -7,6 +7,8 @@ import { Recipe } from "@/types/types";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { BeatLoader } from "react-spinners";
 import PageTitle from "@/components/ui/PageTitle";
+import Link from "next/link";
+import { IoCreateOutline } from "react-icons/io5";
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -23,7 +25,16 @@ const RecipesPage = () => {
 
   return (
     <div>
-      <PageTitle>Recipes</PageTitle>
+      <div className="flex justify-between items-center">
+        <PageTitle>Recipes</PageTitle>
+        <Link
+          href={"/dashboard/create-recipe"}
+          className="text-neutral-100 flex gap-2 bg-brown p-2 rounded hover:bg-lightBrown"
+        >
+          <IoCreateOutline size={22} />
+          <p className="hidden md:block">Create Recipe</p>
+        </Link>
+      </div>
       {isLoading ? (
         <div className="flex items-center justify-center h-[80vh] w-full">
           <BeatLoader color="#545046" />

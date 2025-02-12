@@ -38,6 +38,9 @@ const RecipeDetails = ({
   const saveRecipe = async () => {
     if (!currentRecipe) return;
 
+    const updatedIngredients = ingredients.filter(
+      (ingredient) => ingredient.ingredient !== ""
+    );
     const emptyIngredients = ingredients.filter(
       (ingredient) => ingredient.ingredient === ""
     );
@@ -62,7 +65,7 @@ const RecipeDetails = ({
     }
 
     emptyIngredients.map((ingredient) => deleteIngredient(ingredient._id!));
-    const ingredientsForDB = ingredients.map((ingredient) => {
+    const ingredientsForDB = updatedIngredients.map((ingredient) => {
       const { ...rest } = ingredient;
       return rest;
     });
@@ -197,118 +200,122 @@ const RecipeDetails = ({
   };
 
   return (
-    <div>
-      <div className="my-5 w-full">
-        <div className="flex flex-col gap-5">
-          <div>
-            <h5 className="text-xl my-4">Recipe Name</h5>
-            <input
-              className="border py-2 px-4 rounded outline-none w-full"
-              type="text"
-              value={recipeName}
-              name="name"
-              onChange={changeRecipeName}
-            />
-          </div>
-          <div>
-            <h5 className="text-xl my-4">Ingredients</h5>
-            <ul className="flex flex-col gap-8 md:gap-3">
-              {ingredients.map((ingredient, index) => (
-                <li
-                  key={ingredient._id}
-                  className="relative flex flex-col gap-4 md:flex-row md:items-center"
-                >
-                  <div className="flex gap-2">
-                    <input
-                      className="border py-2 px-4 rounded outline-none w-full md:w-full"
-                      name="quantity"
-                      type="number"
-                      value={ingredient.quantity}
-                      onChange={(event) =>
-                        handleCreateIngredient(event, ingredient._id!)
-                      }
-                    />
-                    <select
-                      className="border py-2 px-4 rounded outline-none"
-                      name="unit"
-                      value={ingredient.unit}
-                      onChange={(event) =>
-                        handleCreateIngredient(event, ingredient._id!)
-                      }
-                    >
-                      {units.map((unit: string) => (
-                        <option key={unit} value={unit}>
-                          {unit}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="flex gap-2">
-                    <div className="relative w-full md:flex-1">
+    <div className="w-full h-full lg:px-5">
+      <div className="flex flex-col justify-between my-5 w-full h-full md:w-full">
+        <div className="flex md:flex-row md:gap-10 md:items-strech flex-col gap-5">
+          <div className="flex-shrink">
+            <div>
+              <h5 className="text-xl mb-4">Recipe Name</h5>
+              <input
+                className="border py-2 px-4 rounded outline-none w-full"
+                type="text"
+                value={recipeName}
+                name="name"
+                onChange={changeRecipeName}
+              />
+            </div>
+            <div className="w-full">
+              <h5 className="text-xl my-4">Ingredients</h5>
+              <ul className="flex flex-col gap-8 md:gap-3">
+                {ingredients.map((ingredient, index) => (
+                  <li
+                    key={ingredient._id}
+                    className="relative flex flex-col gap-4 md:flex-row md:items-center"
+                  >
+                    <div className="flex gap-2">
                       <input
-                        className="border py-2 px-4 rounded outline-none w-full"
-                        type="text"
-                        value={ingredient.ingredient}
+                        className="border py-2 px-4 rounded outline-none w-full md:w-16"
+                        name="quantity"
+                        type="number"
+                        value={ingredient.quantity}
                         onChange={(event) =>
-                          handleIngredientChange(event, ingredient._id!)
+                          handleCreateIngredient(event, ingredient._id!)
                         }
                       />
-                      {activeIngredientDropdown === ingredient._id &&
-                        isDropdownOpen && (
-                          <IngredientDropdown
-                            ingredientInputValue={
-                              ingredients.find(
-                                (ing) =>
-                                  ing.ingredient === ingredient.ingredient
-                              )?.ingredient || ""
-                            }
-                            isDropdownOpen={isDropdownOpen}
-                            setIsDropdownOpen={setIsDropdownOpen}
-                            handleIngredientSelect={(selectedIngredient) =>
-                              handleIngredientSelect(selectedIngredient, index)
-                            }
-                          />
-                        )}
+                      <select
+                        className="border py-2 px-4 rounded outline-none"
+                        name="unit"
+                        value={ingredient.unit}
+                        onChange={(event) =>
+                          handleCreateIngredient(event, ingredient._id!)
+                        }
+                      >
+                        {units.map((unit: string) => (
+                          <option key={unit} value={unit}>
+                            {unit}
+                          </option>
+                        ))}
+                      </select>
                     </div>
-                    <button onClick={() => deleteIngredient(ingredient._id!)}>
-                      <IoIosClose size={24} />
-                    </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <button
-              onClick={addIngredientInput}
-              className="mt-8 bg-neutral-50 text-neutral-500 text-sm p-2 rounded hover:opacity-80"
-            >
-              + Add ingredient
-            </button>
+                    <div className="flex gap-2">
+                      <div className="relative w-full md:flex-1">
+                        <input
+                          className="border py-2 px-4 rounded outline-none w-full md:w-32 xl:w-full"
+                          type="text"
+                          value={ingredient.ingredient}
+                          onChange={(event) =>
+                            handleIngredientChange(event, ingredient._id!)
+                          }
+                        />
+                        {activeIngredientDropdown === ingredient._id &&
+                          isDropdownOpen && (
+                            <IngredientDropdown
+                              ingredientInputValue={
+                                ingredients.find(
+                                  (ing) =>
+                                    ing.ingredient === ingredient.ingredient
+                                )?.ingredient || ""
+                              }
+                              isDropdownOpen={isDropdownOpen}
+                              setIsDropdownOpen={setIsDropdownOpen}
+                              handleIngredientSelect={(selectedIngredient) =>
+                                handleIngredientSelect(
+                                  selectedIngredient,
+                                  index
+                                )
+                              }
+                            />
+                          )}
+                      </div>
+                      <button onClick={() => deleteIngredient(ingredient._id!)}>
+                        <IoIosClose size={24} />
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+              <button
+                onClick={addIngredientInput}
+                className="mt-8 bg-neutral-100 text-neutral-700 text-sm p-2 rounded hover:opacity-80"
+              >
+                + Add ingredient
+              </button>
+            </div>
           </div>
-          <div>
-            <h5 className="text-xl my-4">Description</h5>
+          <div className="flex-1 flex flex-col">
+            <h5 className="text-xl mb-4">Description</h5>
             <textarea
-              className="border py-2 px-4 rounded outline-none w-full"
+              className="border py-2 px-4 rounded outline-none w-full flex-1 resize-none"
               value={description}
               onChange={(event) => setDescription(event.target.value)}
             />
           </div>
+        </div>
+        {error && <ErrorMessage message={error} />}
 
-          {error && <ErrorMessage message={error} />}
-
-          <div className="flex gap-4 items-center w-1/2">
-            <Button handleClick={saveRecipe} filled type="button">
-              Save
+        <div
+          className={`flex gap-4 items-center justify-center w-full md:w-1/2 md:justify-start ${
+            isModal ? "mt-7" : "my-10"
+          }`}
+        >
+          <Button handleClick={saveRecipe} filled type="button">
+            Save
+          </Button>
+          {currentRecipe && currentRecipe._id && (
+            <Button handleClick={openDeleteRecipe} color="black" type="button">
+              Delete
             </Button>
-            {currentRecipe && currentRecipe._id && (
-              <Button
-                handleClick={openDeleteRecipe}
-                color="black"
-                type="button"
-              >
-                Delete
-              </Button>
-            )}
-          </div>
+          )}
         </div>
       </div>
       {isModalOpen && (

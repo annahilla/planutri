@@ -48,7 +48,7 @@ const SideNavbar = ({
   };
 
   return (
-    <nav className="z-[1000] fixed justify-center items-center flex bottom-0 bg-brown text-neutral-300 shrink-0 w-full md:w-auto md:h-full md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start">
+    <nav className="z-[1000] fixed justify-center items-center flex bottom-0 bg-brown text-neutral-200 shrink-0 w-full md:w-auto md:h-full md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start">
       <div className="md:w-full">
         <button
           onClick={toggleNavbar}

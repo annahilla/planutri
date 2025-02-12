@@ -141,7 +141,7 @@ const CreateRecipe = () => {
       <PageTitle>Create a Recipe</PageTitle>
       <form
         onSubmit={handleCreateRecipe}
-        className="bg-white p-5 flex flex-col gap-5 w-full rounded text-black md:p-8"
+        className="p-5 flex flex-col gap-5 w-full rounded text-black bg-white md:p-7"
         noValidate
       >
         <div className="flex flex-col gap-1">

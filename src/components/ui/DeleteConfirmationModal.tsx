@@ -15,7 +15,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
   handleDelete,
 }) => {
   return (
-    <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
+    <Modal isBig isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
       <p className="text-center mt-8">
         Are you sure you want to delete {thingToDelete}?
       </p>

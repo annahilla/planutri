@@ -6,9 +6,10 @@ interface ModalProps {
   isOpen: boolean;
   closeModal: () => void;
   children: React.ReactNode;
+  isBig?: boolean;
 }
 
-const Modal = ({ isOpen, closeModal, children }: ModalProps) => {
+const Modal = ({ isOpen, closeModal, children, isBig }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null!);
   useClickOutside(modalRef, closeModal);
 
@@ -17,7 +18,9 @@ const Modal = ({ isOpen, closeModal, children }: ModalProps) => {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center text-black z-[11000]">
         <div
           ref={modalRef}
-          className="w-11/12 max-w-2xl relative bg-white p-2 rounded flex flex-col items-center justify-start lg:w-1/2 max-h-[90vh]"
+          className={`${
+            isBig ? "max-w-2xl lg:w-1/2" : "w-2xl lg:w-[80vw]"
+          } w-11/12 relative bg-white p-2 rounded flex flex-col items-center justify-start max-h-[90vh]`}
         >
           <button className="absolute right-5 top-5" onClick={closeModal}>
             <IoMdClose />

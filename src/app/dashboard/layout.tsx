@@ -47,7 +47,7 @@ export default function DashboardLayout({
           />
         </div>
 
-        <div className="flex-1 m-6 h-auto overflow-auto md:mx-10">
+        <div className="flex-1 m-6 h-auto overflow-hidden lg:mx-10">
           <div className="mb-16 md:mb-0 h-auto md:h-full md:w-full">
             {children}
           </div>
