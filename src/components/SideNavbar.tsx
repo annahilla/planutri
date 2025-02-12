@@ -2,14 +2,17 @@
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import Logo from "./Logo";
-import { CiBoxList } from "react-icons/ci";
 import { IoCreateOutline } from "react-icons/io5";
-import { PiNotebookLight } from "react-icons/pi";
-import { CiCalendar } from "react-icons/ci";
-import { CiUser } from "react-icons/ci";
+import {
+  CiCalendar,
+  CiUser,
+  CiLogout,
+  CiSettings,
+  CiBoxList,
+  CiViewList,
+} from "react-icons/ci";
 import Link from "next/link";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
-import { CiLogout } from "react-icons/ci";
 import { useRef, useState } from "react";
 import { logoutUser } from "@/lib/store/auth/authActions";
 import { useRouter } from "next/navigation";
@@ -47,8 +50,20 @@ const SideNavbar = ({
     router.push("/");
   };
 
+  const handleUserClick = () => {
+    if (window.innerWidth < 768) {
+      router.push("/dashboard/profile");
+    } else {
+      toggleDropdown();
+    }
+  };
+
   return (
-    <nav className="z-[1000] fixed justify-center items-center flex bottom-0 bg-brown text-neutral-200 shrink-0 w-full md:w-auto md:h-full md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start">
+    <nav
+      className={`${
+        isNavbarCollapsed ? "md:w-16" : "md:w-64"
+      } z-[1000] fixed justify-center items-center flex bottom-0 bg-brown text-neutral-200 w-full shrink-0 md:h-full md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start`}
+    >
       <div className="md:w-full">
         <button
           onClick={toggleNavbar}
@@ -89,7 +104,7 @@ const SideNavbar = ({
           <SideNavbarItem
             name="Recipes"
             href="/dashboard/recipes"
-            icon={<PiNotebookLight size={22} />}
+            icon={<CiViewList size={22} />}
             collapsedStyles={isNavbarCollapsed}
           />
           <SideNavbarItem
@@ -101,36 +116,55 @@ const SideNavbar = ({
         </ul>
       </div>
       <div
-        onClick={toggleDropdown}
+        onClick={handleUserClick}
         ref={dropdownRef}
         className="relative flex flex-col cursor-pointer min-h-16 justify-center md:w-full"
       >
         {isDropdownOpen && (
-          <button
-            onClick={handleLogout}
+          <div
             className={`${
-              isNavbarCollapsed ? "m-auto" : "pl-9"
-            } absolute bottom-16 rounded-t bg-lightBrown w-[3.75rem] text-sm py-4 px-5 hover:opacity-75 md:rounded-none md:w-full md:bg-brown md:bottom-20`}
+              isNavbarCollapsed ? "m-auto" : "pl-2"
+            } flex-col items-center justify-center gap-5 mb-4 hidden md:flex`}
           >
-            <div className="flex items-center h-full gap-1">
-              <CiLogout className="text-xl md:text-3xl" />
-              <p className="hidden md:block">
-                {!isNavbarCollapsed && "Log Out"}
-              </p>
-            </div>
-          </button>
-        )}
-        <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-lightBrown px-5 py-4 md:py-5 md:justify-start">
-          <CiUser className="text-xl md:text-3xl" />
-          {!isNavbarCollapsed && (
-            <>
-              <div className="hidden md:block">
-                <div className="text-sm">
-                  {user && user.name ? user.name : ""}
-                </div>
-                <div className="text-xs">{user ? user.email : "User"}</div>
+            <Link
+              href={"/dashboard/profile"}
+              className="px-5 hover:opacity-75 w-full"
+            >
+              <div className="flex items-center h-full gap-1">
+                <CiSettings className="text-xl" />
+                <p className="hidden md:block text-xs">
+                  {!isNavbarCollapsed && "User Settings"}
+                </p>
               </div>
-            </>
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="px-5 hover:opacity-75 w-full"
+            >
+              <div className="flex items-center h-full gap-1">
+                <CiLogout className="text-xl" />
+                <p className="hidden md:block text-xs">
+                  {!isNavbarCollapsed && "Log Out"}
+                </p>
+              </div>
+            </button>
+          </div>
+        )}
+        <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-lightBrown px-5 py-4 md:py-5 md:justify-between">
+          <div className="w-9">
+            <CiUser className="text-xl md:text-3xl" />
+          </div>
+          {!isNavbarCollapsed && (
+            <div className="flex flex-1 flex-col gap-1 justify-start hidden md:block">
+              <div className="text-sm">
+                {user
+                  ? user.name
+                    ? user.name
+                    : user.email?.split("@")[0]
+                  : "User"}
+              </div>
+              <div className="text-xs">{user ? user.email : "User"}</div>
+            </div>
           )}
           <div
             className={`${
