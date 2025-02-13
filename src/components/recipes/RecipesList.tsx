@@ -1,19 +1,17 @@
 "use client";
 
+import { useAppSelector } from "@/lib/store/reduxHooks";
 import { Recipe } from "@/types/types";
 import Link from "next/link";
 
 interface RecipeListProps {
-  recipes: Recipe[];
   onSelect?: (recipe: Recipe) => void;
   showLinks?: boolean;
 }
 
-const RecipesList = ({
-  recipes,
-  onSelect,
-  showLinks = true,
-}: RecipeListProps) => {
+const RecipesList = ({ onSelect, showLinks = true }: RecipeListProps) => {
+  const recipes = useAppSelector((state) => state.recipes.recipes);
+
   return (
     <div className="flex flex-col items-center md:items-start md:w-full">
       {recipes.map((recipe) => (

@@ -3,6 +3,7 @@ import authReducer from "./auth/authSlice";
 import unitsReducer from "./apis/unitsSlice";
 import ingredientsReducer from "./apis/ingredientsSlice";
 import menuReducer from "./menu/menuSlice";
+import recipeReducer from "./recipes/recipeSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -10,7 +11,8 @@ export const makeStore = () => {
         auth: authReducer,
         units: unitsReducer,
         ingredients: ingredientsReducer,
-        menu: menuReducer
+        menu: menuReducer,
+        recipes: recipeReducer
     }
   })
 };

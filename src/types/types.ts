@@ -33,8 +33,18 @@ export type DayOfTheWeek =
   | "Saturday"
   | "Sunday"
 
+  export const days: DayOfTheWeek[] = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
 
 export type Meal = "Breakfast" | "Lunch" | "Snack" | "Dinner";
+export const meals: Meal[] = ["Breakfast", "Lunch", "Snack", "Dinner"];
 
 export interface MenuInterface {
   _id?: string;

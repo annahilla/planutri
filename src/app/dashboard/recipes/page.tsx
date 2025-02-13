@@ -1,28 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getRecipes } from "@/services/recipeService";
-import RecipesList from "@/components/RecipesList";
-import { Recipe } from "@/types/types";
+import RecipesList from "@/components/recipes/RecipesList";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { BeatLoader } from "react-spinners";
 import PageTitle from "@/components/ui/PageTitle";
 import Link from "next/link";
 import { IoCreateOutline } from "react-icons/io5";
-import DashboardButton from "@/components/ui/DashboardButton";
+import DashboardButton from "@/components/ui/buttons/DashboardButton";
 
 const RecipesPage = () => {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const token = useAppSelector((state) => state.auth.user?.token);
-
-  useEffect(() => {
-    if (token) {
-      getRecipes(token)
-        .then((data) => setRecipes(data))
-        .finally(() => setIsLoading(false));
-    }
-  }, []);
+  const isLoading =
+    useAppSelector((state) => state.recipes.status) === "loading";
 
   return (
     <div>
@@ -39,7 +27,7 @@ const RecipesPage = () => {
           <BeatLoader color="#545046" />
         </div>
       ) : (
-        <RecipesList recipes={recipes} showLinks={true} />
+        <RecipesList showLinks={true} />
       )}
     </div>
   );

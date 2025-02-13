@@ -1,15 +1,15 @@
 "use client";
 
 import { useAppSelector } from "@/lib/store/reduxHooks";
-import Button from "./ui/Button";
+import Button from "../ui/buttons/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
 import { IngredientInterface, Recipe } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
-import IngredientDropdown from "./ui/IngredientDropdown";
+import IngredientDropdown from "../ui/IngredientDropdown";
 import { IoIosClose } from "react-icons/io";
-import ErrorMessage from "./ui/ErrorMessage";
-import DeleteConfirmationModal from "./ui/DeleteConfirmationModal";
+import ErrorMessage from "../ui/ErrorMessage";
+import DeleteConfirmationModal from "../ui/DeleteConfirmationModal";
 
 const RecipeDetails = ({
   currentRecipe,

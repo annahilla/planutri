@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Button from "./ui/Button";
-import Logo from "./Logo";
-import GoogleButton from "./ui/GoogleButton";
+import Button from "../ui/buttons/Button";
+import Logo from "../Logo";
+import GoogleButton from "../ui/buttons/GoogleButton";
 import { loginUser, signUpUser } from "@/lib/store/auth/authActions";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { useRouter } from "next/navigation";

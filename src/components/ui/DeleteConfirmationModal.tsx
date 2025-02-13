@@ -1,4 +1,4 @@
-import Button from "./Button";
+import Button from "./buttons/Button";
 import Modal from "./Modal";
 
 interface DeleteConfirmationModalProps {

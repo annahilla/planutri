@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/components/ui/Button";
+import Button from "@/components/ui/buttons/Button";
 import PageTitle from "@/components/ui/PageTitle";
 import { logoutUser } from "@/lib/store/auth/authActions";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";

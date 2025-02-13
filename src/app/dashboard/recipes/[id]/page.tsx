@@ -1,6 +1,6 @@
 "use client";
 
-import RecipeDetails from "@/components/RecipeDetails";
+import RecipeDetails from "@/components/recipes/RecipeDetails";
 import { Recipe } from "@/types/types";
 import { IoMdArrowBack } from "react-icons/io";
 import Link from "next/link";

@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import SideNavbar from "@/components/SideNavbar";
 import ProtectedRoute from "@/utils/ProtectedRoute";
 import { fetchMenu } from "@/lib/store/menu/menuSlice";
+import { fetchRecipes } from "@/lib/store/recipes/recipeSlice";
 
 export default function DashboardLayout({
   children,
@@ -27,7 +28,8 @@ export default function DashboardLayout({
     dispatch(fetchUnits());
     dispatch(fetchIngredients());
     dispatch(fetchMenu());
-  }, [dispatch]);
+    dispatch(fetchRecipes());
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("isNavbarCollapsed", String(isNavbarCollapsed));

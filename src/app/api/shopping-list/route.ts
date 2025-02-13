@@ -2,6 +2,9 @@ import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "../(utils)/auth";
 import ShoppingList from "@/database/models/shopping-list";
+import Menu from "@/database/models/menu";
+import Recipe from "@/database/models/recipes";
+import { IngredientInterface } from "@/types/types";
 
 export const GET = async (req: NextRequest) => {
     try {
@@ -31,17 +34,25 @@ export const POST = async (req: NextRequest) => {
         }
 
         await connect();
-        const body = await req.json();
-        const { list } = body;
+        const weeklyMenu = await Menu.find({ userId: userId });
 
-        const newShoppingList = new ShoppingList({
-            userId,
-            list,
+        if (!weeklyMenu || weeklyMenu.length === 0) {
+            return new NextResponse("No menus found", { status: 404 });
+        }
+
+        const recipeIds = weeklyMenu.map(menu => menu.recipe);
+        const recipes = await Recipe.find({ _id: { $in: recipeIds } });
+
+        if (!recipes || recipes.length === 0) {
+            return new NextResponse("No recipes found", { status: 404 });
+        }
+
+        let shoppingList: IngredientInterface[] = [];
+        recipes.forEach(recipe => {
+            shoppingList = [...shoppingList, ...recipe.ingredients];
         });
 
-        await newShoppingList.save();
-
-        return new NextResponse(JSON.stringify(newShoppingList), { status: 201 });
+        return new NextResponse(JSON.stringify(shoppingList), { status: 201 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error("Error creating recipe:", error); 
