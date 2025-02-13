@@ -12,8 +12,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Plantry | Plan your meals and fill your pantry",
-  description: "Plan your meals and fill your pantry",
+  title: "Planutry | Plan your meals and fill your pantry",
+  description: "Plan your meals and fill your larder",
 };
 
 export default function RootLayout({

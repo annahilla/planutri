@@ -9,6 +9,7 @@ import { BeatLoader } from "react-spinners";
 import PageTitle from "@/components/ui/PageTitle";
 import Link from "next/link";
 import { IoCreateOutline } from "react-icons/io5";
+import DashboardButton from "@/components/ui/DashboardButton";
 
 const RecipesPage = () => {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -27,12 +28,10 @@ const RecipesPage = () => {
     <div>
       <div className="flex justify-between items-center">
         <PageTitle>Recipes</PageTitle>
-        <Link
-          href={"/dashboard/create-recipe"}
-          className="text-neutral-100 flex gap-2 bg-brown p-2 rounded hover:bg-lightBrown"
-        >
-          <IoCreateOutline size={22} />
-          <p className="hidden md:block">Create Recipe</p>
+        <Link href={"/dashboard/create-recipe"}>
+          <DashboardButton icon={<IoCreateOutline size={22} />}>
+            Create Recipe
+          </DashboardButton>
         </Link>
       </div>
       {isLoading ? (

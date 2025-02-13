@@ -14,7 +14,7 @@ const useAuthListener = () => {
         const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const token = await user.getIdToken();
-                const userData = { name: user.displayName, email: user.email!, token };
+                const userData = { name: user.displayName, email: user.email!, joined: user.metadata.creationTime, token };
                 dispatch(setUser(userData));
             } else {
                 dispatch(logout());
@@ -24,14 +24,24 @@ const useAuthListener = () => {
 
         const unsubscribeToken = onIdTokenChanged(auth, async (user) => {
             if (user) {
-                const token = await user.getIdToken(true); 
-                dispatch(setUser({ name: user.displayName, email: user.email!, token }));
+                const token = await user.getIdToken(true);
+                dispatch(setUser({ name: user.displayName, email: user.email!, joined: user.metadata.creationTime, token }));
             }
         });
+
+
+        const tokenRefreshInterval = setInterval(async () => {
+            const user = auth.currentUser;
+            if (user) {
+                const token = await user.getIdToken(true);
+                dispatch(setUser({ name: user.displayName, email: user.email!, joined: user.metadata.creationTime, token }));
+            }
+        }, 3600000);
 
         return () => {
             unsubscribeAuth();
             unsubscribeToken();
+            clearInterval(tokenRefreshInterval);
         };
     }, [dispatch]);
 

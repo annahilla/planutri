@@ -150,7 +150,7 @@ const SideNavbar = ({
             </button>
           </div>
         )}
-        <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-lightBrown px-5 py-4 md:py-5 md:justify-between">
+        <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-lightBrown p-4 md:py-5 md:justify-between">
           <div className="w-9">
             <CiUser className="text-xl md:text-3xl" />
           </div>
