@@ -7,7 +7,6 @@ import { deleteSingleMenu } from "@/services/menuService";
 import { IoMdClose } from "react-icons/io";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import { setMenu } from "@/lib/store/menu/menuSlice";
-import { generateShoppingList } from "@/services/shoppingListService";
 import { mealIcons } from "@/utils/MealIcons";
 import RecipeListModal from "./RecipeListModal";
 import RecipeDetailsModal from "./RecipeDetailsModal";
@@ -31,10 +30,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
     [meal: string]: Recipe | null;
   }>({});
 
-  console.log(recipes);
-
   useEffect(() => {
-    if (token) generateShoppingList(token);
     updateSelectedRecipes();
   }, [fullMenu]);
 
@@ -95,6 +91,11 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
       Object.keys(updatedRecipes).forEach((meal) => {
         if (updatedRecipes[meal]?._id === recipeId) {
           updatedRecipes[meal] = null;
+          setSelectedRecipes((prev) => {
+            const updatedRecipes = { ...prev };
+            updatedRecipes[meal] = null;
+            return updatedRecipes;
+          });
         }
       });
       return updatedRecipes;
