@@ -9,7 +9,7 @@ const Logo = ({
 
   return (
     <div className="flex flex-col items-center w-fill relative font-balginLight tracking-widest">
-      <p>{minified ? "pt" : "plantry"}</p>
+      <p>{minified ? "pt" : "planutry"}</p>
       <div
         className={`absolute top-[115%] left-1/2 transform -translate-x-1/2 bg-${bgColor} w-[1rem] h-[3%]`}
       ></div>
