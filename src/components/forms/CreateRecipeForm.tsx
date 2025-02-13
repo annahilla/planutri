@@ -125,7 +125,7 @@ const CreateRecipeForm = () => {
   return (
     <form
       onSubmit={handleCreateRecipe}
-      className="p-5 flex flex-col gap-5 w-full rounded text-black bg-white md:p-7"
+      className="py-5 flex flex-col gap-5 w-full rounded text-black"
       noValidate
     >
       <div className="flex flex-col gap-1">

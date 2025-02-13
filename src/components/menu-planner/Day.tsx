@@ -114,7 +114,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
         <h5 className="my-2 text-sm font-bold text-left text-black">
           {dayOfTheWeek}
         </h5>
-        <div className="bg-neutral-50 px-3 py-4 rounded text-center shadow-sm">
+        <div className="bg-beige px-3 py-4 rounded text-center shadow-sm">
           <div className="flex flex-col items-center gap-6 h-full">
             {meals.map((meal) => (
               <div
@@ -129,7 +129,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
                   <div className="flex justify-between bg-white w-full p-2 items-center rounded shadow-sm">
                     <button
                       onClick={() => handleRecipeClick(selectedRecipes[meal])}
-                      className="text-left text-sm text-neutral-800  border border-white  outline-none"
+                      className="text-left text-sm text-neutral-800  border border-white  outline-none hover:opacity-75"
                     >
                       {selectedRecipes[meal]?.name}
                     </button>

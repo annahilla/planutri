@@ -61,7 +61,7 @@ const SideNavbar = ({
   return (
     <nav
       className={`${
-        isNavbarCollapsed ? "md:w-16" : "md:w-64"
+        isNavbarCollapsed ? "md:w-16" : "md:w-56"
       } z-[1000] fixed justify-center items-center flex bottom-0 bg-brown text-neutral-200 w-full shrink-0 md:h-full md:flex-col md:pt-4 md:bottom-auto md:justify-between md:items-start`}
     >
       <div className="md:w-full">
@@ -150,8 +150,8 @@ const SideNavbar = ({
             </button>
           </div>
         )}
-        <div className="relative flex gap-3 min-h-16 items-center justify-center hover:bg-lightBrown p-4 md:py-5 md:justify-between">
-          <div className="w-9">
+        <div className="relative flex gap-2 min-h-16 items-center justify-center hover:bg-lightBrown px-5 py-4 md:px-2 md:py-5 md:justify-between">
+          <div className={`${isNavbarCollapsed && "md:ml-2"}`}>
             <CiUser className="text-xl md:text-3xl" />
           </div>
           {!isNavbarCollapsed && (

@@ -37,10 +37,10 @@ export default function DashboardLayout({
 
   return (
     <ProtectedRoute canActivate={isLoggedIn} redirectPath="/login">
-      <main className="flex flex-col min-h-screen bg-beige md:flex-row">
+      <main className="flex flex-col min-h-screen bg-white md:flex-row">
         <div
           className={`transition-all duration-300 ${
-            isNavbarCollapsed ? "md:w-16" : "md:w-64"
+            isNavbarCollapsed ? "md:w-16" : "md:w-56"
           }`}
         >
           <SideNavbar
