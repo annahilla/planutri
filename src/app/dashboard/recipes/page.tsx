@@ -9,6 +9,7 @@ import { IoCreateOutline } from "react-icons/io5";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 
 const RecipesPage = () => {
+  const recipes = useAppSelector((state) => state.recipes.recipes);
   const isLoading =
     useAppSelector((state) => state.recipes.status) === "loading";
 
@@ -27,7 +28,7 @@ const RecipesPage = () => {
           <BeatLoader color="#545046" />
         </div>
       ) : (
-        <RecipesList showLinks={true} />
+        <RecipesList recipes={recipes} showLinks={true} />
       )}
     </div>
   );
