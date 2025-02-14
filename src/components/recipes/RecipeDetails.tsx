@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppSelector } from "@/lib/store/reduxHooks";
+import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import Button from "../ui/buttons/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
 import { IngredientInterface, Recipe } from "@/types/types";
@@ -10,6 +10,8 @@ import IngredientDropdown from "../ui/IngredientDropdown";
 import { IoIosClose } from "react-icons/io";
 import ErrorMessage from "../ui/ErrorMessage";
 import DeleteConfirmationModal from "../ui/DeleteConfirmationModal";
+import { validateCreateRecipeForm } from "@/utils/validation";
+import { fetchRecipes } from "@/lib/store/recipes/recipeSlice";
 
 const RecipeDetails = ({
   currentRecipe,
@@ -22,6 +24,7 @@ const RecipeDetails = ({
   closeModal?: () => void;
   clearRecipe?: (id: string) => void;
 }) => {
+  const dispatch = useAppDispatch();
   const units = useAppSelector((state) => state.units.units);
   const router = useRouter();
   const [error, setError] = useState("");
@@ -45,23 +48,10 @@ const RecipeDetails = ({
       (ingredient) => ingredient.ingredient === ""
     );
 
-    if (!recipeName.trim()) {
-      setError("Please enter a recipe name");
+    const validationError = validateCreateRecipeForm(recipeName, ingredients);
+    if (validationError) {
+      setError(validationError);
       return;
-    }
-
-    if (ingredients.length === 0) {
-      setError("Please enter at least one ingredient");
-      return;
-    }
-
-    if (ingredients.length > 0 && emptyIngredients.length === 0) {
-      for (const ing of ingredients) {
-        if (ing.quantity <= 0 || isNaN(ing.quantity)) {
-          setError(`Please enter a valid quantity for ${ing.ingredient}`);
-          return;
-        }
-      }
     }
 
     emptyIngredients.map((ingredient) => deleteIngredient(ingredient._id!));
@@ -70,7 +60,6 @@ const RecipeDetails = ({
       return rest;
     });
 
-    console.log("Ingredients to send", ingredientsForDB);
     const updatedRecipe = {
       _id: currentRecipe._id,
       name: recipeName,
@@ -78,10 +67,10 @@ const RecipeDetails = ({
       description,
     };
 
-    console.log("Updated recipe to send: ", updatedRecipe);
     try {
       if (token) {
         await updateRecipe(updatedRecipe, token);
+        dispatch(fetchRecipes());
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
@@ -191,6 +180,7 @@ const RecipeDetails = ({
         }
         if (token) {
           await deleteRecipe(currentRecipe._id, token);
+          dispatch(fetchRecipes());
         }
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
@@ -200,11 +190,11 @@ const RecipeDetails = ({
   };
 
   return (
-    <div className="w-full h-full lg:px-5">
-      <div className="flex flex-col justify-between my-5 w-full h-full md:w-full">
-        <div className="flex md:flex-row md:gap-10 md:items-strech flex-col gap-5">
+    <div className="w-full lg:px-5">
+      <div className="flex flex-col justify-between my-5 w-full min-h-[75vh] md:w-full">
+        <div className="flex md:flex-row md:gap-10 md:items-strech flex-col gap-5 min-h-[60vh]">
           <div className="flex-shrink">
-            <div>
+            <div className="mb-7">
               <h5 className="text-xl mb-4">Recipe Name</h5>
               <input
                 className="border py-2 px-4 rounded outline-none w-full"
@@ -219,7 +209,7 @@ const RecipeDetails = ({
               <ul className="flex flex-col gap-8 md:gap-3">
                 {ingredients.map((ingredient, index) => (
                   <li
-                    key={ingredient._id}
+                    key={ingredient._id || index}
                     className="relative flex flex-col gap-4 md:flex-row md:items-center"
                   >
                     <div className="flex gap-2">
@@ -304,9 +294,7 @@ const RecipeDetails = ({
         {error && <ErrorMessage message={error} />}
 
         <div
-          className={`flex gap-4 items-center justify-center w-full md:w-1/2 md:justify-start ${
-            isModal ? "mt-7" : "my-10"
-          }`}
+          className={`flex gap-4 mt-7 items-center justify-center w-full md:justify-start`}
         >
           <Button handleClick={saveRecipe} filled type="button">
             Save

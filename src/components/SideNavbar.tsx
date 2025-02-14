@@ -90,7 +90,7 @@ const SideNavbar = ({
         </Link>
         <ul className="flex w-full md:flex-col md:my-10">
           <SideNavbarItem
-            name="Meal Plan"
+            name="Meal Planner"
             href="/dashboard/menu"
             icon={<CiCalendar size={22} />}
             collapsedStyles={isNavbarCollapsed}

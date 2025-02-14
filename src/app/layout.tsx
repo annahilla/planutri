@@ -12,7 +12,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "Planutry | Plan your meals and fill your pantry",
+  title: "Planutri | Plan your meals and fill your pantry",
   description: "Plan your meals and fill your larder",
 };
 

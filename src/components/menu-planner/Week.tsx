@@ -5,7 +5,7 @@ import { days } from "@/types/types";
 
 const Week = () => {
   return (
-    <div className="min-h-[80vh] invisible-scrollbar flex overflow-x-auto scrollbar-none snap-x snap-mandatory w-full md:grid md:grid-cols-2 ld:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7 md:overflow-x-hidden gap-3">
+    <div className="transition-all duration-300 min-h-[80vh] invisible-scrollbar flex overflow-x-auto scrollbar-none snap-x snap-mandatory w-full md:grid md:grid-cols-[repeat(auto-fit,minmax(185px,1fr))] md:overflow-x-hidden gap-3">
       {days.map((day) => (
         <div
           key={day}

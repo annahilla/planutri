@@ -32,7 +32,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
 
   useEffect(() => {
     updateSelectedRecipes();
-  }, [fullMenu]);
+  }, [fullMenu, recipes]);
 
   const updateSelectedRecipes = () => {
     const newSelectedRecipes = dayMenu.reduce(
@@ -115,25 +115,25 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
           {dayOfTheWeek}
         </h5>
         <div className="bg-beige px-3 py-4 rounded text-center shadow-sm">
-          <div className="flex flex-col items-center gap-6 h-full">
+          <div className="flex flex-col items-center gap-4 h-full">
             {meals.map((meal) => (
               <div
                 className="flex flex-col items-start gap-1 rounded w-full text-left"
                 key={meal}
               >
-                <div className="flex items-center gap-2 text-neutral-600">
+                <div className="flex items-center gap-2 mb-1 text-neutral-600">
                   {mealIcons[meal]}
                   <p className="text-xs">{meal}</p>
                 </div>
                 {selectedRecipes[meal] ? (
-                  <div className="flex justify-between bg-white w-full p-2 items-center rounded shadow-sm">
+                  <div className="flex justify-between bg-white w-full p-2 items-center rounded shadow-sm group">
                     <button
                       onClick={() => handleRecipeClick(selectedRecipes[meal])}
-                      className="text-left text-sm text-neutral-800  border border-white  outline-none hover:opacity-75"
+                      className="text-left text-sm text-neutral-800 border border-white outline-none truncate line-clamp-2 whitespace-normal w-full hover:opacity-75"
                     >
                       {selectedRecipes[meal]?.name}
                     </button>
-                    <div className="flex items-center gap-1 text-neutral-600">
+                    <div className="flex items-center gap-1 text-neutral-600 lg:hidden group-hover:flex">
                       <IconButton
                         handleClick={() => openSelectRecipeModal(meal)}
                         icon={<LiaExchangeAltSolid />}

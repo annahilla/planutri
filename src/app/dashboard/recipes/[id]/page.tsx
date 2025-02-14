@@ -8,7 +8,7 @@ import { getRecipe } from "@/services/recipeService";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { useParams } from "next/navigation";
-import { BeatLoader } from "react-spinners";
+import Loader from "@/components/ui/Loader";
 
 const RecipeDetailsPage = () => {
   const params = useParams();
@@ -23,26 +23,24 @@ const RecipeDetailsPage = () => {
   }, []);
 
   if (!recipe) {
-    return (
-      <div className="flex items-center justify-center h-[90vh] w-full">
-        <BeatLoader color="#545046" />
-      </div>
-    );
+    return <Loader />;
   }
 
   return (
-    <div className="flex bg-white h-full py-5 flex-col px-6 rounded text-black md:items-start md:w-full">
-      <div className="flex gap-3 items-center mb-5">
-        <Link
-          href={"/dashboard/recipes"}
-          className="text-lightBrown hover:opacity-80"
-        >
-          <IoMdArrowBack size={24} />
-        </Link>
-        <h2 className="text-2xl">{recipe.name}</h2>
+    <>
+      <div className="flex bg-white h-full py-5 flex-col rounded text-black md:items-start md:w-full">
+        <div className="flex gap-3 items-center mb-5">
+          <Link
+            href={"/dashboard/recipes"}
+            className="text-lightBrown hover:opacity-80"
+          >
+            <IoMdArrowBack size={24} />
+          </Link>
+          <h2 className="text-2xl">{recipe.name}</h2>
+        </div>
+        <RecipeDetails currentRecipe={recipe} />
       </div>
-      <RecipeDetails currentRecipe={recipe} />
-    </div>
+    </>
   );
 };
 

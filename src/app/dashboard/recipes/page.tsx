@@ -2,11 +2,11 @@
 
 import RecipesList from "@/components/recipes/RecipesList";
 import { useAppSelector } from "@/lib/store/reduxHooks";
-import { BeatLoader } from "react-spinners";
 import PageTitle from "@/components/ui/PageTitle";
 import Link from "next/link";
 import { IoCreateOutline } from "react-icons/io5";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
+import Loader from "@/components/ui/Loader";
 
 const RecipesPage = () => {
   const recipes = useAppSelector((state) => state.recipes.recipes);
@@ -24,9 +24,7 @@ const RecipesPage = () => {
         </Link>
       </div>
       {isLoading ? (
-        <div className="flex items-center justify-center h-[80vh] w-full">
-          <BeatLoader color="#545046" />
-        </div>
+        <Loader />
       ) : (
         <RecipesList recipes={recipes} showLinks={true} />
       )}
