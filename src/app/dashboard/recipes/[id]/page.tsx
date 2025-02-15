@@ -1,7 +1,7 @@
 "use client";
 
 import RecipeDetails from "@/components/recipes/RecipeDetails";
-import { Recipe } from "@/types/types";
+import { RecipeInterface } from "@/types/types";
 import { IoMdArrowBack } from "react-icons/io";
 import Link from "next/link";
 import { getRecipe } from "@/services/recipeService";
@@ -14,7 +14,7 @@ const RecipeDetailsPage = () => {
   const params = useParams();
   const id = params?.id;
   const token = useAppSelector((state) => state.auth.user?.token);
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [recipe, setRecipe] = useState<RecipeInterface | null>(null);
 
   useEffect(() => {
     if (token && id !== undefined) {

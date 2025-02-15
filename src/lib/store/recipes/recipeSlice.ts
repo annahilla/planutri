@@ -1,10 +1,10 @@
 import { getRecipes } from "@/services/recipeService";
-import { AuthUser, Recipe } from "@/types/types";
+import { AuthUser, RecipeInterface } from "@/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface RecipeState {
-  recipes: Recipe[];
-  selectedRecipes: { [meal: string]: Recipe | null }; 
+  recipes: RecipeInterface[];
+  selectedRecipes: { [meal: string]: RecipeInterface | null }; 
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
@@ -27,7 +27,7 @@ const recipeSlice = createSlice({
     name: "recipes",
     initialState,
     reducers: {
-      setRecipes: (state, action: PayloadAction<{ menu: Recipe[] }>) => {
+      setRecipes: (state, action: PayloadAction<{ menu: RecipeInterface[] }>) => {
       state.recipes = action.payload.menu;
     }
     },

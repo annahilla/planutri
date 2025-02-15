@@ -1,6 +1,6 @@
 "use client"
 
-import { Recipe } from "@/types/types";
+import { RecipeInterface } from "@/types/types";
 import { toast } from "react-toastify";
 
 
@@ -20,7 +20,7 @@ export const getRecipes = async (token: string) => {
 
     const recipes = await response.json();
 
-    const sortedRecipes = recipes.sort((a: Recipe, b: Recipe) => {
+    const sortedRecipes = recipes.sort((a: RecipeInterface, b: RecipeInterface) => {
       if (a.name < b.name) return -1;
       if (a.name > b.name) return 1;
       return 0;
@@ -45,7 +45,7 @@ export const getRecipe = async (id: string, token: string) => {
   return recipe;
 }
 
-export const addRecipe = async (recipe: Recipe, token: string) => {
+export const addRecipe = async (recipe: RecipeInterface, token: string) => {
     try {
     const response = await fetch(`/api/recipes`, {
       method: "POST",
@@ -69,7 +69,7 @@ export const addRecipe = async (recipe: Recipe, token: string) => {
   }
 };
 
-export const updateRecipe = async (recipe: Partial<Recipe>, token: string) => {
+export const updateRecipe = async (recipe: Partial<RecipeInterface>, token: string) => {
   const id = recipe._id;
   try {
     const response = await fetch(`/api/recipes/${id}`, {

@@ -1,10 +1,10 @@
 import { getMenu } from "@/services/menuService";
-import { AuthUser, MenuInterface, Recipe, SelectedRecipesState } from "@/types/types";
+import { AuthUser, MenuInterface, RecipeInterface, SelectedRecipesState } from "@/types/types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface MenuState {
   menu: MenuInterface[];
-  selectedRecipes: { [meal: string]: Recipe | null }; 
+  selectedRecipes: { [meal: string]: RecipeInterface | null }; 
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
