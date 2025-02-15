@@ -20,6 +20,7 @@ import SideNavbarItem from "./ui/SideNavbarItem";
 import { BsBoxArrowLeft } from "react-icons/bs";
 import { BsBoxArrowRight } from "react-icons/bs";
 import useClickOutside from "@/hooks/useClickOutside";
+import { generateShoppingList } from "@/services/shoppingListService";
 
 interface SideNavbarProps {
   isNavbarCollapsed: boolean;
@@ -32,6 +33,7 @@ const SideNavbar = ({
 }: SideNavbarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
+  const token = useAppSelector((state) => state.auth.user?.token);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null!);
@@ -55,6 +57,13 @@ const SideNavbar = ({
       router.push("/dashboard/profile");
     } else {
       toggleDropdown();
+    }
+  };
+
+  const handleGenerateShoppingList = () => {
+    if (token) {
+      generateShoppingList(token);
+      router.push("/dashboard/shopping-list");
     }
   };
 
@@ -95,18 +104,21 @@ const SideNavbar = ({
             icon={<CiCalendar size={22} />}
             collapsedStyles={isNavbarCollapsed}
           />
-          <SideNavbarItem
-            name="Shopping List"
-            href="/dashboard/shopping-list"
-            icon={<CiBoxList size={22} />}
-            collapsedStyles={isNavbarCollapsed}
-          />
+          <button onClick={handleGenerateShoppingList}>
+            <SideNavbarItem
+              name="Shopping List"
+              href="/dashboard/shopping-list"
+              icon={<CiBoxList size={22} />}
+              collapsedStyles={isNavbarCollapsed}
+            />
+          </button>
           <SideNavbarItem
             name="Recipes"
             href="/dashboard/recipes"
             icon={<CiViewList size={22} />}
             collapsedStyles={isNavbarCollapsed}
           />
+
           <SideNavbarItem
             name="Create Recipe"
             href="/dashboard/create-recipe"
