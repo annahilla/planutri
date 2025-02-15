@@ -5,6 +5,7 @@ const ShoppingListSchema = new Schema(
     userId: { type: String, required: true },
     list: [
         { 
+            _id: { type: String, required: false },
             ingredient: { type: String, required: true }, 
             quantity: { type: Number, required: true}, 
             unit: { type: String, required: true }  

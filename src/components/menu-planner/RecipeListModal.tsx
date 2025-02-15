@@ -3,7 +3,12 @@
 import { CiSearch } from "react-icons/ci";
 import Modal from "../ui/Modal";
 import RecipesList from "../recipes/RecipesList";
-import { DayOfTheWeek, Meal, MenuInterface, Recipe } from "@/types/types";
+import {
+  DayOfTheWeek,
+  Meal,
+  MenuInterface,
+  RecipeInterface,
+} from "@/types/types";
 import { ChangeEvent, useEffect, useState } from "react";
 import { addRecipeToMenu } from "@/services/menuService";
 import { setMenu } from "@/lib/store/menu/menuSlice";
@@ -26,7 +31,8 @@ const RecipeListModal = ({
   const token = useAppSelector((state) => state.auth.user?.token);
   const recipes = useAppSelector((state) => state.recipes.recipes);
   const fullMenu = useAppSelector((state) => state.menu.menu);
-  const [filteredRecipes, setFilteredRecipes] = useState<Recipe[]>(recipes);
+  const [filteredRecipes, setFilteredRecipes] =
+    useState<RecipeInterface[]>(recipes);
 
   useEffect(() => {
     setFilteredRecipes(recipes);
@@ -43,7 +49,7 @@ const RecipeListModal = ({
     }
   };
 
-  const selectRecipe = async (recipe: Recipe, selectedMeal: Meal) => {
+  const selectRecipe = async (recipe: RecipeInterface, selectedMeal: Meal) => {
     try {
       const newMenu: MenuInterface = {
         recipe,

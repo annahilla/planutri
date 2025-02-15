@@ -1,11 +1,11 @@
 "use client";
 
-import { Recipe } from "@/types/types";
+import { RecipeInterface } from "@/types/types";
 import Link from "next/link";
 
 interface RecipeListProps {
-  recipes: Recipe[];
-  onSelect?: (recipe: Recipe) => void;
+  recipes: RecipeInterface[];
+  onSelect?: (recipe: RecipeInterface) => void;
   showLinks?: boolean;
 }
 

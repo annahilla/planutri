@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DayOfTheWeek, Meal, MenuInterface, Recipe } from "@/types/types";
+import {
+  DayOfTheWeek,
+  Meal,
+  MenuInterface,
+  RecipeInterface,
+} from "@/types/types";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { deleteSingleMenu } from "@/services/menuService";
 import { IoMdClose } from "react-icons/io";
@@ -19,7 +24,9 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
   const [isRecipeDetailsModalOpen, setIsRecipeDetailsModalOpen] =
     useState(false);
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null);
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+  const [selectedRecipe, setSelectedRecipe] = useState<RecipeInterface | null>(
+    null
+  );
   const token = useAppSelector((state) => state.auth.user?.token);
   const recipes = useAppSelector((state) => state.recipes.recipes);
   const fullMenu = useAppSelector((state) => state.menu.menu);
@@ -27,7 +34,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
     (fullMenu) => fullMenu.dayOfTheWeek === dayOfTheWeek
   );
   const [selectedRecipes, setSelectedRecipes] = useState<{
-    [meal: string]: Recipe | null;
+    [meal: string]: RecipeInterface | null;
   }>({});
 
   useEffect(() => {
@@ -38,14 +45,14 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
     const newSelectedRecipes = dayMenu.reduce(
       (acc, menuItem: MenuInterface) => {
         const selectedRecipe = recipes.find(
-          (recipe: Recipe) => recipe._id === menuItem.recipe
+          (recipe: RecipeInterface) => recipe._id === menuItem.recipe
         );
         if (selectedRecipe) {
           acc[menuItem.meal] = selectedRecipe;
         }
         return acc;
       },
-      {} as { [meal: string]: Recipe | null }
+      {} as { [meal: string]: RecipeInterface | null }
     );
 
     if (
@@ -66,7 +73,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
     setSelectedMeal(meal);
   };
 
-  const openRecipeDetailsModal = (currentRecipe: Recipe) => {
+  const openRecipeDetailsModal = (currentRecipe: RecipeInterface) => {
     setIsRecipeDetailsModalOpen(true);
     if (currentRecipe !== null) {
       setSelectedRecipe(currentRecipe);
@@ -102,7 +109,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
     });
   };
 
-  const handleRecipeClick = (currentRecipe: Recipe | null) => {
+  const handleRecipeClick = (currentRecipe: RecipeInterface | null) => {
     if (currentRecipe) {
       openRecipeDetailsModal(currentRecipe);
     }

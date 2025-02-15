@@ -17,7 +17,7 @@ export interface IngredientInterface {
   unit: string
 }
 
-export interface Recipe {
+export interface RecipeInterface {
   _id?: string;
   name: string;
   ingredients: IngredientInterface[],
@@ -48,11 +48,11 @@ export const meals: Meal[] = ["Breakfast", "Lunch", "Snack", "Dinner"];
 
 export interface MenuInterface {
   _id?: string;
-  recipe: Recipe | string,
+  recipe: RecipeInterface | string,
   dayOfTheWeek: DayOfTheWeek,
   meal: Meal
 }
 
 export type SelectedRecipesState = {
-  [meal: string]: Recipe | null;
+  [meal: string]: RecipeInterface | null;
 };

@@ -3,7 +3,7 @@
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import Button from "../ui/buttons/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
-import { IngredientInterface, Recipe } from "@/types/types";
+import { IngredientInterface, RecipeInterface } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import IngredientDropdown from "../ui/IngredientDropdown";
@@ -19,7 +19,7 @@ const RecipeDetails = ({
   closeModal,
   clearRecipe,
 }: {
-  currentRecipe: Recipe;
+  currentRecipe: RecipeInterface;
   isModal?: boolean;
   closeModal?: () => void;
   clearRecipe?: (id: string) => void;

@@ -1,10 +1,10 @@
-import { Recipe } from "@/types/types";
+import { RecipeInterface } from "@/types/types";
 import RecipeDetails from "../recipes/RecipeDetails";
 import Modal from "../ui/Modal";
 
 interface RecipeDetailsModalProps {
   isModalOpen: boolean;
-  selectedRecipe: Recipe | null;
+  selectedRecipe: RecipeInterface | null;
   handleClearRecipe: (id: string) => void;
   closeModal: () => void;
 }
@@ -21,7 +21,7 @@ const RecipeDetailsModal = ({
         <RecipeDetails
           isModal={true}
           closeModal={closeModal}
-          currentRecipe={selectedRecipe ?? ({} as Recipe)}
+          currentRecipe={selectedRecipe ?? ({} as RecipeInterface)}
           clearRecipe={handleClearRecipe}
         />
       </div>
