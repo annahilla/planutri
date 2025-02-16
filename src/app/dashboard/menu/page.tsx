@@ -6,7 +6,7 @@ import { deleteFullMenu } from "@/services/menuService";
 import { useState } from "react";
 import DeleteConfirmationModal from "@/components/ui/DeleteConfirmationModal";
 import PageTitle from "@/components/ui/PageTitle";
-import { setMenu } from "@/lib/store/menu/menuSlice";
+import { setMenu } from "@/lib/store/apis/menuSlice";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { BsEraser } from "react-icons/bs";
 import Loader from "@/components/ui/Loader";

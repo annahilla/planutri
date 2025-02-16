@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { deleteSingleMenu } from "@/services/menuService";
 import { IoMdClose } from "react-icons/io";
 import { LiaExchangeAltSolid } from "react-icons/lia";
-import { setMenu } from "@/lib/store/menu/menuSlice";
+import { setMenu } from "@/lib/store/apis/menuSlice";
 import { mealIcons } from "@/utils/MealIcons";
 import RecipeListModal from "./RecipeListModal";
 import RecipeDetailsModal from "./RecipeDetailsModal";

@@ -11,7 +11,7 @@ import { IoIosClose } from "react-icons/io";
 import ErrorMessage from "../ui/ErrorMessage";
 import DeleteConfirmationModal from "../ui/DeleteConfirmationModal";
 import { validateCreateRecipeForm } from "@/utils/validation";
-import { fetchRecipes } from "@/lib/store/recipes/recipeSlice";
+import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
 
 const RecipeDetails = ({
   currentRecipe,

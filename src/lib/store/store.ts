@@ -2,8 +2,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./auth/authSlice";
 import unitsReducer from "./apis/unitsSlice";
 import ingredientsReducer from "./apis/ingredientsSlice";
-import menuReducer from "./menu/menuSlice";
-import recipeReducer from "./recipes/recipeSlice";
+import menuReducer from "./apis/menuSlice";
+import recipeReducer from "./apis/recipeSlice";
+import shoppingListReducer from "./apis/shoppingListSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -12,7 +13,8 @@ export const makeStore = () => {
         units: unitsReducer,
         ingredients: ingredientsReducer,
         menu: menuReducer,
-        recipes: recipeReducer
+        recipes: recipeReducer,
+        shoppingList: shoppingListReducer
     }
   })
 };

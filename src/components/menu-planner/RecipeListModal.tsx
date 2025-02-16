@@ -11,7 +11,7 @@ import {
 } from "@/types/types";
 import { ChangeEvent, useEffect, useState } from "react";
 import { addRecipeToMenu } from "@/services/menuService";
-import { setMenu } from "@/lib/store/menu/menuSlice";
+import { setMenu } from "@/lib/store/apis/menuSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 
 interface RecipeListModalProps {

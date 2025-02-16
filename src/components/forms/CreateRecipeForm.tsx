@@ -10,7 +10,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { IngredientInterface } from "@/types/types";
 import { addRecipe } from "@/services/recipeService";
 import { validateCreateRecipeForm } from "@/utils/validation";
-import { fetchRecipes } from "@/lib/store/recipes/recipeSlice";
+import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
 
 const CreateRecipeForm = () => {
   const units = useAppSelector((state) => state.units.units);
