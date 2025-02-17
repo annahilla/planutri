@@ -1,6 +1,6 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import { verifyToken } from "@/app/api/(utils)/auth";
+import { verifyToken } from "@/app/api/(auth)/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {

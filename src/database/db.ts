@@ -21,6 +21,7 @@ const connect = async () => {
             bufferCommands: true
         });
         console.log("Connected");
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {
         console.log("Error", error);
         throw new Error("Error: ", error)

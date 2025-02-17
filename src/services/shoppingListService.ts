@@ -1,4 +1,5 @@
 import { IngredientInterface } from "@/types/types";
+import { toast } from "react-toastify";
 
 export const getShoppingList = async (token: string) => {
   try {
@@ -47,3 +48,25 @@ export const generateShoppingList  = async (token: string): Promise<IngredientIn
   }
 };
 
+export const deleteShoppingList = async (token: string) => {
+  try {
+    const response = await fetch(`/api/shopping-list`, {
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+      }
+    });
+
+    if (!response.ok) {
+      toast.error("Failed to clear the shopping list. Please try again.");
+      return;
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error(error);
+    toast.error("An unexpected error occurred. Please try again later.");
+  }
+};

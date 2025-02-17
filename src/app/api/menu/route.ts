@@ -1,4 +1,4 @@
-import { verifyToken } from "@/app/api/(utils)/auth";
+import { verifyToken } from "@/app/api/(auth)/auth";
 import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import Menu from "@/database/models/menu";

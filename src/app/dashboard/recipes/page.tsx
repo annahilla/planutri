@@ -18,7 +18,7 @@ const RecipesPage = () => {
       <div className="flex justify-between items-center">
         <PageTitle>Recipes</PageTitle>
         <Link href={"/dashboard/create-recipe"}>
-          <DashboardButton icon={<IoCreateOutline size={22} />}>
+          <DashboardButton icon={<IoCreateOutline size={17} />}>
             Create Recipe
           </DashboardButton>
         </Link>

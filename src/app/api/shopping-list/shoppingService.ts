@@ -21,10 +21,16 @@ export class shoppingService {
             return new NextResponse("No recipes found", { status: 404 });
         }
 
+        const existingShoppingList = await ShoppingList.find({ userId: userId });
         const shoppingList = this.getIngredients(recipes);
-        console.log("shoppingList");
+        const shoppingListIngredientsCalculated = this.sumOfIngredients(shoppingList);
 
-        const newShoppingList = new ShoppingList({userId, list: shoppingList});
+        if(existingShoppingList.length > 0) {
+            const updatedShoppingList = await ShoppingList.findByIdAndUpdate(existingShoppingList[0]._id, {list: shoppingListIngredientsCalculated}, {new: true})
+            return updatedShoppingList;
+        }
+
+        const newShoppingList = new ShoppingList({userId, list: shoppingListIngredientsCalculated});
         await newShoppingList.save();
 
         return shoppingList;
@@ -46,8 +52,16 @@ export class shoppingService {
     // private async getRecipes(weeklyMenu: MenuInterface[]): Promise<RecipeInterface> {
     private async getRecipes(weeklyMenu: MenuInterface[]) {
         const recipeIds = weeklyMenu.map(menu => menu.recipe);
-        const recipes = await Recipe.find({ _id: { $in: recipeIds } });
-        return recipes;
+        const recipes = await Recipe.find({ _id: recipeIds });
+        const repeatedRecipes: RecipeInterface[] = [];
+        
+        recipeIds.forEach(recipeId => {
+            const recipe = recipes.find(recipeItem => recipeItem._id.toString() === recipeId.toString());
+            if (recipe) {
+                repeatedRecipes.push(recipe);
+            }
+        });
+        return repeatedRecipes;
     }
 
     private async recipesExist(recipes: RecipeInterface[]): Promise<boolean> {
@@ -60,6 +74,24 @@ export class shoppingService {
     }
 
     private getIngredients(recipes: RecipeInterface[]): IngredientInterface[] {
-        return recipes.flatMap(recipe => recipe.ingredients);
+    return recipes
+        .flatMap(recipe => recipe.ingredients)
+        .sort((a, b) => a.ingredient.localeCompare(b.ingredient));
     }
+    
+    private sumOfIngredients(list: IngredientInterface[]): IngredientInterface[] {
+    const ingredientMap = new Map<string, IngredientInterface>();
+
+    list.forEach(({ _id, ingredient, quantity, unit }) => {
+        const key = `${ingredient}-${unit}`;
+
+        if (ingredientMap.has(key)) {
+            ingredientMap.get(key)!.quantity += quantity;
+        } else {
+            ingredientMap.set(key, { _id, ingredient, quantity, unit });
+        }
+    });
+
+    return Array.from(ingredientMap.values());
+}
 }

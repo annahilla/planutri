@@ -1,6 +1,6 @@
 import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "../(utils)/auth";
+import { verifyToken } from "../(auth)/auth";
 import ShoppingList from "@/database/models/shopping-list";
 import { shoppingService } from "./shoppingService";
 
@@ -42,3 +42,29 @@ export const POST = async (req: NextRequest) => {
         });
     }
 };
+
+export const DELETE = async (req: NextRequest) => {
+    try {
+        const userId = await verifyToken(req);
+
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        await connect();
+
+        const result = await ShoppingList.deleteMany({ userId });
+
+        if (result.deletedCount === 0) {
+            return new NextResponse("No shopping list found to delete", { status: 404 });
+        }
+
+        return new NextResponse(JSON.stringify({ message: "Shopping List deleted successfully", deletedCount: result.deletedCount }), { status: 200 });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+        console.error("Error deleting recipe:", error);
+        return new NextResponse(JSON.stringify({ message: error.message, stack: error.stack }), {
+            status: 500,
+        });
+    }
+}

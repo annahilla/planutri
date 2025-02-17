@@ -11,7 +11,10 @@ import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { BsEraser } from "react-icons/bs";
 import Loader from "@/components/ui/Loader";
 import { CiBoxList } from "react-icons/ci";
-import { generateShoppingList } from "@/services/shoppingListService";
+import {
+  deleteShoppingList,
+  generateShoppingList,
+} from "@/services/shoppingListService";
 import { useRouter } from "next/navigation";
 
 const Menu = () => {
@@ -28,6 +31,7 @@ const Menu = () => {
   const clearAll = async () => {
     if (token) {
       const isDeleted = await deleteFullMenu(token);
+      await deleteShoppingList(token);
       setIsModalOpen(false);
       if (isDeleted) {
         dispatch(setMenu({ menu: [] }));

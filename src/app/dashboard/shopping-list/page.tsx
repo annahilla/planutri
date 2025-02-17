@@ -2,16 +2,28 @@
 
 import Loader from "@/components/ui/Loader";
 import PageTitle from "@/components/ui/PageTitle";
-import { useAppSelector } from "@/lib/store/reduxHooks";
+import { fetchShoppingList } from "@/lib/store/apis/shoppingListSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
+import { generateShoppingList } from "@/services/shoppingListService";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const ShoppingList = () => {
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.user?.token);
   const shoppingList = useAppSelector(
     (state) => state.shoppingList.shoppingList
   );
   const isLoading = useAppSelector(
     (state) => state.shoppingList.status === "loading"
   );
+
+  useEffect(() => {
+    if (token) {
+      generateShoppingList(token);
+    }
+    dispatch(fetchShoppingList());
+  }, []);
 
   return (
     <div className="h-full">
@@ -20,7 +32,7 @@ const ShoppingList = () => {
         {isLoading ? (
           <Loader />
         ) : shoppingList.length > 0 ? (
-          <div className="flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:px-10 md:w-fit">
+          <div className="flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:w-fit">
             {shoppingList.map((shoppingItem) => (
               <div className="flex gap-2" key={shoppingItem._id}>
                 <input type="checkbox" />
