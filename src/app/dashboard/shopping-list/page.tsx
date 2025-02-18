@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { generateShoppingList } from "@/services/shoppingListService";
 import Link from "next/link";
 import { useEffect } from "react";
+import ShoppingListItem from "./ShoppingListItem";
 
 const ShoppingList = () => {
   const dispatch = useAppDispatch();
@@ -32,16 +33,12 @@ const ShoppingList = () => {
         {isLoading ? (
           <Loader />
         ) : shoppingList.length > 0 ? (
-          <div className="flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:w-fit">
+          <div className="mt-3 flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:w-fit">
             {shoppingList.map((shoppingItem) => (
-              <div className="flex gap-2" key={shoppingItem._id}>
-                <input type="checkbox" />
-                <div className="flex gap-1">
-                  <span>{shoppingItem.quantity}</span>
-                  <span>{shoppingItem.unit}</span>
-                  <span>{shoppingItem.ingredient}</span>
-                </div>
-              </div>
+              <ShoppingListItem
+                key={shoppingItem._id}
+                shoppingItem={shoppingItem}
+              />
             ))}
           </div>
         ) : (

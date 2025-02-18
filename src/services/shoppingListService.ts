@@ -15,7 +15,7 @@ export const getShoppingList = async (token: string) => {
       throw new Error("Error fetching recipes");
     }
 
-    const data = await response.json();
+    const data = await response.json()
     const shoppingList = data[0].list;
 
     return shoppingList;
@@ -70,3 +70,29 @@ export const deleteShoppingList = async (token: string) => {
     toast.error("An unexpected error occurred. Please try again later.");
   }
 };
+
+export const updateShoppingList = async (ingredient: IngredientInterface, token: string): Promise<IngredientInterface[]> => {
+  const id = ingredient._id;
+  try {
+    const response = await fetch("/api/shopping-list", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify({ id, ...ingredient }),
+    });
+
+    if (!response.ok) {
+      toast.error("There was an error updating the shopping list");
+      throw new Error("Error updating shopping list");
+    }
+
+    const updatedShoppingList = await response.json();
+    return updatedShoppingList;
+  } catch (error) {
+    console.error(error);
+    toast.error("An unexpected error occurred. Please try again later.");
+    return [];
+  }
+}

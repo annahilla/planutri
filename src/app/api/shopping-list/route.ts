@@ -43,6 +43,32 @@ export const POST = async (req: NextRequest) => {
     }
 };
 
+export const PUT = async (req: NextRequest) => {
+    try {
+        const userId = await verifyToken(req);
+
+        if (!userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
+
+        const body = await req.json();
+        const { _id, checked } = body;
+
+        const shoppingListService = new shoppingService();
+        const updatedShoppingList = await shoppingListService.updateShoppingList(userId, _id, checked);
+
+        console.log(updatedShoppingList);
+        
+        return new NextResponse(JSON.stringify(updatedShoppingList), { status: 201 })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+        console.error("Error generating shopping list:", error); 
+        return new NextResponse(JSON.stringify({ message: error.message, stack: error.stack }), {
+            status: 500,
+        });
+    }
+}
+
 export const DELETE = async (req: NextRequest) => {
     try {
         const userId = await verifyToken(req);

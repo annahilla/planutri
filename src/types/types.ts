@@ -12,6 +12,7 @@ export interface User {
 
 export interface IngredientInterface {
   _id?: string;
+  checked?: boolean;
   ingredient: string,
   quantity: number,
   unit: string

@@ -25,16 +25,12 @@ const CreateRecipeForm = () => {
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
   const token = useAppSelector((state) => state.auth.user?.token);
 
-  const handleRecipeNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleRecipeNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRecipeName(event.target.value);
     setError("");
   };
 
-  const handleIngredientChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleIngredientChange = (event: ChangeEvent<HTMLInputElement>) => {
     setIngredientInputValue(event.target.value);
     setError("");
   };

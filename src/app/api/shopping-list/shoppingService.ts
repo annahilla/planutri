@@ -36,6 +36,24 @@ export class shoppingService {
         return shoppingList;
     }
 
+    async updateShoppingList(userId: string, ingredientId: string, checked: boolean) {
+    const shoppingList = await ShoppingList.findOne({ userId });
+
+    if (!shoppingList) {
+        throw new Error("Shopping list not found");
+    }
+
+    const ingredientIndex = shoppingList.list.findIndex((item: IngredientInterface) => item._id && item._id.toString() === ingredientId);
+
+    if (ingredientIndex !== -1) {
+        shoppingList.list[ingredientIndex].checked = checked;
+        await shoppingList.save();
+    }
+
+    return shoppingList;
+}
+
+
     // private async getMenu(userId: string): Promise<MenuInterface> {
     private async getMenu(userId: string) {
         return await Menu.find({ userId: userId });
