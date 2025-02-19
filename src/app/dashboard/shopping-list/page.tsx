@@ -4,7 +4,10 @@ import Loader from "@/components/ui/Loader";
 import PageTitle from "@/components/ui/PageTitle";
 import { fetchShoppingList } from "@/lib/store/apis/shoppingListSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
-import { generateShoppingList } from "@/services/shoppingListService";
+import {
+  generateShoppingList,
+  updateShoppingList,
+} from "@/services/shoppingListService";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ShoppingListItem from "../../../components/shopping-list/ShoppingListItem";
@@ -40,6 +43,25 @@ const ShoppingList = () => {
     setCurrentList(shoppingList);
   };
 
+  const handleCheckboxChange = (updatedItem: IngredientInterface) => {
+    setCurrentList((prevList) => {
+      const updatedList = prevList.map((item) =>
+        item._id === updatedItem._id ? updatedItem : item
+      );
+
+      return updatedList.sort((a, b) => {
+        if (a.checked !== b.checked) {
+          return Number(a.checked) - Number(b.checked);
+        }
+        return a.ingredient.localeCompare(b.ingredient);
+      });
+    });
+
+    if (token) {
+      updateShoppingList(updatedItem, token);
+    }
+  };
+
   useEffect(() => {
     if (token) {
       generateShoppingList(token);
@@ -58,15 +80,20 @@ const ShoppingList = () => {
         {isLoading ? (
           <Loader />
         ) : shoppingList.length > 0 ? (
-          <div className="mt-3 flex flex-col items-start gap-5 border border-neutral-400 rounded p-5 w-full md:w-1/2 lg:w-1/3 xl:w-1/4">
+          <div className="mt-3 flex flex-col items-start gap-8 border border-neutral-400 rounded p-5 w-full md:w-1/2 lg:w-1/3 xl:w-1/4">
             <div className="flex flex-col gap-2 w-full">
-              {currentList.map((shoppingItem) => (
-                <ShoppingListItem
-                  key={shoppingItem._id}
-                  shoppingItem={shoppingItem}
-                />
-              ))}
+              {currentList
+                .slice()
+                .sort((a, b) => Number(a.checked) - Number(b.checked))
+                .map((shoppingItem, index) => (
+                  <ShoppingListItem
+                    key={`${shoppingItem._id}-${index}`}
+                    shoppingItem={shoppingItem}
+                    onCheckboxChange={handleCheckboxChange}
+                  />
+                ))}
             </div>
+
             <AddButton handleClick={addNewInput} item="ingredient" />
           </div>
         ) : (

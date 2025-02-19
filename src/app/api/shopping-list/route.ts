@@ -56,8 +56,6 @@ export const PUT = async (req: NextRequest) => {
 
         const shoppingListService = new shoppingService();
         const updatedShoppingList = await shoppingListService.updateShoppingList(userId, _id, checked);
-
-        console.log(updatedShoppingList);
         
         return new NextResponse(JSON.stringify(updatedShoppingList), { status: 201 })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
