@@ -14,7 +14,7 @@ export interface IngredientInterface {
   _id?: string;
   checked?: boolean;
   ingredient: string,
-  quantity: number,
+  quantity: number | null,
   unit: string
 }
 

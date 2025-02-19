@@ -12,6 +12,7 @@ import ErrorMessage from "../ui/ErrorMessage";
 import DeleteConfirmationModal from "../ui/DeleteConfirmationModal";
 import { validateCreateRecipeForm } from "@/utils/validation";
 import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
+import AddButton from "../ui/buttons/AddButton";
 
 const RecipeDetails = ({
   currentRecipe,
@@ -274,12 +275,9 @@ const RecipeDetails = ({
                   </li>
                 ))}
               </ul>
-              <button
-                onClick={addIngredientInput}
-                className="mt-8 bg-neutral-100 text-neutral-700 text-sm p-2 rounded hover:opacity-80"
-              >
-                + Add ingredient
-              </button>
+              <div className="mt-8">
+                <AddButton item="ingredient" handleClick={addIngredientInput} />
+              </div>
             </div>
           </div>
           <div className="flex-1 flex flex-col">
