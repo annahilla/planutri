@@ -26,7 +26,20 @@ export class shoppingService {
         const shoppingListIngredientsCalculated = this.sumOfIngredients(shoppingList);
 
         if(existingShoppingList.length > 0) {
-            const updatedShoppingList = await ShoppingList.findByIdAndUpdate(existingShoppingList[0]._id, {list: shoppingListIngredientsCalculated}, {new: true})
+            const existingList = existingShoppingList[0].list;
+            const mergedList = shoppingListIngredientsCalculated.map(newItem => {
+                const existigItem = existingList.find((item: IngredientInterface) => item.ingredient === newItem.ingredient && item.unit === newItem.unit);
+                return {
+                    ...newItem,
+                    checked: existigItem ? existigItem.checked : false
+                }
+            })
+            const updatedShoppingList = await ShoppingList.findByIdAndUpdate(
+                existingShoppingList[0]._id, 
+                {list: mergedList}, 
+                {new: true}
+            );
+
             return updatedShoppingList;
         }
 
@@ -48,8 +61,10 @@ export class shoppingService {
     if (ingredientIndex !== -1) {
         shoppingList.list[ingredientIndex].checked = checked;
         await shoppingList.save();
+    } else {
+        throw new Error("Ingredient not found in the shopping list");
     }
-
+    
     return shoppingList;
 }
 

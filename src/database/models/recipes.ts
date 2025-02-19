@@ -8,7 +8,8 @@ const RecipesSchema = new Schema(
             _id: {type: String, required: false},
             ingredient: { type: String, required: true }, 
             quantity: { type: Number, required: true}, 
-            unit: { type: String, required: true }  
+            unit: { type: String, required: true },
+            checked: { type: Boolean, default: false, required: false },
         }
     ],
     description: { type: String, required: false },

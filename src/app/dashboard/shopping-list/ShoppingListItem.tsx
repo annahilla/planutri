@@ -10,22 +10,25 @@ const ShoppingListItem = ({
 }: {
   shoppingItem: IngredientInterface;
 }) => {
-  const [isChecked, setIsChecked] = useState(
-    shoppingItem.checked ? shoppingItem.checked : false
-  );
-  const [ingredient, setIngredient] = useState(shoppingItem);
+  const [isChecked, setIsChecked] = useState(false);
   const token = useAppSelector((state) => state.auth.user?.token);
 
   const handleOnChange = () => {
     setIsChecked(!isChecked);
-    setIngredient((prev) => ({ ...prev, checked: !isChecked }));
+
+    const newIngredient = {
+      ...shoppingItem,
+      checked: !isChecked,
+    };
+
+    if (token) {
+      updateShoppingList(newIngredient, token);
+    }
   };
 
   useEffect(() => {
-    if (token) {
-      updateShoppingList(ingredient, token);
-    }
-  }, [isChecked]);
+    setIsChecked(shoppingItem.checked ? shoppingItem.checked : false);
+  }, [shoppingItem]);
 
   return (
     <div className="flex gap-2" key={shoppingItem._id}>

@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 export const getShoppingList = async (token: string) => {
   try {
-    const response = await fetch(`/api/shopping-list`, {
+    const response = await fetch("/api/shopping-list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -15,9 +15,8 @@ export const getShoppingList = async (token: string) => {
       throw new Error("Error fetching recipes");
     }
 
-    const data = await response.json()
+    const data = await response.json();
     const shoppingList = data[0].list;
-
     return shoppingList;
   } catch (error) {
     console.error(error);
