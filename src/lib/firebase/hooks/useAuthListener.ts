@@ -11,39 +11,41 @@ const useAuthListener = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const token = await user.getIdToken();
-                const userData = { name: user.displayName, email: user.email!, joined: user.metadata.creationTime, token };
-                dispatch(setUser(userData));
-            } else {
-                dispatch(logout());
-            }
-            setLoading(false);
-        });
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const token = await user.getIdToken(true);
+            console.log("onAuthStateChanged token: ", token);
+            dispatch(setUser({
+                name: user.displayName, 
+                email: user.email!, 
+                joined: user.metadata.creationTime, 
+                token 
+            }));
+        } else {
+            dispatch(logout());
+        }
+        setLoading(false);
+    });
 
-        const unsubscribeToken = onIdTokenChanged(auth, async (user) => {
-            if (user) {
-                const token = await user.getIdToken(true);
-                dispatch(setUser({ name: user.displayName, email: user.email!, joined: user.metadata.creationTime, token }));
-            }
-        });
+    const unsubscribeToken = onIdTokenChanged(auth, async (user) => {
+        if (user) {
+            const token = await user.getIdToken(true);
+            console.log("onIdTokenChanged token: ", token);
+            dispatch(setUser({
+                name: user.displayName, 
+                email: user.email!, 
+                joined: user.metadata.creationTime, 
+                token 
+            }));
+        }
+    });
 
+    return () => {
+        unsubscribeAuth();
+        unsubscribeToken();
+    };
+}, [dispatch]);
 
-        const tokenRefreshInterval = setInterval(async () => {
-            const user = auth.currentUser;
-            if (user) {
-                const token = await user.getIdToken(true);
-                dispatch(setUser({ name: user.displayName, email: user.email!, joined: user.metadata.creationTime, token }));
-            }
-        }, 3600000);
-
-        return () => {
-            unsubscribeAuth();
-            unsubscribeToken();
-            clearInterval(tokenRefreshInterval);
-        };
-    }, [dispatch]);
 
     return loading;
 };

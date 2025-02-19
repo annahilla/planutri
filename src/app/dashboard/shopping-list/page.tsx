@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { generateShoppingList } from "@/services/shoppingListService";
 import Link from "next/link";
 import { useEffect } from "react";
-import ShoppingListItem from "./ShoppingListItem";
+import ShoppingListItem from "../../../components/shopping-list/ShoppingListItem";
 
 const ShoppingList = () => {
   const dispatch = useAppDispatch();
