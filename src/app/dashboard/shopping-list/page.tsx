@@ -11,7 +11,6 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ShoppingListItem from "../../../components/shopping-list/ShoppingListItem";
-import AddButton from "@/components/ui/buttons/AddButton";
 import { IngredientInterface } from "@/types/types";
 
 const ShoppingList = () => {
@@ -26,18 +25,6 @@ const ShoppingList = () => {
   const [currentList, setCurrentList] = useState<IngredientInterface[] | []>(
     shoppingList
   );
-
-  const addNewInput = () => {
-    const newEmptyIngredient = {
-      _id: crypto.randomUUID(),
-      name: "",
-      checked: false,
-      ingredient: "",
-      quantity: null,
-      unit: "",
-    };
-    setCurrentList((prevList) => [...prevList, newEmptyIngredient]);
-  };
 
   const updateCurrentList = () => {
     setCurrentList(shoppingList);
@@ -93,8 +80,6 @@ const ShoppingList = () => {
                   />
                 ))}
             </div>
-
-            <AddButton handleClick={addNewInput} item="ingredient" />
           </div>
         ) : (
           <div className="my-4 text-neutral-600">
