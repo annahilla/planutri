@@ -136,7 +136,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
                   <div className="flex justify-between bg-white w-full p-2 items-center rounded shadow-sm group">
                     <button
                       onClick={() => handleRecipeClick(selectedRecipes[meal])}
-                      className="text-left text-sm text-neutral-800 border border-white outline-none truncate line-clamp-2 whitespace-normal w-full hover:opacity-75"
+                      className="text-left text-sm text-neutral-800 border border-white outline-none truncate w-full hover:opacity-75"
                     >
                       {selectedRecipes[meal]?.name}
                     </button>
