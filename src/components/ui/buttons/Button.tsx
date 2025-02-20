@@ -2,21 +2,20 @@ interface ButtonProps {
   children: React.ReactNode;
   filled?: boolean;
   type?: "submit" | "button";
-  color?: string;
+  color?: "black" | "white";
   handleClick?: (() => void) | ((id: string) => Promise<void>);
 }
 
 const colors: Record<string, string> = {
   black: "text-black border-black",
   white: "text-white border-white",
-  red: "text-red-500 border-red-500",
 };
 
 const Button = ({
   children,
   filled,
   type,
-  color = "white",
+  color = "black",
   handleClick,
 }: ButtonProps) => {
   return (

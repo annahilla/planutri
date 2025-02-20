@@ -118,7 +118,10 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
   return (
     <>
       <div className="w-auto">
-        <h5 className="my-2 text-sm font-bold text-left text-black">
+        <h5
+          role="heading"
+          className="my-2 text-sm font-bold text-left text-black"
+        >
           {dayOfTheWeek}
         </h5>
         <div className="bg-beige px-3 py-4 rounded text-center shadow-sm">

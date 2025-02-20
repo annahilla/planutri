@@ -294,11 +294,11 @@ const RecipeDetails = ({
         <div
           className={`flex gap-4 mt-7 items-center justify-center w-full md:justify-start`}
         >
-          <Button handleClick={saveRecipe} filled type="button">
+          <Button handleClick={saveRecipe} color="white" filled type="button">
             Save
           </Button>
           {currentRecipe && currentRecipe._id && (
-            <Button handleClick={openDeleteRecipe} color="black" type="button">
+            <Button handleClick={openDeleteRecipe} type="button">
               Delete
             </Button>
           )}

@@ -20,14 +20,10 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
         Are you sure you want to delete {thingToDelete}?
       </p>
       <div className="flex gap-3 w-2/3 my-8 m-auto md:gap-10">
-        <Button handleClick={handleDelete} type="button" filled>
+        <Button handleClick={handleDelete} type="button" color="white" filled>
           Yes
         </Button>
-        <Button
-          handleClick={() => setIsModalOpen(false)}
-          type="button"
-          color="black"
-        >
+        <Button handleClick={() => setIsModalOpen(false)} type="button">
           No
         </Button>
       </div>

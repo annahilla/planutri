@@ -222,7 +222,7 @@ const CreateRecipeForm = () => {
       </div>
       {error && <ErrorMessage message={error} />}
       <div className="w-32 m-auto md:m-0">
-        <Button filled type="submit">
+        <Button filled color="white" type="submit">
           Create
         </Button>
       </div>
