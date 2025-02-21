@@ -4,6 +4,7 @@ import { IngredientInterface } from "@/types/types";
 import { ChangeEvent, useEffect, useState } from "react";
 
 import { useRef } from "react";
+import IngredientQuantityAndUnit from "../IngredientQuantityAndUnit";
 
 const ShoppingListItem = ({
   shoppingItem,
@@ -46,10 +47,7 @@ const ShoppingListItem = ({
         />
         <div className="flex justify-start gap-2">
           {shoppingItem.quantity && shoppingItem.unit && (
-            <div className="flex gap-1 text-neutral-500">
-              <span>{shoppingItem.quantity}</span>
-              <span>{shoppingItem.unit}</span>
-            </div>
+            <IngredientQuantityAndUnit ingredient={shoppingItem} />
           )}
           <span ref={textRef} className="absolute invisible whitespace-pre">
             {ingredientName}

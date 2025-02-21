@@ -3,18 +3,24 @@
 import RecipeDetails from "@/components/recipes/RecipeDetails";
 import { RecipeInterface } from "@/types/types";
 import { IoMdArrowBack } from "react-icons/io";
-import Link from "next/link";
 import { getRecipe } from "@/services/recipeService";
 import { useEffect, useState } from "react";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { useParams } from "next/navigation";
 import Loader from "@/components/ui/Loader";
+import DashboardButton from "@/components/ui/buttons/DashboardButton";
+import { CiEdit } from "react-icons/ci";
+import { useRouter } from "next/navigation";
+import ConfirmModal from "@/components/ui/modals/ConfirmModal";
 
 const RecipeDetailsPage = () => {
+  const router = useRouter();
   const params = useParams();
   const id = params?.id;
   const token = useAppSelector((state) => state.auth.user?.token);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [recipe, setRecipe] = useState<RecipeInterface | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   useEffect(() => {
     if (token && id !== undefined) {
@@ -26,20 +32,54 @@ const RecipeDetailsPage = () => {
     return <Loader />;
   }
 
+  const handleEditMode = () => {
+    setIsEditMode(true);
+  };
+
+  const handleBackClick = () => {
+    if (isEditMode) {
+      setIsModalOpen(true);
+    } else {
+      router.push("/dashboard/recipes");
+    }
+  };
+
+  const goBack = () => {
+    setIsEditMode(false);
+    setIsModalOpen(false);
+  };
+
   return (
     <>
       <div className="flex bg-white h-full py-5 flex-col rounded text-black md:items-start md:w-full">
-        <div className="flex gap-3 items-center mb-5">
-          <Link
-            href={"/dashboard/recipes"}
-            className="text-lightBrown hover:opacity-80"
-          >
-            <IoMdArrowBack size={24} />
-          </Link>
-          <h2 className="text-2xl">{recipe.name}</h2>
+        <div className="flex justify-between mb-5 w-full">
+          <div className="flex gap-3 items-center">
+            <button
+              onClick={handleBackClick}
+              className="text-lightBrown outline-none hover:opacity-80"
+            >
+              <IoMdArrowBack size={24} />
+            </button>
+            <h2 className="text-2xl">{recipe.name}</h2>
+          </div>
+          {!isEditMode && (
+            <DashboardButton handleClick={handleEditMode} icon={<CiEdit />}>
+              Edit
+            </DashboardButton>
+          )}
         </div>
-        <RecipeDetails currentRecipe={recipe} />
+        <RecipeDetails
+          currentRecipe={recipe}
+          editMode={isEditMode}
+          setIsEditMode={setIsEditMode}
+        />
       </div>
+      <ConfirmModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        text="Are you sure you want to go back? Any changes made won't be saved"
+        handleFunction={goBack}
+      />
     </>
   );
 };

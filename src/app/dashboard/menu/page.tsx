@@ -4,7 +4,6 @@ import Week from "@/components/menu-planner/Week";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { deleteFullMenu } from "@/services/menuService";
 import { useState } from "react";
-import DeleteConfirmationModal from "@/components/ui/DeleteConfirmationModal";
 import PageTitle from "@/components/ui/PageTitle";
 import { setMenu } from "@/lib/store/apis/menuSlice";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
@@ -16,6 +15,7 @@ import {
   generateShoppingList,
 } from "@/services/shoppingListService";
 import { useRouter } from "next/navigation";
+import ConfirmModal from "@/components/ui/modals/ConfirmModal";
 
 const Menu = () => {
   const dispatch = useAppDispatch();
@@ -69,11 +69,11 @@ const Menu = () => {
         </div>
         <Week />
       </div>
-      <DeleteConfirmationModal
+      <ConfirmModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
-        handleDelete={clearAll}
-        thingToDelete="the menu"
+        handleFunction={clearAll}
+        text="Are you sure you want to delete the menu?"
       />
     </>
   );
