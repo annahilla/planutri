@@ -14,7 +14,6 @@ const useAuthListener = () => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
         if (user) {
             const token = await user.getIdToken(true);
-            console.log("onAuthStateChanged token: ", token);
             dispatch(setUser({
                 name: user.displayName, 
                 email: user.email!, 
@@ -30,7 +29,6 @@ const useAuthListener = () => {
     const unsubscribeToken = onIdTokenChanged(auth, async (user) => {
         if (user) {
             const token = await user.getIdToken(true);
-            console.log("onIdTokenChanged token: ", token);
             dispatch(setUser({
                 name: user.displayName, 
                 email: user.email!, 
