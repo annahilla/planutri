@@ -20,7 +20,7 @@ const ProfilePage = () => {
   return (
     <div>
       <PageTitle>Profile</PageTitle>
-      <div className="my-3 flex flex-col gap-4 bg-white rounded px-7 py-6 w-full lg:w-96">
+      <div className="my-3 flex flex-col gap-4 rounded md:px-7 bg-beige py-6 w-full lg:w-96">
         {user?.name && (
           <div className="flex gap-2">
             <p className="font-bold">Name:</p>
@@ -38,7 +38,7 @@ const ProfilePage = () => {
           </div>
         )}
         <div className="my-4 w-full">
-          <Button filled handleClick={handleLogout}>
+          <Button color="white" filled handleClick={handleLogout}>
             Log Out
           </Button>
         </div>
