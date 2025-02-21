@@ -50,7 +50,9 @@ export default function DashboardLayout({
         </div>
 
         <div className="flex-1 m-6 h-auto overflow-hidden lg:mx-10">
-          <div className="mb-16 h-auto md:h-full md:w-full">{children}</div>
+          <div className="mb-12 h-auto md:h-full md:w-full md:mb-5">
+            {children}
+          </div>
         </div>
       </main>
     </ProtectedRoute>

@@ -159,7 +159,7 @@ const RecipeDetails = ({
 
         {editMode && (
           <div
-            className={`flex gap-4 mt-7 items-center justify-center w-full md:justify-start`}
+            className={`flex gap-4 mt-7 items-center justify-center w-full md:justify-start lg:mt-16`}
           >
             <Button handleClick={saveRecipe} color="white" filled type="button">
               Save
