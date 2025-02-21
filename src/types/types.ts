@@ -22,7 +22,8 @@ export interface RecipeInterface {
   _id?: string;
   name: string;
   ingredients: IngredientInterface[],
-  description?:string
+  description?:string,
+  imageUrl?: string,
 }
 
 export type DayOfTheWeek =

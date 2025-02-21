@@ -1,6 +1,7 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
 import { verifyToken } from "@/app/api/(auth)/auth";
+import  { imageService }  from "./imageService";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest) => {
@@ -37,12 +38,16 @@ export const POST = async (req: NextRequest) => {
         if (!name || !ingredients || ingredients.length === 0) {
             return new NextResponse("Required fields are missing", { status: 400 });
         }
+        
+        const imgService = new imageService();
+        const imageUrl = await imgService.generateImage(name);
 
         const newRecipe = new Recipe({
             name,
             ingredients,
             description,
-            userId
+            userId,
+            imageUrl
         });
 
         await newRecipe.save();

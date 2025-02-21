@@ -17,7 +17,8 @@ const RecipesSchema = new Schema(
         type: String,
         ref: "User",
         required: true
-    }
+    },
+    imageUrl: {type: String, required: false}
   },
   { timestamps: true }
 );

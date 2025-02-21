@@ -9,6 +9,7 @@ import ConfirmModal from "../ui/modals/ConfirmModal";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { deleteRecipe } from "@/services/recipeService";
 import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
+import { useRouter } from "next/navigation";
 
 const RecipeCard = ({
   recipe,
@@ -20,6 +21,7 @@ const RecipeCard = ({
   const dispatch = useAppDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = useAppSelector((state) => state.auth.user?.token);
+  const router = useRouter();
 
   const ingredientsList = recipe.ingredients
     .map((ingredient) => ingredient.ingredient)
@@ -53,7 +55,7 @@ const RecipeCard = ({
             className="flex flex-col gap-3 hover:opacity-80"
             href={`/dashboard/recipes/${recipe._id}`}
           >
-            <RecipeImage height="h-56" recipe={recipe.name} />
+            <RecipeImage height="h-56" recipe={recipe} />
             <h3 className="font-bold">{recipe.name}</h3>
             <div className="flex flex-col gap-1">
               <p className="text-sm">Ingredients: </p>
@@ -69,7 +71,13 @@ const RecipeCard = ({
             )}
           </Link>
           <div className="flex gap-2 mt-5 text-sm">
-            <Button color="white" filled>
+            <Button
+              handleClick={() =>
+                router.push(`/dashboard/recipes/${recipe._id}`)
+              }
+              color="white"
+              filled
+            >
               Edit
             </Button>
             <Button handleClick={openDeleteRecipe}>Delete</Button>
@@ -77,7 +85,7 @@ const RecipeCard = ({
         </>
       ) : (
         <div className="flex flex-col gap-3 cursor-pointer hover:opacity-80">
-          <RecipeImage height="h-56" recipe={recipe.name} />
+          <RecipeImage height="h-56" recipe={recipe} />
           <h3 className="font-bold">{recipe.name}</h3>
           <div className="flex flex-col gap-1">
             <p className="text-sm">Ingredients: </p>

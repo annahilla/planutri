@@ -1,5 +1,3 @@
-"use client";
-
 import { RecipeInterface } from "@/types/types";
 import RecipeCard from "./RecipeCard";
 

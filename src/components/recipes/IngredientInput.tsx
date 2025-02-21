@@ -118,7 +118,7 @@ const IngredientInput = ({
       >
         {ingredients.map((ingredient, index) => (
           <li
-            key={ingredient._id}
+            key={ingredient._id || index}
             className="relative w-full justify-between md:flex-row"
           >
             {editMode ? (
