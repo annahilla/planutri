@@ -77,6 +77,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
             <p>
               Don&apos;t have an account?{" "}
               <Link
+                color="white"
                 className="text-neutral-500 hover:underline"
                 href={"/signup"}
               >

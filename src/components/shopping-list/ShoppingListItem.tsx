@@ -2,7 +2,6 @@
 
 import { IngredientInterface } from "@/types/types";
 import { ChangeEvent, useEffect, useState } from "react";
-import { IoIosClose } from "react-icons/io";
 
 import { useRef } from "react";
 
@@ -66,12 +65,6 @@ const ShoppingListItem = ({
           <div className="absolute top-1/2 left-0 w-full h-[1px] bg-neutral-600"></div>
         )}
       </div>
-      <button
-        onClick={() => console.log(1)}
-        className="text-neutral-700 md:hidden md:group-hover:hidden"
-      >
-        <IoIosClose />
-      </button>
     </div>
   );
 };
