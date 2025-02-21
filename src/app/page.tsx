@@ -18,7 +18,7 @@ export default function Home() {
           </p>
           <div className="w-40 m-auto lg:m-0">
             <Link href={"/signup"}>
-              <Button>Get Started</Button>
+              <Button color="white">Get Started</Button>
             </Link>
           </div>
         </div>
