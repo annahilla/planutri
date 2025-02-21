@@ -66,7 +66,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
           />
           <div className="mt-4 flex flex-col gap-4 w-full">
             <GoogleButton />
-            <Button type="submit" filled>
+            <Button type="submit" color="white" filled>
               {formType}
             </Button>
           </div>
