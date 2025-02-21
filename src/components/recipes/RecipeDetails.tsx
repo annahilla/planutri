@@ -12,6 +12,7 @@ import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
 import IngredientInput from "./IngredientInput";
 import DescriptionInput from "./DescriptionInput";
 import ConfirmModal from "../ui/modals/ConfirmModal";
+import RecipeImage from "./RecipeImage";
 
 interface RecipeDetailsProps {
   currentRecipe: RecipeInterface;
@@ -128,6 +129,7 @@ const RecipeDetails = ({
   return (
     <div className="w-full lg:px-5">
       <div className="flex flex-col justify-between my-5 w-full md:w-full">
+        <RecipeImage recipe={recipeName} />
         <div className="flex flex-col gap-5 md:gap-10 md:items-strech lg:flex-row">
           <div className="flex-shrink lg:max-w-80 xl:max-w-96">
             {editMode && (

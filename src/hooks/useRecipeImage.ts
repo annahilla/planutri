@@ -1,40 +1,44 @@
 import { useState, useEffect } from "react";
 
-const useRecipeImage = (recipeName: string) => {
+const useRecipeImage = (query: string) => {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [imgError, setImgError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchImage = async () => {
-      try {
-        const response = await fetch(
-          `https://api.unsplash.com/photos/random?query=${recipeName}&client_id=${process.env.UNSPLASH_API_KEY}`
-        );
-        
-        if (!response.ok) {
-          throw new Error("Failed to fetch image");
-        }
-        
-        const data = await response.json();
+    const fetchImage = async (query: string) => {
+  if (!query) return;
 
-        if (data && data[0] && data[0].urls) {
-          setImageUrl(data[0].urls.regular);
-        } else {
-          setError("No image found for this recipe.");
-        }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (err: any) {
-        setError("Failed to load image.");
-        console.error("Error fetching image from Unsplash:", err);
-      }
-    };
+  setLoading(true);
+  setImgError(null);
 
-    if (recipeName) {
-      fetchImage();
+  try {
+    const response = await fetch(`/api/recipe-image?query=${query}`);
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch image');
     }
-  }, [recipeName]);
 
-  return { imageUrl, error };
+    const data = await response.json();
+    if (data.imageUrl) {
+      setImageUrl(data.imageUrl);
+    } else {
+      setImgError('No image found');
+    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (error: any) {
+    console.log(error);
+    setImgError('Error fetching image');
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+    fetchImage(query);
+  }, [query]);
+
+  return { imageUrl, loading, imgError };
 };
 
 export default useRecipeImage;

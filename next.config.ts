@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  images: {
+    domains: ['images.pexels.com'], // Afegeix aquest domini aquí
+  },
 }
  
 export default nextConfig
