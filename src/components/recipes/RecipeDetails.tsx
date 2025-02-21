@@ -129,7 +129,9 @@ const RecipeDetails = ({
   return (
     <div className="w-full lg:px-5">
       <div className="flex flex-col justify-between my-5 w-full md:w-full">
-        <RecipeImage recipe={recipeName} />
+        <div className="mb-6">
+          <RecipeImage height="h-96" recipe={recipeName} />
+        </div>
         <div className="flex flex-col gap-5 md:gap-10 md:items-strech lg:flex-row">
           <div className="flex-shrink lg:max-w-80 xl:max-w-96">
             {editMode && (

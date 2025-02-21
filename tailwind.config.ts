@@ -23,7 +23,10 @@ export default {
       },
        backgroundOpacity: {
         '80': '0.8',
-        }
+        },
+        lineClamp: {
+        4: '4',
+      },
     },
   },
   plugins: [],
