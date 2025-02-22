@@ -5,8 +5,8 @@ import { RecipeInterface } from "@/types/types";
 import { IoMdArrowBack } from "react-icons/io";
 import { getRecipe } from "@/services/recipeService";
 import { useEffect, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import { useAppSelector } from "@/lib/store/reduxHooks";
-import { useParams } from "next/navigation";
 import Loader from "@/components/ui/Loader";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiEdit } from "react-icons/ci";
@@ -14,13 +14,22 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ui/modals/ConfirmModal";
 
 const RecipeDetailsPage = () => {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const params = useParams();
-  const id = params?.id;
+  const { id } = useParams();
   const token = useAppSelector((state) => state.auth.user?.token);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recipe, setRecipe] = useState<RecipeInterface | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
+
+  useEffect(() => {
+    const edit = searchParams.get("edit");
+    if (edit) {
+      setIsEditMode(true);
+    } else {
+      setIsEditMode(false);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (token && id !== undefined) {

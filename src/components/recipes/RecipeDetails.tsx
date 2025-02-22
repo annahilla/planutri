@@ -127,7 +127,7 @@ const RecipeDetails = ({
   };
 
   return (
-    <div className="w-full lg:px-5">
+    <div className="w-full">
       <div className="flex flex-col justify-between w-full md:w-full">
         <div className="mb-6">
           <RecipeImage height="h-96" recipe={currentRecipe} />

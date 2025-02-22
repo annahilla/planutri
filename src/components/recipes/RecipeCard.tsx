@@ -47,6 +47,10 @@ const RecipeCard = ({
     }
   };
 
+  const openRecipeEdit = () => {
+    router.push(`/dashboard/recipes/${recipe._id}?edit=true`);
+  };
+
   return (
     <div className="border p-5 rounded h-full flex flex-col justify-between">
       {showLinks ? (
@@ -71,13 +75,7 @@ const RecipeCard = ({
             )}
           </Link>
           <div className="flex gap-2 mt-5 text-sm">
-            <Button
-              handleClick={() =>
-                router.push(`/dashboard/recipes/${recipe._id}`)
-              }
-              color="white"
-              filled
-            >
+            <Button handleClick={openRecipeEdit} color="white" filled>
               Edit
             </Button>
             <Button handleClick={openDeleteRecipe}>Delete</Button>
