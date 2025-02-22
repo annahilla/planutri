@@ -17,7 +17,11 @@ export const getShoppingList = async (token: string) => {
 
     const data = await response.json();
     const shoppingList = data[0].list;
-    return shoppingList;
+    if(shoppingList) {
+      return shoppingList;
+    } else {
+      return [];
+    }
   } catch (error) {
     console.error(error);
     throw error;
@@ -91,7 +95,6 @@ export const updateShoppingList = async (ingredient: IngredientInterface, token:
     return updatedShoppingList;
   } catch (error) {
     console.error(error);
-    toast.error("An unexpected error occurred. Please try again later.");
     return [];
   }
 }

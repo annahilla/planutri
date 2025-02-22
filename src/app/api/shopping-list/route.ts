@@ -52,11 +52,11 @@ export const PUT = async (req: NextRequest) => {
         }
 
         const body = await req.json();
-        const { _id, checked } = body;
+        const { ingredient, checked } = body;
 
         const shoppingListService = new shoppingService();
-        const updatedShoppingList = await shoppingListService.updateShoppingList(userId, _id, checked);
-        
+        const updatedShoppingList = await shoppingListService.updateShoppingList(userId, ingredient, checked);
+
         return new NextResponse(JSON.stringify(updatedShoppingList), { status: 201 })
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
