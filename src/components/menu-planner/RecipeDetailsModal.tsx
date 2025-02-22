@@ -16,7 +16,7 @@ const RecipeDetailsModal = ({
   closeModal,
 }: RecipeDetailsModalProps) => {
   return (
-    <Modal isOpen={isModalOpen} closeModal={closeModal}>
+    <Modal isSmall={false} isOpen={isModalOpen} closeModal={closeModal}>
       <div className="px-5 w-full">
         <RecipeDetails
           isModal={true}

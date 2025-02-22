@@ -13,6 +13,7 @@ import IngredientInput from "./IngredientInput";
 import DescriptionInput from "./DescriptionInput";
 import ConfirmModal from "../ui/modals/ConfirmModal";
 import RecipeImage from "./RecipeImage";
+import EditRecipeImageButton from "./EditRecipeImage";
 
 interface RecipeDetailsProps {
   currentRecipe: RecipeInterface;
@@ -128,8 +129,9 @@ const RecipeDetails = ({
   return (
     <div className="w-full">
       <div className="flex flex-col justify-between w-full md:w-full">
-        <div className="mb-6">
+        <div className="relative mb-6">
           <RecipeImage height="h-96" recipe={currentRecipe} />
+          {isEditMode && <EditRecipeImageButton />}
         </div>
         <div className="flex flex-col gap-5 md:gap-10 md:items-strech lg:flex-row">
           <div className="flex-shrink lg:max-w-80 xl:max-w-96">
