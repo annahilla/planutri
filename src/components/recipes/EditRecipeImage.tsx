@@ -74,7 +74,6 @@ const EditRecipeImageButton = ({
 
     if (imageUrl) {
       try {
-        console.log(imageUrl);
         const updatedRecipe = { ...recipe, imageUrl: imageUrl };
         if (token) {
           await updateRecipe(updatedRecipe, token);

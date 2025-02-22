@@ -9,6 +9,9 @@ const nextConfig: NextConfig = {
   images: {
     domains: ['images.pexels.com', 'res.cloudinary.com']
   },
+  env: {
+    CLOUDINARY_UPLOAD_URL: process.env.CLOUDINARY_UPLOAD_URL,
+  },
 }
  
 export default nextConfig

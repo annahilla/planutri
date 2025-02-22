@@ -1,5 +1,3 @@
-"use client"
-
 import { RecipeInterface } from "@/types/types";
 import { toast } from "react-toastify";
 
@@ -119,7 +117,7 @@ export const deleteRecipe = async (id: string, token:string) => {
 };
 
 export const uploadRecipeImage = async (formData: FormData) => {
-    const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL;
+    const cloudinaryUrl = process.env.CLOUDINARY_UPLOAD_URL;
 
     if (!cloudinaryUrl) {
       console.error("Cloudinary URL is missing.");
