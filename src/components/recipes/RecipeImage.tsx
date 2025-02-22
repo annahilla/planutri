@@ -2,15 +2,17 @@ import Image from "next/image";
 import { RecipeInterface } from "@/types/types";
 const RecipeImage = ({
   recipe,
+  imageUrl,
   height = "h-96",
 }: {
   recipe: RecipeInterface;
+  imageUrl?: string;
   height: string;
 }) => {
   return (
     <div className={`relative w-full rounded overflow-hidden ${height}`}>
       <Image
-        src={recipe.imageUrl ? recipe.imageUrl : "/default-image.png"}
+        src={imageUrl ? imageUrl : "/default-image.png"}
         alt={recipe.name}
         fill
         priority

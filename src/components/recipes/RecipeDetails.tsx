@@ -36,6 +36,7 @@ const RecipeDetails = ({
   const [recipeName, setRecipeName] = useState(currentRecipe.name);
   const [description, setDescription] = useState(currentRecipe.description);
   const [ingredients, setIngredients] = useState(currentRecipe.ingredients);
+  const [imageUrl, setImageUrl] = useState(currentRecipe.imageUrl);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = useAppSelector((state) => state.auth.user?.token);
 
@@ -130,8 +131,17 @@ const RecipeDetails = ({
     <div className="w-full">
       <div className="flex flex-col justify-between w-full md:w-full">
         <div className="relative mb-6">
-          <RecipeImage height="h-96" recipe={currentRecipe} />
-          {isEditMode && <EditRecipeImageButton />}
+          <RecipeImage
+            height="h-96"
+            recipe={currentRecipe}
+            imageUrl={imageUrl}
+          />
+          {isEditMode && (
+            <EditRecipeImageButton
+              recipe={currentRecipe}
+              setImageUrl={setImageUrl}
+            />
+          )}
         </div>
         <div className="flex flex-col gap-5 md:gap-10 md:items-strech lg:flex-row">
           <div className="flex-shrink lg:max-w-80 xl:max-w-96">

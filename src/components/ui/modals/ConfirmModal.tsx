@@ -15,7 +15,11 @@ const ConfirmModal = ({
   handleFunction,
 }: ConfirmModalProps) => {
   return (
-    <Modal isBig isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
+    <Modal
+      isSmall={true}
+      isOpen={isModalOpen}
+      closeModal={() => setIsModalOpen(false)}
+    >
       <p className="text-center mt-8">{text}</p>
       <div className="flex gap-3 w-2/3 my-8 m-auto md:gap-10">
         <Button handleClick={handleFunction} type="button" color="white" filled>

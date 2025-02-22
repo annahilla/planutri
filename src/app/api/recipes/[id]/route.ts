@@ -31,18 +31,17 @@ export const PUT = async (req: NextRequest, context: { params: Promise<{ id: str
     try {
         const userId = await verifyToken(req);
 
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
+        if (!userId) {            return new NextResponse("Unauthorized", { status: 401 });
         }
 
         await connect();
         const body = await req.json();
-        const { name, ingredients, description } = body;
+        const { name, ingredients, description, imageUrl } = body;
         const id = (await context.params).id;
 
         const updatedRecipe = await Recipe.findByIdAndUpdate(
             id,
-            { id, name, ingredients, description, userId },
+            { id, name, ingredients, description, imageUrl, userId },
             { new: true }
         );
 

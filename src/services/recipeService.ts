@@ -117,3 +117,31 @@ export const deleteRecipe = async (id: string, token:string) => {
         console.error("Error deleting recipe:", error);
     }
 };
+
+export const uploadRecipeImage = async (formData: FormData) => {
+    const cloudinaryUrl = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_URL;
+
+    if (!cloudinaryUrl) {
+      console.error("Cloudinary URL is missing.");
+      return;
+    }
+
+  try {
+      const response = await fetch(cloudinaryUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.secure_url) {
+        return data.secure_url; 
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("An error occurred while uploading.");
+      return null;
+    } 
+}

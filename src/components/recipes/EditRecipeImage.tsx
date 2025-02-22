@@ -6,11 +6,23 @@ import Modal from "../ui/Modal";
 import { useState } from "react";
 import Button from "../ui/buttons/Button";
 import Image from "next/image";
+import { updateRecipe, uploadRecipeImage } from "@/services/recipeService";
+import { useAppSelector } from "@/lib/store/reduxHooks";
+import { RecipeInterface } from "@/types/types";
+import { PulseLoader } from "react-spinners";
 
-const EditRecipeImageButton = () => {
+const EditRecipeImageButton = ({
+  recipe,
+  setImageUrl,
+}: {
+  recipe: RecipeInterface;
+  setImageUrl: (image: string) => void;
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const token = useAppSelector((state) => state.auth.user?.token);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -33,18 +45,48 @@ const EditRecipeImageButton = () => {
     event.preventDefault();
   };
 
-  const handleSave = () => {
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setPreviewUrl(null);
+  };
+
+  const handleUpload = async () => {
+    const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME;
+
     if (!selectedImage) {
       alert("Please select an image first.");
       return;
     }
 
-    setIsModalOpen(false);
-  };
+    if (!cloudinaryPreset) {
+      console.error("Cloudinary preset is missing.");
+      return;
+    }
 
-  const closeModal = () => {
+    setIsUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", selectedImage);
+    formData.append("upload_preset", cloudinaryPreset);
+    formData.append("folder", "recipes");
+
+    const imageUrl = await uploadRecipeImage(formData);
+
+    if (imageUrl) {
+      try {
+        console.log(imageUrl);
+        const updatedRecipe = { ...recipe, imageUrl: imageUrl };
+        if (token) {
+          await updateRecipe(updatedRecipe, token);
+        }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (error: any) {
+        console.error(error);
+      }
+    }
+    setImageUrl(imageUrl);
     setIsModalOpen(false);
-    setPreviewUrl(null);
+    setIsUploading(false);
   };
 
   return (
@@ -103,8 +145,8 @@ const EditRecipeImageButton = () => {
         </div>
         <div className="flex gap-4 mt-8">
           <Button handleClick={closeModal}>Cancel</Button>
-          <Button handleClick={handleSave} filled color="white">
-            Save
+          <Button handleClick={handleUpload} filled color="white">
+            {isUploading ? <PulseLoader size={5} color="white" /> : "Save"}
           </Button>
         </div>
       </Modal>

@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['images.pexels.com'], // Afegeix aquest domini aquí
+    domains: ['images.pexels.com', 'res.cloudinary.com']
   },
 }
  

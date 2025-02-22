@@ -24,8 +24,8 @@ const Modal = ({
         <div
           ref={modalRef}
           className={`${
-            isSmall ? "px-10" : "w-2xl lg:w-[80vw]"
-          } w-50 relative bg-white p-2 rounded flex flex-col items-center justify-start max-h-[95vh]`}
+            isSmall ? "max-w-2xl lg:w-1/2" : "w-2xl lg:w-[80vw]"
+          } w-11/12 relative bg-white p-2 rounded flex flex-col items-center justify-start max-h-[95vh]`}
         >
           <button className="absolute right-5 top-5" onClick={closeModal}>
             <IoMdClose />

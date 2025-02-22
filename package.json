@@ -12,11 +12,13 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.1",
+    "cloudinary": "^2.5.1",
     "firebase": "^11.2.0",
     "firebase-admin": "^13.1.0",
     "mongodb": "^6.13.0",
     "mongoose": "^8.9.6",
     "next": "15.1.6",
+    "next-cloudinary": "^6.16.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
