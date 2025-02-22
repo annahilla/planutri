@@ -87,7 +87,11 @@ const RecipeCard = ({
         </>
       ) : (
         <div className="flex flex-col gap-3 cursor-pointer hover:opacity-80">
-          <RecipeImage height="h-56" recipe={recipe} />
+          <RecipeImage
+            imageUrl={recipe.imageUrl}
+            height="h-56"
+            recipe={recipe}
+          />
           <h3 className="font-bold">{recipe.name}</h3>
           <div className="flex flex-col gap-1">
             <p className="text-sm">Ingredients: </p>

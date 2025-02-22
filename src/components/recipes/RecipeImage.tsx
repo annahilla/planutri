@@ -6,7 +6,7 @@ const RecipeImage = ({
   height = "h-96",
 }: {
   recipe: RecipeInterface;
-  imageUrl?: string;
+  imageUrl: string | undefined;
   height: string;
 }) => {
   return (
