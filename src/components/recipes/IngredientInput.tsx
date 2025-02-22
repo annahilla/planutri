@@ -8,10 +8,10 @@ import { IoIosClose } from "react-icons/io";
 import AddButton from "../ui/buttons/AddButton";
 import IngredientQuantityAndUnit from "../IngredientQuantityAndUnit";
 import { BiSolidCheckboxChecked } from "react-icons/bi";
+import { useSearchParams } from "next/navigation";
 
 interface IngredientInputProps {
   ingredients: IngredientInterface[];
-  editMode: boolean;
   setIngredients: (
     prev:
       | IngredientInterface[]
@@ -22,11 +22,12 @@ interface IngredientInputProps {
 
 const IngredientInput = ({
   ingredients,
-  editMode,
   setIngredients,
   setError,
 }: IngredientInputProps) => {
   const units = useAppSelector((state) => state.units.units);
+  const searchParams = useSearchParams();
+  const isEditMode = searchParams.get("edit") === "true";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [activeIngredientDropdown, setActiveIngredientDropdown] = useState<
     string | null
@@ -113,7 +114,7 @@ const IngredientInput = ({
       <h5 className="text-xl mb-3">Ingredients</h5>
       <ul
         className={`flex flex-col gap-3 rounded ${
-          editMode ? "bg-white" : "bg-beige p-5"
+          isEditMode ? "bg-white" : "bg-beige p-5"
         }`}
       >
         {ingredients.map((ingredient, index) => (
@@ -121,7 +122,7 @@ const IngredientInput = ({
             key={ingredient._id || index}
             className="relative w-full justify-between md:flex-row"
           >
-            {editMode ? (
+            {isEditMode ? (
               <div className="flex gap-2">
                 <input
                   className="border text-center py-2 px-4 rounded outline-none w-12 md:w-16 md:text-left"
@@ -188,7 +189,7 @@ const IngredientInput = ({
           </li>
         ))}
       </ul>
-      {editMode && (
+      {isEditMode && (
         <div className="mt-8">
           <AddButton item="ingredient" handleClick={addIngredientInput} />
         </div>

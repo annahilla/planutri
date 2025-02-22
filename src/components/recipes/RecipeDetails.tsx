@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import Button from "../ui/buttons/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
 import { RecipeInterface } from "@/types/types";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import ErrorMessage from "../ui/ErrorMessage";
 import { validateCreateRecipeForm } from "@/utils/validation";
@@ -17,21 +17,19 @@ import RecipeImage from "./RecipeImage";
 interface RecipeDetailsProps {
   currentRecipe: RecipeInterface;
   isModal?: boolean;
-  editMode?: boolean;
   closeModal?: () => void;
   clearRecipe?: (id: string) => void;
-  setIsEditMode?: (prev: boolean) => void;
 }
 
 const RecipeDetails = ({
   currentRecipe,
   isModal = false,
-  editMode = false,
   closeModal,
   clearRecipe,
-  setIsEditMode,
 }: RecipeDetailsProps) => {
   const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const isEditMode = searchParams.get("edit") === "true";
   const router = useRouter();
   const [error, setError] = useState("");
   const [recipeName, setRecipeName] = useState(currentRecipe.name);
@@ -81,8 +79,9 @@ const RecipeDetails = ({
 
     if (isModal) {
       closeModal?.();
-    } else if (setIsEditMode) {
-      setIsEditMode(false);
+    } else {
+      const params = new URLSearchParams(searchParams);
+      params.set("edit", "false");
     }
   };
 
@@ -134,7 +133,7 @@ const RecipeDetails = ({
         </div>
         <div className="flex flex-col gap-5 md:gap-10 md:items-strech lg:flex-row">
           <div className="flex-shrink lg:max-w-80 xl:max-w-96">
-            {editMode && (
+            {isEditMode && (
               <div className="mb-7">
                 <h5 className="text-xl mb-4">Recipe Name</h5>
                 <input
@@ -150,18 +149,16 @@ const RecipeDetails = ({
               ingredients={ingredients}
               setIngredients={setIngredients}
               setError={setError}
-              editMode={editMode}
             />
           </div>
           <DescriptionInput
             description={description}
             setDescription={setDescription}
-            editMode={editMode}
           />
         </div>
         {error && <ErrorMessage message={error} />}
 
-        {editMode && (
+        {isEditMode && (
           <div
             className={`flex gap-4 mt-7 items-center justify-center w-full md:justify-start lg:mt-16`}
           >

@@ -20,16 +20,7 @@ const RecipeDetailsPage = () => {
   const token = useAppSelector((state) => state.auth.user?.token);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recipe, setRecipe] = useState<RecipeInterface | null>(null);
-  const [isEditMode, setIsEditMode] = useState(false);
-
-  useEffect(() => {
-    const edit = searchParams.get("edit");
-    if (edit) {
-      setIsEditMode(true);
-    } else {
-      setIsEditMode(false);
-    }
-  }, [searchParams]);
+  const isEditMode = searchParams.get("edit") === "true";
 
   useEffect(() => {
     if (token && id !== undefined) {
@@ -37,12 +28,10 @@ const RecipeDetailsPage = () => {
     }
   }, []);
 
-  if (!recipe) {
-    return <Loader />;
-  }
-
   const handleEditMode = () => {
-    setIsEditMode(true);
+    const params = new URLSearchParams(searchParams);
+    params.set("edit", "true");
+    router.replace(`/dashboard/recipes/${id}?${params.toString()}`);
   };
 
   const handleBackClick = () => {
@@ -54,9 +43,15 @@ const RecipeDetailsPage = () => {
   };
 
   const goBack = () => {
-    setIsEditMode(false);
+    const params = new URLSearchParams(searchParams);
+    params.delete("edit");
+    router.replace(`/dashboard/recipes/${id}?${params.toString()}`);
     setIsModalOpen(false);
   };
+
+  if (!recipe) {
+    return <Loader />;
+  }
 
   return (
     <>
@@ -79,11 +74,7 @@ const RecipeDetailsPage = () => {
             </div>
           )}
         </div>
-        <RecipeDetails
-          currentRecipe={recipe}
-          editMode={isEditMode}
-          setIsEditMode={setIsEditMode}
-        />
+        <RecipeDetails currentRecipe={recipe} />
       </div>
       <ConfirmModal
         isModalOpen={isModalOpen}

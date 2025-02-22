@@ -1,17 +1,18 @@
+import { useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 
 interface DescriptionInputProps {
-  editMode: boolean;
   description: string | undefined;
   setDescription: (description: string) => void;
 }
 
 const DescriptionInput = ({
-  editMode,
   description,
   setDescription,
 }: DescriptionInputProps) => {
   const editableRef = useRef<HTMLSpanElement>(null);
+  const searchParams = useSearchParams();
+  const isEditMode = searchParams.get("edit") === "true";
 
   const handleInputChange = () => {
     if (editableRef.current) {
@@ -28,7 +29,7 @@ const DescriptionInput = ({
   return (
     <div className="flex-1 flex flex-col w-full">
       <h5 className="text-xl mb-3">Description</h5>
-      {editMode ? (
+      {isEditMode ? (
         <span
           ref={editableRef}
           className="whitespace-pre-wrap border p-5 rounded outline-none w-full flex-1 h-fit"

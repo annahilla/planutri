@@ -9,7 +9,7 @@ const SearchInput = ({
   return (
     <div className="my-6 relative">
       <input
-        className="border px-10 py-2 rounded-full w-full outline-none font-light shadow-sm"
+        className="border px-10 py-2 rounded-full w-full font-light outline-none"
         type="text"
         name="recipe"
         placeholder="Search recipe"
