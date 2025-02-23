@@ -16,7 +16,11 @@ const RecipesSchema = new Schema(
     userId: {
         type: String,
         ref: "User",
-        required: true
+        required: false
+    },
+    isPublic: {
+      type: Boolean,
+      required: false
     },
     imageUrl: {type: String, required: false}
   },

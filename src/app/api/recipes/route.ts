@@ -13,7 +13,7 @@ export const GET = async (req: NextRequest) => {
         }
 
         await connect();
-        const recipes = await Recipe.find({ userId: userId });
+        const recipes = await Recipe.find({$or: [{ userId: userId }, { isPublic: true }]});
         return new NextResponse(JSON.stringify(recipes), { status: 200 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {
