@@ -66,7 +66,7 @@ const RecipeDetailsPage = () => {
             </button>
             <h2 className="text-2xl">{recipe.name}</h2>
           </div>
-          {!isEditMode && (
+          {!isEditMode && !recipe?.isPublic && (
             <div>
               <DashboardButton handleClick={handleEditMode} icon={<CiEdit />}>
                 Edit

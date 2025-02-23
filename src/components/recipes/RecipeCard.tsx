@@ -65,6 +65,11 @@ const RecipeCard = ({
               recipe={recipe}
             />
             <h3 className="font-bold">{recipe.name}</h3>
+            {recipe.isPublic && (
+              <p className="text-xs bg-beige p-1 rounded text-neutral-700 w-fit">
+                Public Recipe
+              </p>
+            )}
             <div className="flex flex-col gap-1">
               <p className="text-sm text-neutral-800">Ingredients: </p>
               <p className="text-sm text-neutral-500">{ingredientsList}</p>
@@ -78,12 +83,14 @@ const RecipeCard = ({
               </div>
             )}
           </Link>
-          <div className="flex gap-2 mt-5 text-sm">
-            <Button handleClick={openRecipeEdit} color="white" filled>
-              Edit
-            </Button>
-            <Button handleClick={openDeleteRecipe}>Delete</Button>
-          </div>
+          {!recipe.isPublic && (
+            <div className="flex gap-2 mt-5 text-sm">
+              <Button handleClick={openRecipeEdit} color="white" filled>
+                Edit
+              </Button>
+              <Button handleClick={openDeleteRecipe}>Delete</Button>
+            </div>
+          )}
         </>
       ) : (
         <div className="flex flex-col gap-3 cursor-pointer hover:opacity-80">

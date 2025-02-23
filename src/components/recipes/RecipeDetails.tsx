@@ -30,7 +30,10 @@ const RecipeDetails = ({
 }: RecipeDetailsProps) => {
   const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
-  const isEditMode = searchParams.get("edit") === "true";
+  const isEditMode =
+    currentRecipe &&
+    searchParams.get("edit") === "true" &&
+    !currentRecipe.isPublic;
   const router = useRouter();
   const [error, setError] = useState("");
   const [recipeName, setRecipeName] = useState(currentRecipe.name);
@@ -126,6 +129,15 @@ const RecipeDetails = ({
       }
     }
   };
+
+  if (
+    currentRecipe &&
+    searchParams.get("edit") === "true" &&
+    currentRecipe.isPublic
+  ) {
+    router.replace(window.location.pathname);
+    return null;
+  }
 
   return (
     <div className="w-full">
