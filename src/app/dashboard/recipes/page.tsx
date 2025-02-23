@@ -25,8 +25,16 @@ const RecipesPage = () => {
       </div>
       {isLoading ? (
         <Loader />
-      ) : (
+      ) : recipes.length > 0 ? (
         <RecipesList recipes={recipes} showLinks={true} />
+      ) : (
+        <div className="my-4 text-neutral-600">
+          You haven&apos;t created any recipe yet.{" "}
+          <Link className="underline" href={"/dashboard/create-recipe"}>
+            Create a recipe
+          </Link>{" "}
+          to start.
+        </div>
       )}
     </div>
   );

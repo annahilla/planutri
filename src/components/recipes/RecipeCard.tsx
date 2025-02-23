@@ -66,13 +66,13 @@ const RecipeCard = ({
             />
             <h3 className="font-bold">{recipe.name}</h3>
             <div className="flex flex-col gap-1">
-              <p className="text-sm">Ingredients: </p>
-              <p className="text-sm text-neutral-700">{ingredientsList}</p>
+              <p className="text-sm text-neutral-800">Ingredients: </p>
+              <p className="text-sm text-neutral-500">{ingredientsList}</p>
             </div>
             {recipe.description && (
               <div className="flex flex-col gap-1">
-                <p className="text-sm">Description: </p>
-                <p className="text-sm text-neutral-700 line-clamp-2">
+                <p className="text-sm text-neutral-800">Description: </p>
+                <p className="text-sm text-neutral-500 line-clamp-2">
                   {recipe.description}
                 </p>
               </div>

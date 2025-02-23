@@ -17,6 +17,7 @@ import RecipeListModal from "./RecipeListModal";
 import RecipeDetailsModal from "./RecipeDetailsModal";
 import IconButton from "../ui/buttons/IconButton";
 import { meals } from "@/types/types";
+import { PulseLoader } from "react-spinners";
 
 const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
   const dispatch = useAppDispatch();
@@ -36,6 +37,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
   const [selectedRecipes, setSelectedRecipes] = useState<{
     [meal: string]: RecipeInterface | null;
   }>({});
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     updateSelectedRecipes();
@@ -81,6 +83,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
   };
 
   const clearSingleRecipe = async (meal: Meal) => {
+    setIsLoading(true);
     const menuItem = dayMenu.find((menuItem) => menuItem.meal === meal);
     const recipeId = menuItem ? menuItem._id?.toString() : "";
     if (token && recipeId) {
@@ -88,6 +91,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
       if (isDeleted) {
         const updatedMenu = fullMenu.filter((item) => item._id !== recipeId);
         dispatch(setMenu({ menu: updatedMenu }));
+        setIsLoading(false);
       }
     }
   };
@@ -141,18 +145,24 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
                       onClick={() => handleRecipeClick(selectedRecipes[meal])}
                       className="text-left text-sm text-neutral-800 border border-white outline-none truncate w-full hover:opacity-75"
                     >
-                      {selectedRecipes[meal]?.name}
+                      {isLoading ? (
+                        <PulseLoader className="text-center" size={2} />
+                      ) : (
+                        selectedRecipes[meal]?.name
+                      )}
                     </button>
-                    <div className="flex items-center gap-1 text-neutral-600 lg:hidden group-hover:flex">
-                      <IconButton
-                        handleClick={() => openSelectRecipeModal(meal)}
-                        icon={<LiaExchangeAltSolid />}
-                      />
-                      <IconButton
-                        handleClick={() => clearSingleRecipe(meal)}
-                        icon={<IoMdClose />}
-                      />
-                    </div>
+                    {!isLoading && (
+                      <div className="flex items-center gap-1 text-neutral-600 lg:hidden group-hover:flex">
+                        <IconButton
+                          handleClick={() => openSelectRecipeModal(meal)}
+                          icon={<LiaExchangeAltSolid />}
+                        />
+                        <IconButton
+                          handleClick={() => clearSingleRecipe(meal)}
+                          icon={<IoMdClose />}
+                        />
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <button
