@@ -76,6 +76,7 @@ const RecipeDetails = ({
       if (token) {
         await updateRecipe(updatedRecipe, token);
         dispatch(fetchRecipes());
+        router.push(`/dashboard/recipes/${updatedRecipe._id}?edit=false`);
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
