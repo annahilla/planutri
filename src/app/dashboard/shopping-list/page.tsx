@@ -16,6 +16,7 @@ import { CiBoxList } from "react-icons/ci";
 import AlertMessage from "@/components/ui/AlertMessage";
 import { IngredientInterface } from "@/types/types";
 import { hasEnoughTimePassed } from "@/utils/hasEnoughTimePassed";
+import { toast } from "react-toastify";
 
 const ShoppingList = () => {
   const dispatch = useAppDispatch();
@@ -32,15 +33,19 @@ const ShoppingList = () => {
   );
 
   const handleShoppingList = async () => {
-    if (token) {
-      const { list } = await generateShoppingList(token);
-      if (list) {
-        setCurrentShoppingList(list);
-        dispatch(fetchShoppingList());
-        setShowMenuUpdateAlert(false);
-        localStorage.setItem("lastUpdatedMenu", JSON.stringify(menu));
-      } else {
-        setCurrentShoppingList([]);
+    if (menu.length <= 0) {
+      toast.info("You can't generate a shopping list without a menu.");
+    } else {
+      if (token) {
+        const { list } = await generateShoppingList(token);
+        if (list) {
+          setCurrentShoppingList(list);
+          dispatch(fetchShoppingList());
+          setShowMenuUpdateAlert(false);
+          localStorage.setItem("lastUpdatedMenu", JSON.stringify(menu));
+        } else {
+          setCurrentShoppingList([]);
+        }
       }
     }
   };
