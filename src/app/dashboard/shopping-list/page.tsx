@@ -71,8 +71,8 @@ const ShoppingList = () => {
       </div>
       <div className="flex flex-col gap-2 items-center h-full bg-white rounded text-black md:items-start">
         {showMenuUpdateAlert && (
-          <div className="text-neutral-600 bg-neutral-100 w-full p-2 text-sm flex justify-between items-center border-l-4 border-neutral-300">
-            <div className="flex gap-1 items-center">
+          <div className="text-neutral-600 bg-neutral-100 w-full p-2 text-xs flex items-start justify-between border-l-4 border-neutral-300 md:text-sm gap-2 sm:items-center">
+            <div className="flex gap-2 sm:items-center">
               <CiCircleInfo size={21} />
               <p>
                 You have made changes to the meal planner, please update the
