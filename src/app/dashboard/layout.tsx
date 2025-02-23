@@ -9,6 +9,7 @@ import SideNavbar from "@/components/SideNavbar";
 import ProtectedRoute from "@/utils/ProtectedRoute";
 import { fetchMenu } from "@/lib/store/apis/menuSlice";
 import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
+import { fetchShoppingList } from "@/lib/store/apis/shoppingListSlice";
 
 export default function DashboardLayout({
   children,
@@ -29,6 +30,7 @@ export default function DashboardLayout({
     dispatch(fetchIngredients());
     dispatch(fetchMenu());
     dispatch(fetchRecipes());
+    dispatch(fetchShoppingList());
   }, []);
 
   useEffect(() => {

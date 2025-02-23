@@ -14,8 +14,8 @@ import ShoppingListItem from "@/components/shopping-list/ShoppingListItem";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiBoxList } from "react-icons/ci";
 import AlertMessage from "@/components/ui/AlertMessage";
-import { hasEnoughTimePassed } from "@/utils/hasEnoughTimePassed";
 import { IngredientInterface } from "@/types/types";
+import { hasEnoughTimePassed } from "@/utils/hasEnoughTimePassed";
 
 const ShoppingList = () => {
   const dispatch = useAppDispatch();
@@ -26,9 +26,6 @@ const ShoppingList = () => {
   const menu = useAppSelector((state) => state.menu.menu);
   const [currentShoppingList, setCurrentShoppingList] = useState(shoppingList);
   const [showMenuUpdateAlert, setShowMenuUpdateAlert] = useState(false);
-  const [currentList, setCurrentList] = useState<IngredientInterface[] | []>(
-    shoppingList
-  );
 
   const isLoading = useAppSelector(
     (state) => state.shoppingList.status === "loading"
@@ -41,27 +38,28 @@ const ShoppingList = () => {
         setCurrentShoppingList(list);
         dispatch(fetchShoppingList());
         setShowMenuUpdateAlert(false);
-        localStorage.setItem("isShoppingListUpdated", "true");
+        localStorage.setItem("lastUpdatedMenu", JSON.stringify(menu));
       } else {
         setCurrentShoppingList([]);
       }
     }
   };
 
-  const hasMenuChanged = () => {
-    const savedMenu = localStorage.getItem("previousMenu");
-    const isUpdated = localStorage.getItem("isShoppingListUpdated");
+  const checkMenuChanges = () => {
+    const lastUpdatedMenu = localStorage.getItem("lastUpdatedMenu");
+    const lastDismissedTime = localStorage.getItem("lastDismissedTime");
 
     if (
-      savedMenu &&
-      JSON.stringify(JSON.parse(savedMenu)) !== JSON.stringify(menu)
+      lastUpdatedMenu &&
+      JSON.stringify(menu) !== lastUpdatedMenu &&
+      currentShoppingList.length > 0
     ) {
-      if (hasEnoughTimePassed()) {
+      if (lastDismissedTime && hasEnoughTimePassed()) {
         setShowMenuUpdateAlert(true);
-        localStorage.setItem("isShoppingListUpdated", "false");
       }
+      setShowMenuUpdateAlert(true);
     } else {
-      setShowMenuUpdateAlert(isUpdated === "false" && hasEnoughTimePassed());
+      setShowMenuUpdateAlert(false);
     }
   };
 
@@ -71,7 +69,7 @@ const ShoppingList = () => {
   };
 
   const handleCheckboxChange = (updatedItem: IngredientInterface) => {
-    setCurrentList((prevList) => {
+    setCurrentShoppingList((prevList) => {
       const updatedList = prevList.map((item) =>
         item.ingredient === updatedItem.ingredient ? updatedItem : item
       );
@@ -91,27 +89,23 @@ const ShoppingList = () => {
 
   useEffect(() => {
     dispatch(fetchShoppingList());
-    const isUpdated = localStorage.getItem("isShoppingListUpdated");
-    if (isUpdated === "true") {
-      setShowMenuUpdateAlert(false);
-    }
   }, []);
 
   useEffect(() => {
-    hasMenuChanged();
-  }, [menu]);
+    checkMenuChanges();
+  }, [menu, currentShoppingList]);
+
+  useEffect(() => {
+    setCurrentShoppingList(currentShoppingList);
+  }, [currentShoppingList]);
 
   useEffect(() => {
     setCurrentShoppingList(shoppingList);
   }, [shoppingList]);
 
-  useEffect(() => {
-    setCurrentList(currentShoppingList);
-  }, [currentShoppingList]);
-
   return (
     <div className="h-full">
-      <div className="flex items-center justify-between mb-4 md:mb-6">
+      <div className="flex items-center justify-between mb-6 md:mb-6">
         <PageTitle>Shopping List</PageTitle>
         <DashboardButton
           handleClick={handleShoppingList}
@@ -123,8 +117,7 @@ const ShoppingList = () => {
       <div className="flex flex-col gap-2 items-center h-full bg-white rounded text-black md:items-start">
         {showMenuUpdateAlert && (
           <AlertMessage
-            text="You have made changes to the meal planner, please update the
-                shopping list."
+            text="You have made changes to the meal planner, please update the shopping list."
             handleClick={dismissAlert}
           />
         )}
@@ -132,7 +125,7 @@ const ShoppingList = () => {
           <Loader />
         ) : currentShoppingList.length > 0 ? (
           <div className="mt-3 flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:w-72">
-            {currentList
+            {currentShoppingList
               .slice()
               .sort((a, b) => Number(a.checked) - Number(b.checked))
               .map((shoppingItem) => (

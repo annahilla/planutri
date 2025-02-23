@@ -28,10 +28,11 @@ export class shoppingService {
         if(existingShoppingList.length > 0) {
             const existingList = existingShoppingList[0].list;
             const mergedList = shoppingListIngredientsCalculated.map(newItem => {
-                const existigItem = existingList.find((item: IngredientInterface) => item.ingredient === newItem.ingredient && item.unit === newItem.unit && item.checked === newItem.checked);
+                const existingItem = existingList.find((item: IngredientInterface) => item.ingredient === newItem.ingredient && item.unit === newItem.unit);
+                const checked = existingItem && existingItem.quantity >= newItem.quantity ? existingItem.checked : false;
                 return {
                     ...newItem,
-                    checked: existigItem ? existigItem.checked : false
+                    checked: checked
                 }
             })
             const updatedShoppingList = await ShoppingList.findByIdAndUpdate(

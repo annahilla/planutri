@@ -20,6 +20,9 @@ const Menu = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const token = useAppSelector((state) => state.auth.user?.token);
   const isLoading = useAppSelector((state) => state.menu.status) === "loading";
+  const shoppingList = useAppSelector(
+    (state) => state.shoppingList.shoppingList
+  );
 
   const handleClear = () => {
     setIsModalOpen(true);
@@ -28,7 +31,9 @@ const Menu = () => {
   const clearAll = async () => {
     if (token) {
       const isDeleted = await deleteFullMenu(token);
-      await deleteShoppingList(token);
+      if (shoppingList.length > 0) {
+        await deleteShoppingList(token);
+      }
       setIsModalOpen(false);
       if (isDeleted) {
         dispatch(setMenu({ menu: [] }));
@@ -67,7 +72,7 @@ const Menu = () => {
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
         handleFunction={clearAll}
-        text="Are you sure you want to delete the menu?"
+        text="Are you sure you want to delete the menu? The shopping list will also be deleted."
       />
     </>
   );
