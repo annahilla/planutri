@@ -4,7 +4,10 @@ import Loader from "@/components/ui/Loader";
 import PageTitle from "@/components/ui/PageTitle";
 import { fetchShoppingList } from "@/lib/store/apis/shoppingListSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
-import { generateShoppingList } from "@/services/shoppingListService";
+import {
+  generateShoppingList,
+  updateShoppingList,
+} from "@/services/shoppingListService";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ShoppingListItem from "@/components/shopping-list/ShoppingListItem";
@@ -12,6 +15,7 @@ import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiBoxList } from "react-icons/ci";
 import AlertMessage from "@/components/ui/AlertMessage";
 import { hasEnoughTimePassed } from "@/utils/hasEnoughTimePassed";
+import { IngredientInterface } from "@/types/types";
 
 const ShoppingList = () => {
   const dispatch = useAppDispatch();
@@ -22,6 +26,10 @@ const ShoppingList = () => {
   const menu = useAppSelector((state) => state.menu.menu);
   const [currentShoppingList, setCurrentShoppingList] = useState(shoppingList);
   const [showMenuUpdateAlert, setShowMenuUpdateAlert] = useState(false);
+  const [currentList, setCurrentList] = useState<IngredientInterface[] | []>(
+    shoppingList
+  );
+
   const isLoading = useAppSelector(
     (state) => state.shoppingList.status === "loading"
   );
@@ -29,10 +37,14 @@ const ShoppingList = () => {
   const handleShoppingList = async () => {
     if (token) {
       const { list } = await generateShoppingList(token);
-      setCurrentShoppingList(list);
-      dispatch(fetchShoppingList());
-      setShowMenuUpdateAlert(false);
-      localStorage.setItem("isShoppingListUpdated", "true");
+      if (list) {
+        setCurrentShoppingList(list);
+        dispatch(fetchShoppingList());
+        setShowMenuUpdateAlert(false);
+        localStorage.setItem("isShoppingListUpdated", "true");
+      } else {
+        setCurrentShoppingList([]);
+      }
     }
   };
 
@@ -58,6 +70,25 @@ const ShoppingList = () => {
     localStorage.setItem("lastDismissedTime", Date.now().toString());
   };
 
+  const handleCheckboxChange = (updatedItem: IngredientInterface) => {
+    setCurrentList((prevList) => {
+      const updatedList = prevList.map((item) =>
+        item.ingredient === updatedItem.ingredient ? updatedItem : item
+      );
+
+      return updatedList.sort((a, b) => {
+        if (a.checked !== b.checked) {
+          return Number(a.checked) - Number(b.checked);
+        }
+        return a.ingredient.localeCompare(b.ingredient);
+      });
+    });
+
+    if (token) {
+      updateShoppingList(updatedItem, token);
+    }
+  };
+
   useEffect(() => {
     dispatch(fetchShoppingList());
     const isUpdated = localStorage.getItem("isShoppingListUpdated");
@@ -73,6 +104,10 @@ const ShoppingList = () => {
   useEffect(() => {
     setCurrentShoppingList(shoppingList);
   }, [shoppingList]);
+
+  useEffect(() => {
+    setCurrentList(currentShoppingList);
+  }, [currentShoppingList]);
 
   return (
     <div className="h-full">
@@ -96,13 +131,17 @@ const ShoppingList = () => {
         {isLoading ? (
           <Loader />
         ) : currentShoppingList.length > 0 ? (
-          <div className="mt-3 flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:w-fit">
-            {currentShoppingList.map((shoppingItem) => (
-              <ShoppingListItem
-                key={shoppingItem.ingredient}
-                shoppingItem={shoppingItem}
-              />
-            ))}
+          <div className="mt-3 flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:w-72">
+            {currentList
+              .slice()
+              .sort((a, b) => Number(a.checked) - Number(b.checked))
+              .map((shoppingItem) => (
+                <ShoppingListItem
+                  key={shoppingItem.ingredient}
+                  shoppingItem={shoppingItem}
+                  onCheckboxChange={handleCheckboxChange}
+                />
+              ))}
           </div>
         ) : (
           <div className="my-4 text-neutral-600">

@@ -16,8 +16,9 @@ export const getShoppingList = async (token: string) => {
     }
 
     const data = await response.json();
-    const shoppingList = data[0].list;
-    if(shoppingList) {
+    
+    if(data.length > 0) {
+      const shoppingList = data[0].list;
       return shoppingList;
     } else {
       return [];
