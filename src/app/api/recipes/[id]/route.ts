@@ -1,6 +1,6 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import { verifyToken } from "@/app/api/(auth)/auth";
+import { verifyToken } from "@/app/api/auth/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export const GET = async (req: NextRequest, context: { params: Promise<{ id: string }>}) => {
@@ -31,13 +31,20 @@ export const PUT = async (req: NextRequest, context: { params: Promise<{ id: str
     try {
         const userId = await verifyToken(req);
 
-        if (!userId) {            return new NextResponse("Unauthorized", { status: 401 });
+        if (!userId) {            
+            return new NextResponse("Unauthorized", { status: 401 });
         }
 
         await connect();
         const body = await req.json();
         const { name, ingredients, description, imageUrl } = body;
         const id = (await context.params).id;
+
+        const recipe = await Recipe.findById(id);
+
+        if (!recipe || recipe.userId !== userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
+        }
 
         const updatedRecipe = await Recipe.findByIdAndUpdate(
             id,

@@ -1,6 +1,6 @@
 import connect from "@/database/db";
 import Menu from "@/database/models/menu";
-import { verifyToken } from "@/app/api/(auth)/auth";
+import { verifyToken } from "@/app/api/auth/auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export const DELETE = async (req: NextRequest, context: { params: Promise<{ id: string }>}) => {

@@ -1,6 +1,6 @@
 import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
-import { verifyToken } from "../(auth)/auth";
+import { verifyToken } from "../auth/auth";
 import ShoppingList from "@/database/models/shopping-list";
 import { shoppingService } from "./shoppingService";
 

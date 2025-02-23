@@ -1,6 +1,6 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import { verifyToken } from "@/app/api/(auth)/auth";
+import { verifyToken } from "@/app/api/auth/auth";
 import  { imageService }  from "./imageService";
 import { NextRequest, NextResponse } from "next/server";
 
