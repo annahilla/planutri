@@ -10,6 +10,8 @@ import { useEffect, useState } from "react";
 import ShoppingListItem from "@/components/shopping-list/ShoppingListItem";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiBoxList } from "react-icons/ci";
+import { CiCircleInfo } from "react-icons/ci";
+import { IoMdClose } from "react-icons/io";
 
 const ShoppingList = () => {
   const dispatch = useAppDispatch();
@@ -17,27 +19,44 @@ const ShoppingList = () => {
   const shoppingList = useAppSelector(
     (state) => state.shoppingList.shoppingList
   );
+  const menu = useAppSelector((state) => state.menu.menu);
   const [currentShoppingList, setCurrentShoppingList] = useState(shoppingList);
+  const [showMenuUpdateAlert, setShowMenuUpdateAlert] = useState(false);
   const isLoading = useAppSelector(
     (state) => state.shoppingList.status === "loading"
   );
-
-  const renderShoppingList = async () => {
-    await dispatch(fetchShoppingList());
-    setCurrentShoppingList(shoppingList);
-  };
 
   const handleShoppingList = async () => {
     if (token) {
       const { list } = await generateShoppingList(token);
       setCurrentShoppingList(list);
       dispatch(fetchShoppingList());
+      setShowMenuUpdateAlert(false);
     }
   };
 
+  const hasMenuChanged = () => {
+    const savedMenu = localStorage.getItem("previousMenu");
+    if (
+      savedMenu &&
+      JSON.stringify(JSON.parse(savedMenu)) !== JSON.stringify(menu)
+    ) {
+      setShowMenuUpdateAlert(true);
+    }
+    localStorage.setItem("previousMenu", JSON.stringify(menu));
+  };
+
   useEffect(() => {
-    renderShoppingList();
+    dispatch(fetchShoppingList());
   }, []);
+
+  useEffect(() => {
+    hasMenuChanged();
+  }, [menu]);
+
+  useEffect(() => {
+    setCurrentShoppingList(shoppingList);
+  }, [shoppingList]);
 
   return (
     <div className="h-full">
@@ -51,6 +70,20 @@ const ShoppingList = () => {
         </DashboardButton>
       </div>
       <div className="flex flex-col gap-2 items-center h-full bg-white rounded text-black md:items-start">
+        {showMenuUpdateAlert && (
+          <div className="text-neutral-600 bg-neutral-100 w-full p-2 text-sm flex justify-between items-center border-l-4 border-neutral-300">
+            <div className="flex gap-1 items-center">
+              <CiCircleInfo size={21} />
+              <p>
+                You have made changes to the meal planner, please update the
+                shopping list.
+              </p>
+            </div>
+            <button onClick={() => setShowMenuUpdateAlert(false)}>
+              <IoMdClose />
+            </button>
+          </div>
+        )}
         {isLoading ? (
           <Loader />
         ) : currentShoppingList.length > 0 ? (
