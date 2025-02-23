@@ -28,7 +28,7 @@ export class shoppingService {
         if(existingShoppingList.length > 0) {
             const existingList = existingShoppingList[0].list;
             const mergedList = shoppingListIngredientsCalculated.map(newItem => {
-                const existigItem = existingList.find((item: IngredientInterface) => item.ingredient === newItem.ingredient && item.unit === newItem.unit);
+                const existigItem = existingList.find((item: IngredientInterface) => item.ingredient === newItem.ingredient && item.unit === newItem.unit && item.checked === newItem.checked);
                 return {
                     ...newItem,
                     checked: existigItem ? existigItem.checked : false
@@ -59,8 +59,6 @@ async updateShoppingList(userId: string, ingredientName: string, checked: boolea
     const ingredientIndex = shoppingList.list.findIndex(
         (item: IngredientInterface) => item.ingredient === ingredientName
     );
-
-    console.log("Ingredient index:", ingredientIndex);
 
     if (ingredientIndex !== -1) {
         shoppingList.list[ingredientIndex].checked = checked;
