@@ -10,8 +10,8 @@ import { useEffect, useState } from "react";
 import ShoppingListItem from "@/components/shopping-list/ShoppingListItem";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiBoxList } from "react-icons/ci";
-import { CiCircleInfo } from "react-icons/ci";
-import { IoMdClose } from "react-icons/io";
+import AlertMessage from "@/components/ui/AlertMessage";
+import { hasEnoughTimePassed } from "@/utils/hasEnoughTimePassed";
 
 const ShoppingList = () => {
   const dispatch = useAppDispatch();
@@ -32,22 +32,38 @@ const ShoppingList = () => {
       setCurrentShoppingList(list);
       dispatch(fetchShoppingList());
       setShowMenuUpdateAlert(false);
+      localStorage.setItem("isShoppingListUpdated", "true");
     }
   };
 
   const hasMenuChanged = () => {
     const savedMenu = localStorage.getItem("previousMenu");
+    const isUpdated = localStorage.getItem("isShoppingListUpdated");
+
     if (
       savedMenu &&
       JSON.stringify(JSON.parse(savedMenu)) !== JSON.stringify(menu)
     ) {
-      setShowMenuUpdateAlert(true);
+      if (hasEnoughTimePassed()) {
+        setShowMenuUpdateAlert(true);
+        localStorage.setItem("isShoppingListUpdated", "false");
+      }
+    } else {
+      setShowMenuUpdateAlert(isUpdated === "false" && hasEnoughTimePassed());
     }
-    localStorage.setItem("previousMenu", JSON.stringify(menu));
+  };
+
+  const dismissAlert = () => {
+    setShowMenuUpdateAlert(false);
+    localStorage.setItem("lastDismissedTime", Date.now().toString());
   };
 
   useEffect(() => {
     dispatch(fetchShoppingList());
+    const isUpdated = localStorage.getItem("isShoppingListUpdated");
+    if (isUpdated === "true") {
+      setShowMenuUpdateAlert(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -71,18 +87,11 @@ const ShoppingList = () => {
       </div>
       <div className="flex flex-col gap-2 items-center h-full bg-white rounded text-black md:items-start">
         {showMenuUpdateAlert && (
-          <div className="text-neutral-600 bg-neutral-100 w-full p-2 text-xs flex items-start justify-between border-l-4 border-neutral-300 md:text-sm gap-2 sm:items-center">
-            <div className="flex gap-2 sm:items-center">
-              <CiCircleInfo size={21} />
-              <p>
-                You have made changes to the meal planner, please update the
-                shopping list.
-              </p>
-            </div>
-            <button onClick={() => setShowMenuUpdateAlert(false)}>
-              <IoMdClose />
-            </button>
-          </div>
+          <AlertMessage
+            text="You have made changes to the meal planner, please update the
+                shopping list."
+            handleClick={dismissAlert}
+          />
         )}
         {isLoading ? (
           <Loader />

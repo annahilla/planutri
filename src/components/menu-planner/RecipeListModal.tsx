@@ -53,7 +53,7 @@ const RecipeListModal = ({
 
   return (
     <Modal isSmall={false} isOpen={isModalOpen} closeModal={closeModal}>
-      <h3 className="text-xl">
+      <h3 className="text-lg md:text-xl">
         Choose a recipe for {selectedMeal} on {dayOfTheWeek}
       </h3>
       <RecipesList
