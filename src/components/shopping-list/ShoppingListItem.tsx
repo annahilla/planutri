@@ -34,7 +34,7 @@ const ShoppingListItem = ({
     <div className="flex gap-2">
       <input
         onChange={handleOnChange}
-        className="accent-black"
+        className="accent-black outline-none"
         type="checkbox"
         value={shoppingItem._id}
         checked={isChecked}

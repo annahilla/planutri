@@ -28,7 +28,7 @@ export const getShoppingList = async (token: string) => {
   }
 };
 
-export const generateShoppingList  = async (token: string): Promise<IngredientInterface[]> => {
+export const generateShoppingList  = async (token: string) => {
   try {
     const response = await fetch("/api/shopping-list", {
       method: "POST",

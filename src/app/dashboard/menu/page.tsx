@@ -7,13 +7,10 @@ import { useState } from "react";
 import PageTitle from "@/components/ui/PageTitle";
 import { setMenu } from "@/lib/store/apis/menuSlice";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
-import { BsEraser } from "react-icons/bs";
+import { CiEraser } from "react-icons/ci";
 import Loader from "@/components/ui/Loader";
-import { CiBoxList } from "react-icons/ci";
-import {
-  deleteShoppingList,
-  generateShoppingList,
-} from "@/services/shoppingListService";
+import { CiShoppingBasket } from "react-icons/ci";
+import { deleteShoppingList } from "@/services/shoppingListService";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ui/modals/ConfirmModal";
 
@@ -39,29 +36,26 @@ const Menu = () => {
     }
   };
 
-  const handleGenerateShoppingList = () => {
-    if (token) {
-      generateShoppingList(token);
-      router.push("/dashboard/shopping-list");
-    }
+  const goToShoppingList = () => {
+    router.push("/dashboard/shopping-list");
   };
 
   return (
     <>
       {isLoading && <Loader />}
       <div className="w-full flex flex-col gap-2">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-4 md:mb-6">
           <PageTitle>Meal Planner</PageTitle>
           <div className="flex items-center gap-2">
             <DashboardButton
-              handleClick={handleGenerateShoppingList}
-              icon={<CiBoxList size={17} />}
+              handleClick={goToShoppingList}
+              icon={<CiShoppingBasket size={17} />}
             >
-              Shopping List
+              Go to Shopping List
             </DashboardButton>
             <DashboardButton
               handleClick={handleClear}
-              icon={<BsEraser size={17} />}
+              icon={<CiEraser size={17} />}
             >
               Clear All
             </DashboardButton>

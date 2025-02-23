@@ -19,7 +19,9 @@ const ProfilePage = () => {
 
   return (
     <div>
-      <PageTitle>Profile</PageTitle>
+      <div className="mb-4 md:mb-6">
+        <PageTitle>Profile</PageTitle>
+      </div>
       <div className="my-3 flex flex-col gap-4 rounded px-7 bg-beige py-6 w-full lg:w-96">
         {user?.name && (
           <div className="flex gap-2">

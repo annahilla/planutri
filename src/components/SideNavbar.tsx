@@ -2,14 +2,14 @@
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import Logo from "./Logo";
-import { IoCreateOutline } from "react-icons/io5";
 import {
   CiCalendar,
   CiUser,
   CiLogout,
   CiSettings,
-  CiBoxList,
   CiViewList,
+  CiShoppingBasket,
+  CiSquarePlus,
 } from "react-icons/ci";
 import Link from "next/link";
 import { IoIosArrowUp, IoIosArrowDown } from "react-icons/io";
@@ -20,8 +20,6 @@ import SideNavbarItem from "./ui/SideNavbarItem";
 import { PiSidebarSimpleLight } from "react-icons/pi";
 
 import useClickOutside from "@/hooks/useClickOutside";
-import { generateShoppingList } from "@/services/shoppingListService";
-import { fetchShoppingList } from "@/lib/store/apis/shoppingListSlice";
 
 interface SideNavbarProps {
   isNavbarCollapsed: boolean;
@@ -34,7 +32,6 @@ const SideNavbar = ({
 }: SideNavbarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const user = useAppSelector((state) => state.auth.user);
-  const token = useAppSelector((state) => state.auth.user?.token);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null!);
@@ -59,13 +56,6 @@ const SideNavbar = ({
     } else {
       toggleDropdown();
     }
-  };
-
-  const handleShoppingList = () => {
-    if (token) {
-      generateShoppingList(token);
-    }
-    dispatch(fetchShoppingList());
   };
 
   return (
@@ -101,14 +91,12 @@ const SideNavbar = ({
             icon={<CiCalendar size={22} />}
             collapsedStyles={isNavbarCollapsed}
           />
-          <button onClick={handleShoppingList}>
-            <SideNavbarItem
-              name="Shopping List"
-              href="/dashboard/shopping-list"
-              icon={<CiBoxList size={22} />}
-              collapsedStyles={isNavbarCollapsed}
-            />
-          </button>
+          <SideNavbarItem
+            name="Shopping List"
+            href="/dashboard/shopping-list"
+            icon={<CiShoppingBasket size={22} />}
+            collapsedStyles={isNavbarCollapsed}
+          />
           <SideNavbarItem
             name="Recipes"
             href="/dashboard/recipes"
@@ -119,7 +107,7 @@ const SideNavbar = ({
           <SideNavbarItem
             name="Create Recipe"
             href="/dashboard/create-recipe"
-            icon={<IoCreateOutline size={22} />}
+            icon={<CiSquarePlus size={22} />}
             collapsedStyles={isNavbarCollapsed}
           />
         </ul>
