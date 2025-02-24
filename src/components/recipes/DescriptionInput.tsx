@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { ChangeEvent, useEffect, useRef } from "react";
 
 interface DescriptionInputProps {
   description: string | undefined;
@@ -10,35 +10,38 @@ const DescriptionInput = ({
   description,
   setDescription,
 }: DescriptionInputProps) => {
-  const editableRef = useRef<HTMLSpanElement>(null);
   const searchParams = useSearchParams();
   const isEditMode = searchParams.get("edit") === "true";
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-  const handleInputChange = () => {
-    if (editableRef.current) {
-      setDescription(editableRef.current.innerText);
+  const adjustTextareaRows = () => {
+    if (textareaRef.current) {
+      textareaRef.current.rows = 1;
+
+      const newRows = Math.ceil(textareaRef.current.scrollHeight / 28);
+      textareaRef.current.rows = newRows;
     }
   };
 
+  const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(event.target.value);
+    adjustTextareaRows();
+  };
+
   useEffect(() => {
-    if (editableRef.current && description) {
-      editableRef.current.innerText = description;
-    }
+    adjustTextareaRows();
   }, [description]);
 
   return (
     <div className="flex-1 flex flex-col w-full">
       <h5 className="text-xl mb-3">Description</h5>
       {isEditMode ? (
-        <span
-          ref={editableRef}
-          className="whitespace-pre-wrap border p-5 rounded outline-none w-full flex-1 h-fit"
-          onInput={handleInputChange}
-          contentEditable
-          suppressContentEditableWarning={true}
-        >
-          {description}
-        </span>
+        <textarea
+          ref={textareaRef}
+          className="whitespace-pre-wrap border p-5 rounded outline-none w-full flex-1 resize-none"
+          onChange={handleInputChange}
+          value={description}
+        />
       ) : (
         <span className="whitespace-pre-wrap border text-neutral-900 rounded p-5">
           {description

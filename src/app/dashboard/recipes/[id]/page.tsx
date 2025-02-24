@@ -21,6 +21,7 @@ const RecipeDetailsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recipe, setRecipe] = useState<RecipeInterface | null>(null);
   const isEditMode = searchParams.get("edit") === "true";
+  const [discardChanges, setDiscardChanges] = useState(false);
 
   useEffect(() => {
     if (token && id !== undefined) {
@@ -46,6 +47,7 @@ const RecipeDetailsPage = () => {
     const params = new URLSearchParams(searchParams);
     params.delete("edit");
     router.replace(`/dashboard/recipes/${id}?${params.toString()}`);
+    setDiscardChanges(true);
     setIsModalOpen(false);
   };
 
@@ -74,7 +76,7 @@ const RecipeDetailsPage = () => {
             </div>
           )}
         </div>
-        <RecipeDetails currentRecipe={recipe} />
+        <RecipeDetails discardChanges={discardChanges} currentRecipe={recipe} />
       </div>
       <ConfirmModal
         isModalOpen={isModalOpen}

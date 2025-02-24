@@ -3,9 +3,9 @@
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import Button from "../ui/buttons/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
-import { RecipeInterface } from "@/types/types";
+import { IngredientInterface, RecipeInterface } from "@/types/types";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import ErrorMessage from "../ui/ErrorMessage";
 import { validateCreateRecipeForm } from "@/utils/validation";
 import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
@@ -14,16 +14,19 @@ import DescriptionInput from "./DescriptionInput";
 import ConfirmModal from "../ui/modals/ConfirmModal";
 import RecipeImage from "./RecipeImage";
 import EditRecipeImageButton from "./EditRecipeImage";
+import AddButton from "../ui/buttons/AddButton";
 
 interface RecipeDetailsProps {
   currentRecipe: RecipeInterface;
   isModal?: boolean;
+  discardChanges: boolean;
   closeModal?: () => void;
   clearRecipe?: (id: string) => void;
 }
 
 const RecipeDetails = ({
   currentRecipe,
+  discardChanges,
   isModal = false,
   closeModal,
   clearRecipe,
@@ -131,6 +134,14 @@ const RecipeDetails = ({
     }
   };
 
+  useEffect(() => {
+    if (discardChanges) {
+      setIngredients(currentRecipe.ingredients);
+      setRecipeName(currentRecipe.name);
+      setDescription(currentRecipe.description);
+    }
+  }, [discardChanges, currentRecipe]);
+
   if (
     currentRecipe &&
     searchParams.get("edit") === "true" &&
@@ -139,6 +150,18 @@ const RecipeDetails = ({
     router.replace(window.location.pathname);
     return null;
   }
+
+  const addIngredientInput = () => {
+    const newEmptyIngredient: IngredientInterface = {
+      _id: crypto.randomUUID(),
+      ingredient: "",
+      quantity: 0,
+      unit: "g",
+    };
+    setIngredients((prevIngredients) => {
+      return [...prevIngredients, newEmptyIngredient];
+    });
+  };
 
   return (
     <div className="w-full">
@@ -170,11 +193,33 @@ const RecipeDetails = ({
                 />
               </div>
             )}
-            <IngredientInput
-              ingredients={ingredients}
-              setIngredients={setIngredients}
-              setError={setError}
-            />
+            <div className="w-full">
+              <h5 className="text-xl mb-3">Ingredients</h5>
+              <ul
+                className={`flex flex-col gap-3 rounded ${
+                  isEditMode ? "bg-white" : "bg-beige p-5"
+                }`}
+              >
+                {ingredients.map((ingredient, index) => (
+                  <IngredientInput
+                    key={ingredient._id || ingredient.ingredient}
+                    index={index}
+                    ingredients={ingredients}
+                    ingredient={ingredient}
+                    setIngredients={setIngredients}
+                    setError={setError}
+                  />
+                ))}
+              </ul>
+              {isEditMode && (
+                <div className="mt-8">
+                  <AddButton
+                    item="ingredient"
+                    handleClick={addIngredientInput}
+                  />
+                </div>
+              )}
+            </div>
           </div>
           <DescriptionInput
             description={description}

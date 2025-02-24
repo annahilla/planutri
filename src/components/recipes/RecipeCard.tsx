@@ -67,7 +67,7 @@ const RecipeCard = ({
             <h3 className="font-bold">{recipe.name}</h3>
             {recipe.isPublic && (
               <p className="text-xs bg-beige p-1 rounded text-neutral-700 w-fit">
-                Public Recipe
+                Made by planutri
               </p>
             )}
             <div className="flex flex-col gap-1">
