@@ -2,8 +2,8 @@ import "@testing-library/jest-dom";
 import { render } from "@testing-library/react";
 import Button from "@/components/ui/buttons/Button";
 
-describe("Day Component", () => {
-  test("Renders Day on the page", () => {
+describe("Button Component", () => {
+  test("Renders Button on the page", () => {
     const component = render(<Button filled>Click Me</Button>);
     const button = component.container.querySelector("button");
     expect(button).toBeInTheDocument();

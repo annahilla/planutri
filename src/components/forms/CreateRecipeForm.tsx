@@ -131,6 +131,7 @@ const CreateRecipeForm = () => {
         <input
           className="border py-2 px-4 rounded outline-none"
           name="name"
+          id="name"
           type="text"
           value={recipeName}
           onChange={handleRecipeNameChange}
@@ -145,6 +146,7 @@ const CreateRecipeForm = () => {
           <div className="relative w-full">
             <input
               name="ingredients"
+              id="ingredients"
               className="w-full border py-2 px-4 rounded outline-none"
               type="text"
               value={ingredientInputValue}
@@ -181,6 +183,7 @@ const CreateRecipeForm = () => {
                 <select
                   className="text-xs outline-none"
                   name="unit"
+                  role="unit-combobox"
                   value={
                     ingredients.find((item) => item.ingredient === ingredient)
                       ?.unit || ""
@@ -198,7 +201,10 @@ const CreateRecipeForm = () => {
                 </select>
                 <p className="px-2">{ingredient}</p>
                 <div className="absolute right-0 top-2 text-neutral-600">
-                  <button onClick={() => deleteIngredient(ingredient)}>
+                  <button
+                    role="delete-ingredient"
+                    onClick={() => deleteIngredient(ingredient)}
+                  >
                     <IoIosClose />
                   </button>
                 </div>

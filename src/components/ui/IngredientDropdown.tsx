@@ -39,11 +39,13 @@ const IngredientDropdown = ({
     <>
       {isDropdownOpen && (
         <ul
+          data-testid="ingredient-list"
           ref={dropdownRef}
           className="z-[1000] absolute top-10 w-full bg-white border border-t-0 rounded-b max-h-40 overflow-y-auto [&::-webkit-scrollbar]:hidden"
         >
           {filteredIngredients.map((ingredient) => (
             <li
+              role="listitem"
               key={ingredient}
               className="py-2 px-4 cursor-pointer hover:bg-gray-50"
               onClick={() => handleIngredientSelect(ingredient)}
