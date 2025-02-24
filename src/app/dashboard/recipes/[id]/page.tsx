@@ -20,12 +20,16 @@ const RecipeDetailsPage = () => {
   const token = useAppSelector((state) => state.auth.user?.token);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [recipe, setRecipe] = useState<RecipeInterface | null>(null);
+  const [recipeName, setRecipeName] = useState<string>("");
   const isEditMode = searchParams.get("edit") === "true";
   const [discardChanges, setDiscardChanges] = useState(false);
 
   useEffect(() => {
     if (token && id !== undefined) {
-      getRecipe(id?.toString(), token).then((data) => setRecipe(data));
+      getRecipe(id.toString(), token).then((data) => {
+        setRecipe(data);
+        setRecipeName(data.name);
+      });
     }
   }, []);
 
@@ -66,7 +70,7 @@ const RecipeDetailsPage = () => {
             >
               <IoMdArrowBack size={24} />
             </button>
-            <h2 className="text-2xl">{recipe.name}</h2>
+            <h2 className="text-2xl">{recipeName}</h2>
           </div>
           {!isEditMode && !recipe?.isPublic && (
             <div>

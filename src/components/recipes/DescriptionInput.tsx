@@ -32,6 +32,10 @@ const DescriptionInput = ({
     adjustTextareaRows();
   }, [description]);
 
+  useEffect(() => {
+    adjustTextareaRows();
+  }, []);
+
   return (
     <div className="flex-1 flex flex-col w-full">
       <h5 className="text-xl mb-3">Description</h5>

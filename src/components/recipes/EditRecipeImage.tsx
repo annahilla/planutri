@@ -99,7 +99,7 @@ const EditRecipeImageButton = ({
       <Modal isSmall={false} isOpen={isModalOpen} closeModal={closeModal}>
         <h3 className="text-xl my-2">Edit Recipe Image</h3>
         <div className="mt-8">
-          <div className="flex items-center justify-center w-full">
+          <div className="flex flex-col items-center justify-center w-full">
             <label
               htmlFor="dropzone-file"
               className={`${
