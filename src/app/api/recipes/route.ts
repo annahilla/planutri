@@ -33,7 +33,7 @@ export const POST = async (req: NextRequest) => {
 
         await connect();
         const body = await req.json();
-        const { name, ingredients, description } = body;
+        const { name, ingredients, description, isPublic } = body;
 
         if (!name || !ingredients || ingredients.length === 0) {
             return new NextResponse("Required fields are missing", { status: 400 });
@@ -47,6 +47,7 @@ export const POST = async (req: NextRequest) => {
             ingredients,
             description,
             userId,
+            isPublic: isPublic ? isPublic : false,
             imageUrl
         });
 

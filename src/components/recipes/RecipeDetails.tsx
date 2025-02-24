@@ -19,7 +19,7 @@ import AddButton from "../ui/buttons/AddButton";
 interface RecipeDetailsProps {
   currentRecipe: RecipeInterface;
   isModal?: boolean;
-  discardChanges: boolean;
+  discardChanges?: boolean;
   closeModal?: () => void;
   clearRecipe?: (id: string) => void;
 }

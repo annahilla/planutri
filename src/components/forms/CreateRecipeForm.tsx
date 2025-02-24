@@ -4,18 +4,16 @@ import { IoIosClose } from "react-icons/io";
 import Button from "../ui/buttons/Button";
 import ErrorMessage from "../ui/ErrorMessage";
 import IngredientDropdown from "../ui/IngredientDropdown";
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
+import { useAppSelector } from "@/lib/store/reduxHooks";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { IngredientInterface } from "@/types/types";
 import { addRecipe } from "@/services/recipeService";
 import { validateCreateRecipeForm } from "@/utils/validation";
-import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
 
 const CreateRecipeForm = () => {
   const units = useAppSelector((state) => state.units.units);
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const [ingredientInputValue, setIngredientInputValue] = useState<string>("");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -90,7 +88,6 @@ const CreateRecipeForm = () => {
     try {
       if (token) {
         addRecipe(newRecipe, token);
-        dispatch(fetchRecipes());
         router.push("/dashboard/recipes");
       }
       setSelectedIngredients([]);
