@@ -3,13 +3,13 @@
 import { fetchIngredients } from "@/lib/store/apis/ingredientsSlice";
 import { fetchUnits } from "@/lib/store/apis/unitsSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
-import { useState } from "react";
-import { useEffect } from "react";
-import SideNavbar from "@/components/SideNavbar";
+import { useEffect, useState } from "react";
+import SideNavbar from "@/components/sidebar/SideNavbar";
 import ProtectedRoute from "@/utils/ProtectedRoute";
 import { fetchMenu } from "@/lib/store/apis/menuSlice";
 import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
 import { fetchShoppingList } from "@/lib/store/apis/shoppingListSlice";
+import { loadCollapsedState } from "@/lib/store/sidebar/sidebarSlice";
 
 export default function DashboardLayout({
   children,
@@ -17,13 +17,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const dispatch = useAppDispatch();
-  const [isNavbarCollapsed, setIsNavbarCollapsed] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("isNavbarCollapsed") === "true";
-    }
-    return false;
-  });
+  const isNavbarCollapsed = useAppSelector(
+    (state) => state.sidebar.isCollapsed
+  );
   const isLoggedIn = useAppSelector((state) => state.auth.user) ? true : false;
+  const [isSidebarLoaded, setIsSidebarLoaded] = useState(false);
 
   useEffect(() => {
     dispatch(fetchUnits());
@@ -31,11 +29,11 @@ export default function DashboardLayout({
     dispatch(fetchMenu());
     dispatch(fetchRecipes());
     dispatch(fetchShoppingList());
+    dispatch(loadCollapsedState());
+    setIsSidebarLoaded(true);
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("isNavbarCollapsed", String(isNavbarCollapsed));
-  }, [isNavbarCollapsed]);
+  if (!isSidebarLoaded) return null;
 
   return (
     <ProtectedRoute canActivate={isLoggedIn} redirectPath="/login">
@@ -45,10 +43,7 @@ export default function DashboardLayout({
             isNavbarCollapsed ? "md:w-16" : "md:w-56"
           }`}
         >
-          <SideNavbar
-            isNavbarCollapsed={isNavbarCollapsed}
-            setIsNavbarCollapsed={setIsNavbarCollapsed}
-          />
+          <SideNavbar />
         </div>
 
         <div className="flex-1 m-6 h-auto overflow-hidden lg:mx-10">

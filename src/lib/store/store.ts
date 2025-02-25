@@ -5,6 +5,7 @@ import ingredientsReducer from "./apis/ingredientsSlice";
 import menuReducer from "./apis/menuSlice";
 import recipeReducer from "./apis/recipeSlice";
 import shoppingListReducer from "./apis/shoppingListSlice";
+import sidebarReducer from "./sidebar/sidebarSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -14,7 +15,8 @@ export const makeStore = () => {
         ingredients: ingredientsReducer,
         menu: menuReducer,
         recipes: recipeReducer,
-        shoppingList: shoppingListReducer
+        shoppingList: shoppingListReducer,
+        sidebar: sidebarReducer
     }
   })
 };
