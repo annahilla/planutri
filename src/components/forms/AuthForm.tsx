@@ -32,7 +32,18 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
         user = await dispatch(loginUser({ email, password })).unwrap();
       }
 
-      setCookie("token", user.token, { secure: true, sameSite: "strict" });
+      setCookie("token", user.token, {
+        secure: true,
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24,
+      });
+
+      setCookie("refreshToken", user.refreshToken, {
+        secure: true,
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 30,
+      });
+
       router.push("/dashboard/menu");
     } catch (err) {
       console.error("Error during authentication:", err);

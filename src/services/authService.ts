@@ -20,4 +20,29 @@ export const sendTokenToBackend = async (token: string) => {
       throw error;  
     }
   };
-  
+
+  export async function refreshToken(refreshToken: string) {
+  try {
+    const res = await fetch(
+      `https://securetoken.googleapis.com/v1/token?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          grant_type: "refresh_token",
+          refresh_token: refreshToken,
+        }),
+      }
+    );
+
+    const data = await res.json();
+    return {
+      idToken: data.id_token,
+      refreshToken: data.refresh_token,
+      expiresIn: data.expires_in,
+    };
+  } catch (error) {
+    console.error("Error refreshing token:", error);
+    return null;
+  }
+}
