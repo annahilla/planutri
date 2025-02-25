@@ -1,24 +1,14 @@
-"use client";
-
 import RecipesList from "@/components/recipes/RecipesList";
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import PageTitle from "@/components/ui/PageTitle";
 import Link from "next/link";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
-import Loader from "@/components/ui/Loader";
 import { CiSquarePlus } from "react-icons/ci";
-import { useEffect } from "react";
-import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
+import { fetchRecipes } from "@/services/fetchrecipes";
+import { cookies } from "next/headers";
 
-const RecipesPage = () => {
-  const dispatch = useAppDispatch();
-  const recipes = useAppSelector((state) => state.recipes.recipes);
-  const isLoading =
-    useAppSelector((state) => state.recipes.status) === "loading";
-
-  useEffect(() => {
-    dispatch(fetchRecipes());
-  }, [dispatch]);
+const RecipesPage = async () => {
+  const token = (await cookies()).get("token")?.value;
+  const recipes = token ? await fetchRecipes(token) : [];
 
   return (
     <div>
@@ -30,9 +20,7 @@ const RecipesPage = () => {
           </DashboardButton>
         </Link>
       </div>
-      {isLoading ? (
-        <Loader />
-      ) : recipes.length > 0 ? (
+      {recipes.length > 0 ? (
         <RecipesList recipes={recipes} showLinks={true} />
       ) : (
         <div className="my-4 text-neutral-600">

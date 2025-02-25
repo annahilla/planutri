@@ -13,6 +13,7 @@ import { CiShoppingBasket } from "react-icons/ci";
 import { deleteShoppingList } from "@/services/shoppingListService";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "@/components/ui/modals/ConfirmModal";
+import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
 
 const Menu = () => {
   const dispatch = useAppDispatch();
@@ -47,6 +48,7 @@ const Menu = () => {
 
   useEffect(() => {
     dispatch(fetchMenu());
+    dispatch(fetchRecipes());
   }, [dispatch]);
 
   return (
