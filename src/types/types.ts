@@ -53,7 +53,9 @@ export interface MenuInterface {
   _id?: string;
   recipe: RecipeInterface | string,
   dayOfTheWeek: DayOfTheWeek,
-  meal: Meal
+  meal: Meal,
+  createdAt?:string,
+  updatedAt?:string
 }
 
 export type SelectedRecipesState = {

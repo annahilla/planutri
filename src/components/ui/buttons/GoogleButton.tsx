@@ -4,6 +4,7 @@ import { loginUserWithGoogle } from "@/lib/store/auth/authActions";
 import { useAppDispatch } from "@/lib/store/reduxHooks";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
+import { setCookie } from "cookies-next";
 
 const GoogleButton = () => {
   const router = useRouter();
@@ -11,8 +12,9 @@ const GoogleButton = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      await dispatch(loginUserWithGoogle()).unwrap();
+      const user = await dispatch(loginUserWithGoogle()).unwrap();
       router.push("/dashboard/menu");
+      setCookie("token", user.token, { secure: true, sameSite: "strict" });
     } catch (err) {
       console.error("Error during Google sign-in:", err);
     }

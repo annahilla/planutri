@@ -13,6 +13,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.1",
     "cloudinary": "^2.5.1",
+    "cookies-next": "^5.1.0",
     "firebase": "^11.2.0",
     "firebase-admin": "^13.1.0",
     "mongodb": "^6.13.0",

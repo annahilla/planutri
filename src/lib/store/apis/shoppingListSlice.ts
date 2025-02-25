@@ -14,7 +14,7 @@ const initialState: ShoppingListState = {
     error: null,
 }
 
-export const fetchShoppingList = createAsyncThunk("/api/shopping-list", async (_, { getState }) => {
+export const fetchShoppingList = createAsyncThunk("/api/shopping-list", async (_, { getState }): Promise<IngredientInterface[]> => {
   const state = getState() as { auth: { user: AuthUser } };
   const token = state.auth.user.token;
   const data = await getShoppingList(token);

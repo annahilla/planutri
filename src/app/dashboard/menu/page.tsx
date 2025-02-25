@@ -3,9 +3,9 @@
 import Week from "@/components/menu-planner/Week";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { deleteFullMenu } from "@/services/menuService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PageTitle from "@/components/ui/PageTitle";
-import { setMenu } from "@/lib/store/apis/menuSlice";
+import { fetchMenu, setMenu } from "@/lib/store/apis/menuSlice";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiEraser } from "react-icons/ci";
 import Loader from "@/components/ui/Loader";
@@ -44,6 +44,10 @@ const Menu = () => {
   const goToShoppingList = () => {
     router.push("/dashboard/shopping-list");
   };
+
+  useEffect(() => {
+    dispatch(fetchMenu());
+  }, [dispatch]);
 
   return (
     <>

@@ -8,6 +8,7 @@ import GoogleButton from "../ui/buttons/GoogleButton";
 import { loginUser, signUpUser } from "@/lib/store/auth/authActions";
 import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { useRouter } from "next/navigation";
+import { setCookie } from "cookies-next";
 
 const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
   const router = useRouter();
@@ -23,12 +24,15 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
     e.preventDefault();
 
     try {
+      let user;
       if (formType === "Log In") {
-        await dispatch(loginUser({ email, password })).unwrap();
+        user = await dispatch(loginUser({ email, password })).unwrap();
       } else {
         await dispatch(signUpUser({ email, password })).unwrap();
-        await dispatch(loginUser({ email, password })).unwrap();
+        user = await dispatch(loginUser({ email, password })).unwrap();
       }
+
+      setCookie("token", user.token, { secure: true, sameSite: "strict" });
       router.push("/dashboard/menu");
     } catch (err) {
       console.error("Error during authentication:", err);
