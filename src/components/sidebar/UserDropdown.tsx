@@ -1,8 +1,9 @@
 "use client";
 
+import { useAuth } from "@/app/(providers)/AuthProvider";
 import useClickOutside from "@/hooks/useClickOutside";
-import { logoutUser } from "@/lib/store/auth/authActions";
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
+import { useAppSelector } from "@/lib/store/reduxHooks";
+import { logoutUser } from "@/services/authService";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -10,8 +11,8 @@ import { CiLogout, CiSettings, CiUser } from "react-icons/ci";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
 const UserDropdown = () => {
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth.user);
+  const user = useAuth();
+
   const isNavbarCollapsed = useAppSelector(
     (state) => state.sidebar.isCollapsed
   );
@@ -24,8 +25,8 @@ const UserDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    await logoutUser();
     router.push("/");
   };
 

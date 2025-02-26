@@ -2,8 +2,6 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";
 import { setUser, setError, logout } from "./authSlice";
-import { sendTokenToBackend } from "@/services/authService";
-import { getUserToken } from "./authHelpers";
 import { validateUserInput } from "@/utils/validation";
 import { handleAuthError } from "./errorUtils";
 import { AuthUser, User } from "@/types/types";
@@ -79,20 +77,3 @@ export const logoutUser = createAsyncThunk(
     }
   }
 );
-
-export const sendUserToken = createAsyncThunk(
-  'auth/sendUserToken',
-  async (_, thunkAPI) => {
-    try {
-      const token = await getUserToken();
-      
-      if (!token) throw new Error("No token available for authentication.");
-      
-      const response = await sendTokenToBackend(token);
-      return response;
-    } catch (error) {
-      return thunkAPI.rejectWithValue(handleAuthError(error));
-    }
-  }
-);
- 

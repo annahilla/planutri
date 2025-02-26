@@ -1,20 +1,16 @@
 "use client";
 
-import { loginUserWithGoogle } from "@/lib/store/auth/authActions";
-import { useAppDispatch } from "@/lib/store/reduxHooks";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
-import { setCookie } from "cookies-next";
+import { loginWithGoogle } from "@/services/authService";
 
 const GoogleButton = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   const handleGoogleSignIn = async () => {
     try {
-      const user = await dispatch(loginUserWithGoogle()).unwrap();
+      await loginWithGoogle();
       router.push("/dashboard/menu");
-      setCookie("token", user.token, { secure: true, sameSite: "strict" });
     } catch (err) {
       console.error("Error during Google sign-in:", err);
     }

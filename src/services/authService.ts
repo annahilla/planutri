@@ -1,48 +1,60 @@
-export const sendTokenToBackend = async (token: string) => {
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth } from "@/lib/firebase/firebase";
+
+export async function login(email: string, password: string) {
     try {
-      const response = await fetch('http://localhost:5000/api/habits', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({ data: 'additionalPayload' })  
-      });
-  
-      if (!response.ok) {
-        throw new Error('Failed to send request to backend');
-      }
-  
-      const data = await response.json(); 
-      return data; 
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        const idToken = await user.getIdToken();
+
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idToken }),
+        });
+
+        if (!response.ok) throw new Error("Login error");
+
+        await auth.signOut();
+
+        window.location.assign("/dashboard/menu");
     } catch (error) {
-      console.error('Error sending token to backend:', error);
-      throw error;  
+        console.error("Login error:", error);
+        throw error;
     }
-  };
+}
 
-  export async function refreshToken(refreshToken: string) {
-  try {
-    const res = await fetch(
-      `https://securetoken.googleapis.com/v1/token?key=${process.env.NEXT_PUBLIC_FIREBASE_API_KEY}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          grant_type: "refresh_token",
-          refresh_token: refreshToken,
-        }),
-      }
-    );
+export async function loginWithGoogle() {
+    try {
+        const provider = new GoogleAuthProvider();
+        const userCredential = await signInWithPopup(auth, provider);
+        const user = userCredential.user;
 
-    const data = await res.json();
-    return {
-      idToken: data.id_token,
-      refreshToken: data.refresh_token,
-      expiresIn: data.expires_in,
-    };
-  } catch (error) {
-    console.error("Error refreshing token:", error);
-    return null;
-  }
+        const idToken = await user.getIdToken();
+
+        const response = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ idToken }),
+        });
+
+        if (!response.ok) throw new Error("Login error");
+
+        await auth.signOut();
+        window.location.assign("/dashboard/menu");
+    } catch (error) {
+        console.error("Login error:", error);
+        throw error;
+    }
+}
+
+export async function logoutUser() {
+    try {
+        const response = await fetch("/api/logout", {method: "POST"});
+        if (!response.ok) throw new Error("Log out error");
+        return response;
+    } catch(error) {
+        console.error("Logout error: ", error)
+    }
 }
