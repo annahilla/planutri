@@ -7,7 +7,6 @@ import { getUserId } from "../auth/auth";
 export const GET = async () => {
     try {
         const userId = await getUserId();
-        console.log("userId", userId);
         await connect();
         const recipes = await Recipe.find({$or: [{ userId: userId }, { isPublic: true }]});
         return new NextResponse(JSON.stringify(recipes), { status: 200 });

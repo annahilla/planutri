@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import Button from "../ui/buttons/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
 import { IngredientInterface, RecipeInterface } from "@/types/types";
@@ -8,7 +7,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import ErrorMessage from "../ui/ErrorMessage";
 import { validateCreateRecipeForm } from "@/utils/validation";
-import { fetchRecipes } from "@/lib/store/apis/recipeSlice";
 import IngredientInput from "./IngredientInput";
 import DescriptionInput from "./DescriptionInput";
 import ConfirmModal from "../ui/modals/ConfirmModal";
@@ -31,7 +29,6 @@ const RecipeDetails = ({
   closeModal,
   clearRecipe,
 }: RecipeDetailsProps) => {
-  const dispatch = useAppDispatch();
   const searchParams = useSearchParams();
   const isEditMode =
     currentRecipe &&
@@ -44,7 +41,6 @@ const RecipeDetails = ({
   const [ingredients, setIngredients] = useState(currentRecipe.ingredients);
   const [imageUrl, setImageUrl] = useState(currentRecipe.imageUrl);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const token = useAppSelector((state) => state.auth.user?.token);
 
   const saveRecipe = async () => {
     if (!currentRecipe) return;
@@ -76,11 +72,8 @@ const RecipeDetails = ({
     };
 
     try {
-      if (token) {
-        await updateRecipe(updatedRecipe, token);
-        dispatch(fetchRecipes());
-        router.push(`/dashboard/recipes/${updatedRecipe._id}?edit=false`);
-      }
+      await updateRecipe(updatedRecipe);
+      router.push(`/dashboard/recipes/${updatedRecipe._id}?edit=false`);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error);
@@ -123,10 +116,7 @@ const RecipeDetails = ({
         } else {
           router.push("/dashboard/recipes");
         }
-        if (token) {
-          await deleteRecipe(currentRecipe._id, token);
-          dispatch(fetchRecipes());
-        }
+        await deleteRecipe(currentRecipe._id);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.log(error);

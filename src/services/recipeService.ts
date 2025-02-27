@@ -66,15 +66,15 @@ export const addRecipe = async (recipe: RecipeInterface) => {
   }
 };
 
-export const updateRecipe = async (recipe: Partial<RecipeInterface>, token: string) => {
+export const updateRecipe = async (recipe: Partial<RecipeInterface>) => {
   const id = recipe._id;
   try {
     const response = await fetch(`/api/recipes/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
+      credentials: "include",
       body: JSON.stringify({ id, ...recipe }),
     });
 

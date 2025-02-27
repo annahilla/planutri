@@ -13,8 +13,8 @@ export async function fetchRecipes() {
       },
       credentials: "include",
     });
-
-  if (!response.ok) {
+    
+    if (!response.ok) {
       throw new Error("Error fetching recipes");
     }
 
@@ -27,15 +27,15 @@ export async function fetchRecipes() {
 }
 
 export async function fetchRecipe(recipeId: string) {
+  console.log(recipeId);
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session");
-
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recipes/${recipeId}`, {
       method: "GET",
       headers: { 
       "Content-Type": "application/json",
-      "Cookie": `session=${sessionCookie}`,
+      "Cookie": `session=${sessionCookie?.value}`,
       },
       credentials: "include"
     });

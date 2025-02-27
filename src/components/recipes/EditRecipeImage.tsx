@@ -7,7 +7,6 @@ import { useState } from "react";
 import Button from "../ui/buttons/Button";
 import Image from "next/image";
 import { updateRecipe, uploadRecipeImage } from "@/services/recipeService";
-import { useAppSelector } from "@/lib/store/reduxHooks";
 import { RecipeInterface } from "@/types/types";
 import { PulseLoader } from "react-spinners";
 
@@ -22,7 +21,6 @@ const EditRecipeImageButton = ({
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const token = useAppSelector((state) => state.auth.user?.token);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -75,9 +73,7 @@ const EditRecipeImageButton = ({
     if (imageUrl) {
       try {
         const updatedRecipe = { ...recipe, imageUrl: imageUrl };
-        if (token) {
-          await updateRecipe(updatedRecipe, token);
-        }
+        await updateRecipe(updatedRecipe);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error(error);

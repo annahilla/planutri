@@ -5,7 +5,7 @@ import { getUserId } from "../auth/auth";
 
 export const GET = async (req: NextRequest) => {
     try {
-        const userId = await getUserId(req);
+        const userId = await getUserId();
 
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
@@ -23,7 +23,7 @@ export const GET = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => { 
     try {  
-        const userId = await getUserId(req);
+        const userId = await getUserId();
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
@@ -57,7 +57,7 @@ export const POST = async (req: NextRequest) => {
 
 export const DELETE = async (req: NextRequest) => {
     try {
-        const userId = await getUserId(req);
+        const userId = await getUserId();
 
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });

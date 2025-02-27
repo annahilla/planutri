@@ -5,7 +5,7 @@ import { getUserId } from "../../auth/auth";
 
 export const DELETE = async (req: NextRequest, context: { params: Promise<{ id: string }>}) => {
     try {
-        const userId = await getUserId(req);
+        const userId = await getUserId();
         
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
