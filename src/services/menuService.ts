@@ -1,14 +1,14 @@
 import { MenuInterface } from "@/types/types";
 import { toast } from "react-toastify";
 
-export const getMenu = async (token: string) => {
+export const getMenu = async () => {
   try {
-    const response = await fetch(`/api/menu`, {
+    const response = await fetch("/api/menu", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      }
+      },
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -22,15 +22,15 @@ export const getMenu = async (token: string) => {
   }
 };
 
-export const addRecipeToMenu = async (menu: MenuInterface, token: string) => {
+export const addRecipeToMenu = async (menu: MenuInterface) => {
     try {
-    const response = await fetch(`/api/menu`, {
+    const response = await fetch("/api/menu", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
-      body: JSON.stringify({...menu, userId: token}),
+      credentials: "include",
+      body: JSON.stringify({...menu}),
     });
     
     if (!response.ok) {
@@ -45,13 +45,11 @@ export const addRecipeToMenu = async (menu: MenuInterface, token: string) => {
   }
 };
 
-export const deleteFullMenu = async (token: string) => {
+export const deleteFullMenu = async () => {
   try {
-    const response = await fetch(`/api/menu`, {
+    const response = await fetch("/api/menu", {
       method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      }
+      credentials: "include",
     });
 
     if (!response.ok) {
@@ -69,13 +67,11 @@ export const deleteFullMenu = async (token: string) => {
   }
 };
 
-export const deleteSingleMenu = async (id: string, token: string) => {
+export const deleteSingleMenu = async (id: string) => {
     try {
         const response = await fetch(`/api/menu/${id}`, {
             method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-            }
+            credentials: "include"
         });
 
         if (!response.ok) {

@@ -6,10 +6,6 @@ import { getUserId } from "../auth/auth";
 export const GET = async (req: NextRequest) => {
     try {
         const userId = await getUserId();
-
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
         await connect();
         const menus = await Menu.find({ userId: userId });
         return new NextResponse(JSON.stringify(menus), { status: 200 });
@@ -24,10 +20,6 @@ export const GET = async (req: NextRequest) => {
 export const POST = async (req: NextRequest) => { 
     try {  
         const userId = await getUserId();
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
         await connect();
         const body = await req.json();
         const { recipe, dayOfTheWeek, meal } = body;
@@ -58,11 +50,6 @@ export const POST = async (req: NextRequest) => {
 export const DELETE = async (req: NextRequest) => {
     try {
         const userId = await getUserId();
-
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
         await connect();
 
         const result = await Menu.deleteMany({ userId });

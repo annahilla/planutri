@@ -7,11 +7,9 @@ import {
   MenuInterface,
   RecipeInterface,
 } from "@/types/types";
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { deleteSingleMenu } from "@/services/menuService";
 import { IoMdClose } from "react-icons/io";
 import { LiaExchangeAltSolid } from "react-icons/lia";
-import { setMenu } from "@/lib/store/apis/menuSlice";
 import { mealIcons } from "@/utils/MealIcons";
 import RecipeListModal from "./RecipeListModal";
 import RecipeDetailsModal from "./RecipeDetailsModal";
@@ -19,8 +17,15 @@ import IconButton from "../ui/buttons/IconButton";
 import { meals } from "@/types/types";
 import { PulseLoader } from "react-spinners";
 
-const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
-  const dispatch = useAppDispatch();
+const Day = ({
+  dayOfTheWeek,
+  recipes,
+  fullMenu,
+}: {
+  dayOfTheWeek: DayOfTheWeek;
+  recipes: RecipeInterface[];
+  fullMenu: MenuInterface[];
+}) => {
   const [isSelectRecipeModalOpen, setIsSelectRecipeModalOpen] = useState(false);
   const [isRecipeDetailsModalOpen, setIsRecipeDetailsModalOpen] =
     useState(false);
@@ -28,12 +33,8 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
   const [selectedRecipe, setSelectedRecipe] = useState<RecipeInterface | null>(
     null
   );
-  const token = useAppSelector((state) => state.auth.user?.token);
-  const recipes = useAppSelector((state) => state.recipes.recipes);
-  const fullMenu = useAppSelector((state) => state.menu.menu);
-  const dayMenu = fullMenu.filter(
-    (fullMenu) => fullMenu.dayOfTheWeek === dayOfTheWeek
-  );
+  const [menu, setMenu] = useState<MenuInterface[]>(fullMenu);
+  const dayMenu = menu.filter((menu) => menu.dayOfTheWeek === dayOfTheWeek);
   const [selectedRecipes, setSelectedRecipes] = useState<{
     [meal: string]: RecipeInterface | null;
   }>({});
@@ -41,7 +42,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
 
   useEffect(() => {
     updateSelectedRecipes();
-  }, [fullMenu, recipes]);
+  }, [menu, recipes]);
 
   const updateSelectedRecipes = () => {
     const newSelectedRecipes = dayMenu.reduce(
@@ -77,7 +78,7 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
 
   const openRecipeDetailsModal = (currentRecipe: RecipeInterface) => {
     setIsRecipeDetailsModalOpen(true);
-    if (currentRecipe !== null) {
+    if (currentRecipe) {
       setSelectedRecipe(currentRecipe);
     }
   };
@@ -86,11 +87,11 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
     setIsLoading(true);
     const menuItem = dayMenu.find((menuItem) => menuItem.meal === meal);
     const recipeId = menuItem ? menuItem._id?.toString() : "";
-    if (token && recipeId) {
-      const isDeleted = await deleteSingleMenu(recipeId, token);
+    if (recipeId) {
+      const isDeleted = await deleteSingleMenu(recipeId);
       if (isDeleted) {
         const updatedMenu = fullMenu.filter((item) => item._id !== recipeId);
-        dispatch(setMenu({ menu: updatedMenu }));
+        setMenu(updatedMenu);
         setIsLoading(false);
       }
     }
@@ -178,10 +179,13 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
         </div>
       </div>
       <RecipeListModal
+        recipes={recipes}
         isModalOpen={isSelectRecipeModalOpen}
         closeModal={closeModal}
         dayOfTheWeek={dayOfTheWeek}
         selectedMeal={selectedMeal}
+        fullMenu={fullMenu}
+        setMenu={setMenu}
       />
       <RecipeDetailsModal
         isModalOpen={isRecipeDetailsModalOpen}

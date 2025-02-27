@@ -9,13 +9,14 @@ import {
   RecipeInterface,
 } from "@/types/types";
 import { addRecipeToMenu } from "@/services/menuService";
-import { setMenu } from "@/lib/store/apis/menuSlice";
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 
 interface RecipeListModalProps {
   isModalOpen: boolean;
   dayOfTheWeek: DayOfTheWeek;
   selectedMeal: Meal | null;
+  recipes: RecipeInterface[];
+  fullMenu: MenuInterface[];
+  setMenu: (menu: MenuInterface[]) => void;
   closeModal: () => void;
 }
 
@@ -23,13 +24,11 @@ const RecipeListModal = ({
   isModalOpen,
   dayOfTheWeek,
   selectedMeal,
+  recipes,
+  fullMenu,
+  setMenu,
   closeModal,
 }: RecipeListModalProps) => {
-  const dispatch = useAppDispatch();
-  const token = useAppSelector((state) => state.auth.user?.token);
-  const recipes = useAppSelector((state) => state.recipes.recipes);
-  const fullMenu = useAppSelector((state) => state.menu.menu);
-
   const selectRecipe = async (recipe: RecipeInterface, selectedMeal: Meal) => {
     try {
       const newMenu: MenuInterface = {
@@ -37,12 +36,11 @@ const RecipeListModal = ({
         dayOfTheWeek,
         meal: selectedMeal,
       };
-      if (token) {
-        const addedMenuItem = await addRecipeToMenu(newMenu, token);
-        if (addedMenuItem) {
-          const updatedMenu = [...fullMenu, addedMenuItem];
-          dispatch(setMenu({ menu: updatedMenu }));
-        }
+
+      const addedMenuItem = await addRecipeToMenu(newMenu);
+      if (addedMenuItem) {
+        const updatedMenu: MenuInterface[] = [...fullMenu, addedMenuItem];
+        setMenu(updatedMenu);
       }
     } catch (error) {
       console.log(error);

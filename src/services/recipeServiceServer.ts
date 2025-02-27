@@ -1,3 +1,4 @@
+import { RecipeInterface } from "@/types/types";
 import { cookies } from "next/headers";
 
 export async function fetchRecipes() {
@@ -19,7 +20,11 @@ export async function fetchRecipes() {
     }
 
     const recipes = await response.json();
-    return recipes;
+    const sortedRecipes = recipes.sort((a: RecipeInterface, b: RecipeInterface) =>
+      a.name.localeCompare(b.name)
+    );
+      
+    return sortedRecipes;
   } catch(error) {
     console.error(error);
     throw error;
