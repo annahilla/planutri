@@ -1,17 +1,13 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import { verifyToken } from "@/app/api/auth/auth";
 import  { imageService }  from "./imageService";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserId } from "../auth/auth";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
     try {
-        const userId = await verifyToken(req);
-
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
+        const userId = await getUserId();
+        console.log("userId", userId);
         await connect();
         const recipes = await Recipe.find({$or: [{ userId: userId }, { isPublic: true }]});
         return new NextResponse(JSON.stringify(recipes), { status: 200 });
@@ -25,12 +21,8 @@ export const GET = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => { 
     try {
-        const userId = await verifyToken(req);
-
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
+        const userId = await getUserId();
+        console.log(userId);
         await connect();
         const body = await req.json();
         const { name, ingredients, description, isPublic } = body;
@@ -65,12 +57,7 @@ export const POST = async (req: NextRequest) => {
 
 export const DELETE = async (req: NextRequest) => {
     try {
-        const userId = await verifyToken(req);
-
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
+        const userId = await getUserId();
         await connect();
         const { id } = await req.json();
 
@@ -84,7 +71,7 @@ export const DELETE = async (req: NextRequest) => {
             return new NextResponse("Recipe not found", { status: 404 });
         }
 
-        if (recipe.userId.toString() !== userId.toString()) {
+        if (recipe.userId.toString() !== userId?.toString()) {
             return new NextResponse("Unauthorized: You can only delete your own recipes", { status: 403 });
         }
 

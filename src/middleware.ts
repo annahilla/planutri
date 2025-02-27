@@ -23,6 +23,7 @@ export async function middleware(req: NextRequest) {
     headers: {
       "Cookie": `session=${sessionCookie}`,
     },
+    credentials: "include",
   });
 
   if (!res.ok) {

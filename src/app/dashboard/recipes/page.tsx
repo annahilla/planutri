@@ -3,12 +3,14 @@ import PageTitle from "@/components/ui/PageTitle";
 import Link from "next/link";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiSquarePlus } from "react-icons/ci";
-import { fetchRecipes } from "@/services/fetchrecipes";
-import { cookies } from "next/headers";
+import { fetchRecipes } from "@/services/recipeServiceServer";
+import { RecipeInterface } from "@/types/types";
 
 const RecipesPage = async () => {
-  const token = (await cookies()).get("token")?.value;
-  const recipes = token ? await fetchRecipes(token) : [];
+  const recipes = await fetchRecipes();
+  const sortedRecipes = recipes.sort((a: RecipeInterface, b: RecipeInterface) =>
+    a.name.localeCompare(b.name)
+  );
 
   return (
     <div>
@@ -21,7 +23,7 @@ const RecipesPage = async () => {
         </Link>
       </div>
       {recipes.length > 0 ? (
-        <RecipesList recipes={recipes} showLinks={true} />
+        <RecipesList recipes={sortedRecipes} showLinks={true} />
       ) : (
         <div className="my-4 text-neutral-600">
           You haven&apos;t created any recipe yet.{" "}

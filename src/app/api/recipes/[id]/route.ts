@@ -1,20 +1,13 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import { verifyToken } from "@/app/api/auth/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserId } from "../../auth/auth";
 
 export const GET = async (req: NextRequest, context: { params: Promise<{ id: string }>}) => {
     try {
-        const userId = await verifyToken(req);
-
-        if (!userId) {
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
+        getUserId(req);
         await connect();
-
         const id = (await context.params).id;
-
         const recipe = await Recipe.findById(id);
         if (!recipe) {
             return NextResponse.json({ message: "Recipe not found" }, { status: 404 });
@@ -29,12 +22,7 @@ export const GET = async (req: NextRequest, context: { params: Promise<{ id: str
 
 export const PUT = async (req: NextRequest, context: { params: Promise<{ id: string }>}) => {
     try {
-        const userId = await verifyToken(req);
-
-        if (!userId) {            
-            return new NextResponse("Unauthorized", { status: 401 });
-        }
-
+        const userId = getUserId(req);
         await connect();
         const body = await req.json();
         const { name, ingredients, description, imageUrl } = body;

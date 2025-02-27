@@ -1,11 +1,11 @@
 import connect from "@/database/db";
 import Menu from "@/database/models/menu";
-import { verifyToken } from "@/app/api/auth/auth";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserId } from "../../auth/auth";
 
 export const DELETE = async (req: NextRequest, context: { params: Promise<{ id: string }>}) => {
     try {
-        const userId = await verifyToken(req);
+        const userId = await getUserId(req);
         
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });

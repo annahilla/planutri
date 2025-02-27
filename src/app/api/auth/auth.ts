@@ -1,19 +1,19 @@
-import admin from '@/lib/firebase/firebaseAdmin';
-import { NextRequest } from 'next/server';
+import admin from "@/lib/firebase/firebaseAdmin";
+import { cookies } from 'next/headers';
 
-export const verifyToken = async (req: NextRequest) => {    
-  const authHeader = req.headers.get("Authorization");
+export const getUserId = async () => {
+    try {
+        const cookieStore = await cookies();
+        const sessionCookie = cookieStore.get("session");
 
-  if (!authHeader?.startsWith("Bearer ")) {
-    return null;
-  }
-  const token = authHeader.split(" ")[1];
+        if (!sessionCookie) {
+            throw new Error("No session cookie found");
+        }
 
-  try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    return decodedToken.uid;
-  } catch (error) {
-    console.error("Invalid token:", error);
-    return null;
-  }
+        const decodedToken = await admin.auth().verifySessionCookie(sessionCookie.value, true);
+        return decodedToken.uid;
+    } catch (error) {
+        console.error("Error verifying session cookie:", error);
+        return null;
+    }
 };

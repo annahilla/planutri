@@ -1,11 +1,11 @@
-import { verifyToken } from "@/app/api/auth/auth";
 import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import Menu from "@/database/models/menu";
+import { getUserId } from "../auth/auth";
 
 export const GET = async (req: NextRequest) => {
     try {
-        const userId = await verifyToken(req);
+        const userId = await getUserId(req);
 
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
@@ -23,7 +23,7 @@ export const GET = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => { 
     try {  
-        const userId = await verifyToken(req);
+        const userId = await getUserId(req);
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
@@ -57,7 +57,7 @@ export const POST = async (req: NextRequest) => {
 
 export const DELETE = async (req: NextRequest) => {
     try {
-        const userId = await verifyToken(req);
+        const userId = await getUserId(req);
 
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });

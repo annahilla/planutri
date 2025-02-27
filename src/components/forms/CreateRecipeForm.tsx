@@ -24,7 +24,6 @@ const CreateRecipeForm = () => {
   const [recipeName, setRecipeName] = useState("");
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
-  const token = useAppSelector((state) => state.auth.user?.token);
 
   const handleRecipeNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRecipeName(event.target.value);
@@ -89,10 +88,8 @@ const CreateRecipeForm = () => {
     };
 
     try {
-      if (token) {
-        addRecipe(newRecipe, token);
-        router.push("/dashboard/recipes");
-      }
+      addRecipe(newRecipe);
+      router.push("/dashboard/recipes");
       setSelectedIngredients([]);
       setRecipeName("");
       setDescription("");

@@ -1,7 +1,6 @@
 import { RecipeInterface } from "@/types/types";
 import { toast } from "react-toastify";
 
-
 export const getRecipes = async (token: string) => {
   try {
     const response = await fetch(`/api/recipes`, {
@@ -43,14 +42,14 @@ export const getRecipe = async (id: string, token: string) => {
   return recipe;
 }
 
-export const addRecipe = async (recipe: RecipeInterface, token: string) => {
+export const addRecipe = async (recipe: RecipeInterface) => {
     try {
     const response = await fetch(`/api/recipes`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
+      credentials: "include",
       body: JSON.stringify(recipe),
     });
 
@@ -94,14 +93,14 @@ export const updateRecipe = async (recipe: Partial<RecipeInterface>, token: stri
 };
 
 
-export const deleteRecipe = async (id: string, token:string) => {
+export const deleteRecipe = async (id: string) => {
     try {
-        const response = await fetch(`/api/recipes`, {
+        const response = await fetch("/api/recipes", {
             method: "DELETE",
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
+              "Content-Type": "application/json",
             },
+            credentials: "include",
             body: JSON.stringify({ id }),
         });
 
