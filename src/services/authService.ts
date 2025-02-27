@@ -1,7 +1,8 @@
-import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase/firebase";
+import { AuthUser } from "@/types/types";
 
-export async function login(email: string, password: string) {
+export async function loginUser(email: string, password: string) {
     try {
         const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
@@ -19,6 +20,19 @@ export async function login(email: string, password: string) {
         await auth.signOut();
 
         window.location.assign("/dashboard/menu");
+    } catch (error) {
+        console.error("Login error:", error);
+        throw error;
+    }
+}
+
+export async function signUpUser(email: string, password: string) {
+    try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+        const token = await user.getIdToken();
+        const userData: AuthUser = { email: user.email!,  token };
+        return userData;
     } catch (error) {
         console.error("Login error:", error);
         throw error;

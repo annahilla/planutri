@@ -147,7 +147,11 @@ const Day = ({
                       className="text-left text-sm text-neutral-800 border border-white outline-none truncate w-full hover:opacity-75"
                     >
                       {isLoading ? (
-                        <PulseLoader className="text-center" size={2} />
+                        <PulseLoader
+                          color="#635F53"
+                          className="text-center"
+                          size={2}
+                        />
                       ) : (
                         selectedRecipes[meal]?.name
                       )}

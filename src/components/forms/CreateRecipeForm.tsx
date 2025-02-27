@@ -4,18 +4,15 @@ import { IoIosClose } from "react-icons/io";
 import Button from "../ui/buttons/Button";
 import ErrorMessage from "../ui/ErrorMessage";
 import IngredientDropdown from "../ui/IngredientDropdown";
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { IngredientInterface } from "@/types/types";
 import { addRecipe } from "@/services/recipeService";
 import { validateCreateRecipeForm } from "@/utils/validation";
-import { fetchIngredients } from "@/lib/store/apis/ingredientsSlice";
-import { fetchUnits } from "@/lib/store/apis/unitsSlice";
+import { fetchUnits } from "@/services/unitService";
+import { useQuery } from "@tanstack/react-query";
 
 const CreateRecipeForm = () => {
-  const dispatch = useAppDispatch();
-  const units = useAppSelector((state) => state.units.units);
   const router = useRouter();
   const [ingredientInputValue, setIngredientInputValue] = useState<string>("");
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
@@ -24,6 +21,11 @@ const CreateRecipeForm = () => {
   const [recipeName, setRecipeName] = useState("");
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
+
+  const { data: units } = useQuery({
+    queryKey: ["units"],
+    queryFn: fetchUnits,
+  });
 
   const handleRecipeNameChange = (event: ChangeEvent<HTMLInputElement>) => {
     setRecipeName(event.target.value);
@@ -118,11 +120,6 @@ const CreateRecipeForm = () => {
     setIsDropdownOpen(false);
   }, [selectedIngredients]);
 
-  useEffect(() => {
-    dispatch(fetchIngredients());
-    dispatch(fetchUnits());
-  }, [dispatch]);
-
   return (
     <form
       onSubmit={handleCreateRecipe}
@@ -198,7 +195,7 @@ const CreateRecipeForm = () => {
                   }
                   required
                 >
-                  {units.map((unit) => (
+                  {units.map((unit: string) => (
                     <option key={unit} value={unit}>
                       {unit}
                     </option>

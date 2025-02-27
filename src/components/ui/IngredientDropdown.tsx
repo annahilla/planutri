@@ -1,6 +1,7 @@
 import useClickOutside from "@/hooks/useClickOutside";
-import { useAppSelector } from "@/lib/store/reduxHooks";
+import { fetchIngredients } from "@/services/ingredientService";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface IngredientDropdownProps {
   isDropdownOpen: boolean;
@@ -18,9 +19,11 @@ const IngredientDropdown = ({
   const dropdownRef = useRef<HTMLUListElement>(null!);
   useClickOutside(dropdownRef, () => setIsDropdownOpen(false));
   const [filteredIngredients, setFilteredIngredients] = useState<string[]>([]);
-  const allIngredients = useAppSelector(
-    (state) => state.ingredients.ingredients
-  );
+
+  const { data: allIngredients } = useQuery({
+    queryKey: ["ingredients"],
+    queryFn: fetchIngredients,
+  });
 
   useEffect(() => {
     if (ingredientInputValue === "") {
@@ -28,7 +31,7 @@ const IngredientDropdown = ({
       setFilteredIngredients([]);
     } else {
       setIsDropdownOpen(true);
-      const filtered = allIngredients.filter((ingredient) =>
+      const filtered = allIngredients.filter((ingredient: string) =>
         ingredient.toLowerCase().startsWith(ingredientInputValue.toLowerCase())
       );
       setFilteredIngredients(filtered);

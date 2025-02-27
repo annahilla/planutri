@@ -1,52 +1,56 @@
 "use client";
 
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import Link from "next/link";
 import Button from "../ui/buttons/Button";
 import Logo from "../Logo";
 import GoogleButton from "../ui/buttons/GoogleButton";
-import { loginUser, signUpUser } from "@/lib/store/auth/authActions";
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
 import { useRouter } from "next/navigation";
-import { setCookie } from "cookies-next";
+import { loginUser, signUpUser } from "@/services/authService";
+import { firebaseError, validateUserInput } from "@/utils/validation";
+import ErrorMessage from "../ui/ErrorMessage";
 
 const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const error = useAppSelector((state) => state.auth.error);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const inputStyles =
     "px-5 py-3 outline-none border border-neutral-300 w-full placeholder:font-light";
 
-  const handleAuth = async (e: React.FormEvent) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>, type: string) => {
+    const value = event.target.value;
+
+    if (type === "email") {
+      setEmail(value);
+    } else {
+      setPassword(value);
+    }
+
+    setError("");
+  };
+
+  const handleAuth = async (e: FormEvent) => {
     e.preventDefault();
 
+    const validationError = validateUserInput(email, password);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
     try {
-      let user;
       if (formType === "Log In") {
-        user = await dispatch(loginUser({ email, password })).unwrap();
+        await loginUser(email, password);
       } else {
-        await dispatch(signUpUser({ email, password })).unwrap();
-        user = await dispatch(loginUser({ email, password })).unwrap();
+        await signUpUser(email, password);
       }
-
-      setCookie("token", user.token, {
-        secure: true,
-        sameSite: "strict",
-        maxAge: 60 * 60 * 24,
-      });
-
-      setCookie("refreshToken", user.refreshToken, {
-        secure: true,
-        sameSite: "strict",
-        maxAge: 60 * 60 * 24 * 30,
-      });
-
       router.push("/dashboard/menu");
-    } catch (err) {
-      console.error("Error during authentication:", err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      const authError = firebaseError(err.message);
+      setError(authError);
     }
   };
 
@@ -60,15 +64,16 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
           {formType} now to start planning your meals
         </p>
         <form
+          noValidate
           onSubmit={handleAuth}
-          className="flex flex-col gap-4 items-center w-64 justify-center mt-8"
+          className="flex flex-col gap-4 items-center w-64 justify-center mt-8 mb-4"
         >
           <input
             className={inputStyles}
             type="email"
             placeholder="Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleChange(e, "email")}
             required
           />
           <input
@@ -76,7 +81,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => handleChange(e, "password")}
             required
           />
           <div className="mt-4 flex flex-col gap-4 w-full">
@@ -86,7 +91,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
             </Button>
           </div>
         </form>
-        {error && <p className="text-red-500 mt-4 text-xs">{error}</p>}
+        {error && <ErrorMessage message={error} />}
         <div className="mt-4 text-sm">
           {formType === "Log In" ? (
             <p>

@@ -1,16 +1,37 @@
 import { IngredientInterface } from "@/types/types";
 
 export const validateUserInput = (email: string, password: string) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   if (!email || email.trim() === "") {
-    return "Please enter an email";
+    return "Please enter an email.";
+  }
+
+  if (!emailRegex.test(email)) {
+    return "Please enter a valid email address.";
   }
 
   if (!password || password.trim() === "") {
-    return "Please enter a password";
+    return "Please enter a password.";
+  }
+
+  if (password.length < 8) {
+    return "Password must be at least 8 characters long.";
   }
 
   return null;
 };
+
+export const firebaseError = (error: string) => {
+  console.log(error);
+  if (error === "Firebase: Error (auth/invalid-credential).") {
+    return "Invalid email or password.";
+  } else if (error === "Firebase: Error (auth/email-already-in-use).") {
+    return "This email is already in use.";
+  } else {
+    return "An error occurred. Please try again.";
+  }
+}
 
 export const validateCreateRecipeForm = (recipeName: string, ingredients: IngredientInterface[]) => {
       if (!recipeName.trim()) {

@@ -1,47 +1,6 @@
 import { RecipeInterface } from "@/types/types";
 import { toast } from "react-toastify";
 
-export const getRecipes = async (token: string) => {
-  try {
-    const response = await fetch(`/api/recipes`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error("Error fetching recipes");
-    }
-
-    const recipes = await response.json();
-
-    const sortedRecipes = recipes.sort((a: RecipeInterface, b: RecipeInterface) => {
-      if (a.name < b.name) return -1;
-      if (a.name > b.name) return 1;
-      return 0;
-    });
-
-    return sortedRecipes;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const getRecipe = async (id: string, token: string) => {
-  const response = await fetch(`/api/recipes/${id}`, {
-    method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      }
-  });
-  const recipe = await response.json();
-  return recipe;
-}
-
 export const addRecipe = async (recipe: RecipeInterface) => {
     try {
     const response = await fetch(`/api/recipes`, {

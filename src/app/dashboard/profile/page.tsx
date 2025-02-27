@@ -1,19 +1,18 @@
 "use client";
 
+import { useAuth } from "@/components/providers/AuthProvider";
 import Button from "@/components/ui/buttons/Button";
 import PageTitle from "@/components/ui/PageTitle";
-import { logoutUser } from "@/lib/store/auth/authActions";
-import { useAppDispatch, useAppSelector } from "@/lib/store/reduxHooks";
+import { logoutUser } from "@/services/authService";
 import { useRouter } from "next/navigation";
 import React from "react";
 
 const ProfilePage = () => {
-  const dispatch = useAppDispatch();
+  const user = useAuth();
   const router = useRouter();
-  const user = useAppSelector((state) => state.auth.user);
 
-  const handleLogout = () => {
-    dispatch(logoutUser());
+  const handleLogout = async () => {
+    await logoutUser();
     router.push("/");
   };
 

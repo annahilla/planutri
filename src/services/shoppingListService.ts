@@ -1,34 +1,6 @@
 import { IngredientInterface } from "@/types/types";
 import { toast } from "react-toastify";
 
-export const getShoppingList = async () => {
-  try {
-    const response = await fetch("/api/shopping-list", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include"
-    });
-
-    if (!response.ok) {
-      throw new Error("Error fetching recipes");
-    }
-
-    const data = await response.json();
-    
-    if(data.length > 0) {
-      const shoppingList = data[0].list;
-      return shoppingList;
-    } else {
-      return [];
-    }
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
 export const generateShoppingList  = async () => {
   try {
     const response = await fetch("/api/shopping-list", {
