@@ -4,36 +4,30 @@ import { CiBoxList } from "react-icons/ci";
 import DashboardButton from "../ui/buttons/DashboardButton";
 import PageTitle from "../ui/PageTitle";
 import { generateShoppingList } from "@/services/shoppingListService";
-import { useAppSelector } from "@/lib/store/reduxHooks";
 import { toast } from "react-toastify";
-import { IngredientInterface } from "@/types/types";
+import { IngredientInterface, MenuInterface } from "@/types/types";
 
 const ShoppingListPageHeader = ({
-  doesShoppingListExist,
   setList,
+  menu,
+  shoppingList,
 }: {
-  doesShoppingListExist: boolean;
   setList: (list: IngredientInterface[]) => void;
+  menu: MenuInterface[];
+  shoppingList: IngredientInterface[];
 }) => {
-  const token = useAppSelector((state) => state.auth.user?.token);
-  const menu = useAppSelector((state) => state.menu.menu);
-
   const handleShoppingList = async () => {
-    if (menu.length <= 0 && !doesShoppingListExist) {
+    if (menu.length === 0 && shoppingList.length === 0) {
       toast.info("You can't generate a shopping list without a menu.");
     } else {
-      if (token) {
-        const { list } = await generateShoppingList(token);
-        if (list) {
-          localStorage.setItem("lastUpdatedMenu", JSON.stringify(menu));
-          setList(list);
-        } else {
-          setList([]);
-        }
-        toast.success("Shopping list updated successfully!");
+      const { list } = await generateShoppingList();
+      if (list) {
+        localStorage.setItem("lastUpdatedMenu", JSON.stringify(menu));
+        setList(list);
       } else {
-        toast.error("There was an error generating the shopping list.");
+        setList([]);
       }
+      toast.success("Shopping list updated successfully!");
     }
   };
 
@@ -44,7 +38,7 @@ const ShoppingListPageHeader = ({
         handleClick={handleShoppingList}
         icon={<CiBoxList size={17} />}
       >
-        {doesShoppingListExist ? "Update List" : "Generate List"}
+        {shoppingList.length > 0 ? "Update List" : "Generate List"}
       </DashboardButton>
     </div>
   );

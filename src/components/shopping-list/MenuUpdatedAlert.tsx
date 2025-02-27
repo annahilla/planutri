@@ -2,16 +2,16 @@
 
 import { useEffect, useState } from "react";
 import AlertMessage from "../ui/AlertMessage";
-import { useAppSelector } from "@/lib/store/reduxHooks";
-import { IngredientInterface } from "@/types/types";
+import { IngredientInterface, MenuInterface } from "@/types/types";
 
 const MenuUpdatedAlert = ({
+  menu,
   shoppingList,
 }: {
+  menu: MenuInterface[];
   shoppingList: IngredientInterface[];
 }) => {
   const [showMenuUpdateAlert, setShowMenuUpdateAlert] = useState(false);
-  const menu = useAppSelector((state) => state.menu.menu);
 
   const checkMenuChanges = () => {
     const lastUpdatedMenu = localStorage.getItem("lastUpdatedMenu");

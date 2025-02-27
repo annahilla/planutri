@@ -32,7 +32,6 @@ export async function fetchRecipes() {
 }
 
 export async function fetchRecipe(recipeId: string) {
-  console.log(recipeId);
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session");
   try {
@@ -42,7 +41,7 @@ export async function fetchRecipe(recipeId: string) {
       "Content-Type": "application/json",
       "Cookie": `session=${sessionCookie?.value}`,
       },
-      credentials: "include"
+      credentials: "include",
     });
 
   if (!response.ok) {

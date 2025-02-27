@@ -1,14 +1,14 @@
-import { fetchShoppingListServer } from "@/services/shoppingListFetching";
-import { cookies } from "next/headers";
 import ShoppingListPageClient from "@/components/shopping-list/ShoppingListPageClient";
+import { fetchMenu } from "@/services/menuServiceServer";
+import { fetchShoppingListServer } from "@/services/shoppingListServiceServer";
 
 const ShoppingListPage = async () => {
-  const token = (await cookies()).get("token")?.value;
-  const shoppingList = token ? await fetchShoppingListServer(token) : [];
+  const shoppingList = await fetchShoppingListServer();
+  const menu = await fetchMenu();
 
   return (
     <div className="h-full">
-      <ShoppingListPageClient shoppingList={shoppingList} />
+      <ShoppingListPageClient menu={menu} shoppingList={shoppingList} />
     </div>
   );
 };

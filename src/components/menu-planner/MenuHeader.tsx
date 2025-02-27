@@ -23,6 +23,7 @@ const MenuHeader = () => {
   const clearAll = async () => {
     await deleteFullMenu();
     setIsModalOpen(false);
+    window.location.reload();
   };
 
   return (

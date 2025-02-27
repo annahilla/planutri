@@ -1,14 +1,14 @@
 import { IngredientInterface } from "@/types/types";
 import { toast } from "react-toastify";
 
-export const getShoppingList = async (token: string) => {
+export const getShoppingList = async () => {
   try {
     const response = await fetch("/api/shopping-list", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-      }
+      },
+      credentials: "include"
     });
 
     if (!response.ok) {
@@ -29,14 +29,14 @@ export const getShoppingList = async (token: string) => {
   }
 };
 
-export const generateShoppingList  = async (token: string) => {
+export const generateShoppingList  = async () => {
   try {
     const response = await fetch("/api/shopping-list", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
+      credentials: "include",
       body: JSON.stringify({})
     });
 
@@ -52,13 +52,11 @@ export const generateShoppingList  = async (token: string) => {
   }
 };
 
-export const deleteShoppingList = async (token: string) => {
+export const deleteShoppingList = async () => {
   try {
     const response = await fetch(`/api/shopping-list`, {
       method: "DELETE",
-      headers: {
-        "Authorization": `Bearer ${token}`,
-      }
+      credentials: "include"
     });
 
     if (!response.ok) {
@@ -75,15 +73,15 @@ export const deleteShoppingList = async (token: string) => {
   }
 };
 
-export const updateShoppingList = async (ingredient: IngredientInterface, token: string): Promise<IngredientInterface[]> => {
+export const updateShoppingList = async (ingredient: IngredientInterface): Promise<IngredientInterface[]> => {
   const id = ingredient._id;
   try {
     const response = await fetch("/api/shopping-list", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
       },
+      credentials: "include",
       body: JSON.stringify({ id, ...ingredient }),
     });
 

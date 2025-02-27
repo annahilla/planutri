@@ -1,13 +1,17 @@
-'use server';
+import { cookies } from "next/headers";
 
-export async function fetchShoppingListServer(token: string) {
+export async function fetchShoppingListServer() {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("session");
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shopping-list`, {
       method: "GET",
       headers: { 
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}` 
-    },
+      "Cookie": `session=${sessionCookie?.value}`,
+      },
+      credentials: "include"
   });
 
   if (!response.ok) throw new Error("Failed to fetch shopping list");

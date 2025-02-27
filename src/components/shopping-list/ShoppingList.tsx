@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppSelector } from "@/lib/store/reduxHooks";
 import ShoppingListItem from "./ShoppingListItem";
 import { useEffect, useState } from "react";
 import { IngredientInterface } from "@/types/types";
@@ -12,7 +11,6 @@ const ShoppingList = ({
 }: {
   shoppingList: IngredientInterface[];
 }) => {
-  const token = useAppSelector((state) => state.auth.user?.token);
   const [currentShoppingList, setCurrentShoppingList] = useState(shoppingList);
 
   const handleCheckboxChange = (updatedItem: IngredientInterface) => {
@@ -29,9 +27,7 @@ const ShoppingList = ({
       });
     });
 
-    if (token) {
-      updateShoppingList(updatedItem, token);
-    }
+    updateShoppingList(updatedItem);
   };
 
   useEffect(() => {

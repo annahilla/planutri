@@ -1,6 +1,6 @@
 "use client";
 
-import { useAuth } from "@/app/(providers)/AuthProvider";
+import { useAuth } from "@/components/providers/AuthProvider";
 import useClickOutside from "@/hooks/useClickOutside";
 import { useAppSelector } from "@/lib/store/reduxHooks";
 import { logoutUser } from "@/services/authService";

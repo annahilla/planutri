@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import StoreProvider from "./(providers)/StoreProvider";
+import StoreProvider from "../components/providers/StoreProvider";
 import { ToastContainer } from "react-toastify";
-import { AuthProvider } from "./(providers)/AuthProvider";
+import { AuthProvider } from "../components/providers/AuthProvider";
+import TanstackProvider from "@/components/providers/TanstackProvider";
 
 const poppins = Poppins({
   weight: ["100", "300", "400"],
@@ -25,7 +26,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
         <StoreProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <TanstackProvider>
+            <AuthProvider>{children}</AuthProvider>
+          </TanstackProvider>
         </StoreProvider>
         <ToastContainer />
       </body>
