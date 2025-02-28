@@ -7,8 +7,10 @@ import { CiEraser, CiShoppingBasket } from "react-icons/ci";
 import { useRouter } from "next/navigation";
 import ConfirmModal from "../ui/modals/ConfirmModal";
 import { deleteFullMenu } from "@/services/menuService";
+import { useMenu } from "@/context/MenuContext";
 
 const MenuHeader = () => {
+  const { setMenu } = useMenu();
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -23,7 +25,7 @@ const MenuHeader = () => {
   const clearAll = async () => {
     await deleteFullMenu();
     setIsModalOpen(false);
-    window.location.reload();
+    setMenu([]);
   };
 
   return (
