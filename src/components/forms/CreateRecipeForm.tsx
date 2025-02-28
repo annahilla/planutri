@@ -201,7 +201,9 @@ const CreateRecipeForm = () => {
                     </option>
                   ))}
                 </select>
-                <p className="px-2">{ingredient}</p>
+                <p data-testid={ingredient} className="px-2">
+                  {ingredient}
+                </p>
                 <div className="absolute right-0 top-2 text-neutral-600">
                   <button
                     role="delete-ingredient"

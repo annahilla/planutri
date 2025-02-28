@@ -18,43 +18,57 @@ jest.mock("next/navigation", () => ({
   }),
 }));
 
+jest.mock("@tanstack/react-query", () => {
+  const actual = jest.requireActual("@tanstack/react-query");
+  return {
+    ...actual,
+    useQuery: jest.fn(() => ({
+      data: mockIngredients,
+      isLoading: false,
+      isError: false,
+    })),
+  };
+});
+
 import "@testing-library/jest-dom";
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { render } from "@testing-library/react";
 import CreateRecipeForm from "@/components/forms/CreateRecipeForm";
-import { configureStore } from "@reduxjs/toolkit";
-import { Provider } from "react-redux";
-import authReducer from "@/lib/store/auth/authSlice";
 import { ReactElement } from "react";
-import unitsReducer from "@/lib/store/apis/unitsSlice";
-import ingredientsReducer from "@/lib/store/apis/ingredientsSlice";
-
-export const mockStore = (preloadedState = {}) => {
-  return configureStore({
-    reducer: {
-      auth: authReducer,
-      units: unitsReducer,
-      ingredients: ingredientsReducer,
-    },
-    preloadedState,
-  });
-};
-
-export const renderWithProviders = (
-  ui: ReactElement,
-  { preloadedState = {} } = {}
-) => {
-  const store = mockStore(preloadedState);
-
-  return {
-    ...render(<Provider store={store}>{ui}</Provider>),
-    store,
-  };
-};
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 const mockIngredients = ["Flour", "Sugar", "Salt"];
 
+const fetchIngredients = () => mockIngredients;
+
+const createTestQueryClient = () =>
+  new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: false,
+        staleTime: Infinity,
+      },
+    },
+  });
+
+export const renderWithProviders = (ui: ReactElement) => {
+  const queryClient = createTestQueryClient();
+
+  queryClient.setQueryData(["ingredients"], fetchIngredients);
+
+  return render(
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+  );
+};
+
 describe("Create Recipe Component - User Flow Tests", () => {
+  beforeEach(() => {
+    global.fetch = jest.fn();
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test("Renders Create Recipe component on the page", () => {
     const component = renderWithProviders(<CreateRecipeForm />);
     const form = component.container.querySelector("form");
@@ -71,34 +85,22 @@ describe("Create Recipe Component - User Flow Tests", () => {
   });
 
   test("Allow ingredients addition and shows them on the list", async () => {
-    renderWithProviders(<CreateRecipeForm />, {
-      preloadedState: {
-        ingredients: {
-          ingredients: mockIngredients,
-        },
-      },
-    });
+    renderWithProviders(<CreateRecipeForm />);
 
     const ingredientInput = screen.getByLabelText(/Ingredients */i);
     fireEvent.change(ingredientInput, { target: { value: "Flour" } });
 
-    const ingredientOption = await screen.findByText(/Flour/i);
+    const ingredientOption = screen.getByText("Flour");
     expect(ingredientOption).toBeInTheDocument();
     fireEvent.click(ingredientOption);
 
     await waitFor(() => {
-      expect(screen.getByText(/Flour/i)).toBeInTheDocument();
+      expect(screen.getByTestId(/Flour/i)).toBeInTheDocument();
     });
   });
 
   test("Avoid duplicate ingredients", async () => {
-    renderWithProviders(<CreateRecipeForm />, {
-      preloadedState: {
-        ingredients: {
-          ingredients: mockIngredients,
-        },
-      },
-    });
+    renderWithProviders(<CreateRecipeForm />);
 
     const ingredientInput = screen.getByLabelText(/Ingredients/i);
 
@@ -118,30 +120,20 @@ describe("Create Recipe Component - User Flow Tests", () => {
   });
 
   test("Allow ingredient deletion", async () => {
-    renderWithProviders(<CreateRecipeForm />, {
-      preloadedState: {
-        ingredients: {
-          ingredients: mockIngredients,
-        },
-      },
-    });
+    renderWithProviders(<CreateRecipeForm />);
 
     const ingredientInput = screen.getByLabelText(/Ingredients/i);
     fireEvent.change(ingredientInput, { target: { value: "Flour" } });
 
-    const ingredientOption = await screen.findByText(/Flour/i);
+    const ingredientOption = screen.getByText(/Flour/i);
     expect(ingredientOption).toBeInTheDocument();
     fireEvent.click(ingredientOption);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Flour/i)).toBeInTheDocument();
-    });
 
     const deleteButton = screen.getByRole("delete-ingredient");
     fireEvent.click(deleteButton);
 
-    await waitFor(() => {
-      expect(screen.queryByText(/Flour/i)).not.toBeInTheDocument();
+    waitFor(() => {
+      expect(ingredientOption).not.toBeInTheDocument();
     });
   });
 
@@ -175,13 +167,12 @@ describe("Create Recipe Component - User Flow Tests", () => {
   });
 
   test("Don't show any errors after a successful recipe creation", async () => {
-    renderWithProviders(<CreateRecipeForm />, {
-      preloadedState: {
-        ingredients: {
-          ingredients: mockIngredients,
-        },
-      },
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ message: "Recipe successfully created" }),
     });
+
+    renderWithProviders(<CreateRecipeForm />);
 
     const nameInput = screen.getByLabelText(/Recipe name/i);
     fireEvent.change(nameInput, { target: { value: "Pancakes" } });
@@ -204,6 +195,7 @@ describe("Create Recipe Component - User Flow Tests", () => {
 
     await waitFor(() => {
       expect(screen.queryByRole("error")).not.toBeInTheDocument();
+      expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
 });
