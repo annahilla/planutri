@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
-import StoreProvider from "../components/providers/StoreProvider";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider } from "../components/providers/AuthProvider";
 import TanstackProvider from "@/components/providers/TanstackProvider";
@@ -25,11 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
-        <StoreProvider>
-          <TanstackProvider>
-            <AuthProvider>{children}</AuthProvider>
-          </TanstackProvider>
-        </StoreProvider>
+        <TanstackProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </TanstackProvider>
         <ToastContainer />
       </body>
     </html>

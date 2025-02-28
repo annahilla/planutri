@@ -2,23 +2,17 @@
 
 import Link from "next/link";
 import Logo from "../Logo";
-import { useAppSelector } from "@/lib/store/reduxHooks";
+import useSidebarState from "@/hooks/useSidebarState";
 
 const SideNavbarLogo = () => {
-  const isNavbarCollapsed = useAppSelector(
-    (state) => state.sidebar.isCollapsed
-  );
+  const { isCollapsed } = useSidebarState();
 
   return (
     <Link
       href={"/"}
       className="flex justify-center text-white m-auto text-2xl w-fit hidden md:block"
     >
-      {isNavbarCollapsed ? (
-        <Logo color="white" minified />
-      ) : (
-        <Logo color="white" />
-      )}
+      {isCollapsed ? <Logo color="white" minified /> : <Logo color="white" />}
     </Link>
   );
 };

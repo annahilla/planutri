@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/components/providers/AuthProvider";
 import useClickOutside from "@/hooks/useClickOutside";
-import { useAppSelector } from "@/lib/store/reduxHooks";
+import useSidebarState from "@/hooks/useSidebarState";
 import { logoutUser } from "@/services/authService";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -13,9 +13,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 const UserDropdown = () => {
   const user = useAuth();
 
-  const isNavbarCollapsed = useAppSelector(
-    (state) => state.sidebar.isCollapsed
-  );
+  const { isCollapsed } = useSidebarState();
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null!);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -47,7 +45,7 @@ const UserDropdown = () => {
       {isDropdownOpen && (
         <div
           className={`${
-            isNavbarCollapsed ? "m-auto" : "pl-2"
+            isCollapsed ? "m-auto" : "pl-2"
           } flex-col items-center justify-center gap-5 mb-4 hidden md:flex`}
         >
           <Link
@@ -57,7 +55,7 @@ const UserDropdown = () => {
             <div className="flex items-center h-full gap-1">
               <CiSettings className="text-xl" />
               <p className="hidden md:block text-xs">
-                {!isNavbarCollapsed && "User Settings"}
+                {!isCollapsed && "User Settings"}
               </p>
             </div>
           </Link>
@@ -68,17 +66,17 @@ const UserDropdown = () => {
             <div className="flex items-center h-full gap-1">
               <CiLogout className="text-xl" />
               <p className="hidden md:block text-xs">
-                {!isNavbarCollapsed && "Log Out"}
+                {!isCollapsed && "Log Out"}
               </p>
             </div>
           </button>
         </div>
       )}
       <div className="relative flex gap-2 min-h-16 items-center justify-center hover:bg-lightBrown px-5 py-4 md:px-2 md:py-5 md:justify-between">
-        <div className={`${isNavbarCollapsed && "md:ml-2"}`}>
+        <div className={`${isCollapsed && "md:ml-2"}`}>
           <CiUser className="text-xl md:text-3xl" />
         </div>
-        {!isNavbarCollapsed && (
+        {!isCollapsed && (
           <div className="flex flex-1 flex-col gap-1 justify-start hidden md:block">
             <div className="text-sm">
               {user
@@ -92,7 +90,7 @@ const UserDropdown = () => {
         )}
         <div
           className={`${
-            isNavbarCollapsed ? "absolute right-2 top-4 text-xs" : ""
+            isCollapsed ? "absolute right-2 top-4 text-xs" : ""
           } hidden md:block`}
         >
           {isDropdownOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
