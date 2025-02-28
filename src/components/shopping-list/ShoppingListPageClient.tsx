@@ -5,6 +5,7 @@ import ShoppingList from "./ShoppingList";
 import ShoppingListPageHeader from "./ShoppingListHeader";
 import { useState } from "react";
 import { IngredientInterface, MenuInterface } from "@/types/types";
+import { useMenuUpdateAlert } from "@/hooks/useMenuUpdateAlert";
 
 const ShoppingListPageClient = ({
   shoppingList,
@@ -14,6 +15,7 @@ const ShoppingListPageClient = ({
   menu: MenuInterface[];
 }) => {
   const [list, setList] = useState(shoppingList);
+  const { showMenuUpdateAlert, dismissAlert } = useMenuUpdateAlert(menu);
 
   return (
     <>
@@ -21,10 +23,12 @@ const ShoppingListPageClient = ({
         setList={setList}
         menu={menu}
         shoppingList={shoppingList}
+        dismissAlert={dismissAlert}
       />
-
       <div className="flex flex-col gap-2 items-center h-full bg-white rounded text-black md:items-start">
-        <MenuUpdatedAlert menu={menu} shoppingList={shoppingList} />
+        {showMenuUpdateAlert && (
+          <MenuUpdatedAlert dismissAlert={dismissAlert} />
+        )}
         <ShoppingList shoppingList={list} />
       </div>
     </>

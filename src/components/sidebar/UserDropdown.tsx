@@ -1,23 +1,28 @@
 "use client";
 
-import { useAuth } from "@/components/providers/AuthProvider";
 import useClickOutside from "@/hooks/useClickOutside";
 import useSidebarState from "@/hooks/useSidebarState";
-import { logoutUser } from "@/services/authService";
+import { getUser, logoutUser } from "@/services/authService";
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { CiLogout, CiSettings, CiUser } from "react-icons/ci";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const UserDropdown = () => {
-  const user = useAuth();
-
   const { isCollapsed } = useSidebarState();
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement>(null!);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useClickOutside(dropdownRef, () => setIsDropdownOpen(false));
+
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: getUser,
+  });
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -79,13 +84,23 @@ const UserDropdown = () => {
         {!isCollapsed && (
           <div className="flex flex-1 flex-col gap-1 justify-start hidden md:block">
             <div className="text-sm">
-              {user
-                ? user.name
-                  ? user.name
-                  : user.email?.split("@")[0]
-                : "User"}
+              {user ? (
+                user.name ? (
+                  user.name
+                ) : (
+                  user.email?.split("@")[0]
+                )
+              ) : (
+                <Skeleton baseColor="#635F53" highlightColor="#76736B" />
+              )}
             </div>
-            <div className="text-xs">{user ? user.email : "User"}</div>
+            <div className="text-xs">
+              {user ? (
+                user?.email
+              ) : (
+                <Skeleton baseColor="#635F53" highlightColor="#76736B" />
+              )}
+            </div>
           </div>
         )}
         <div

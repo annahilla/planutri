@@ -25,9 +25,6 @@ export const POST = async (req: NextRequest) => {
             path: "/",
         });
 
-        console.log("Generated session cookie:", sessionCookie);
-
-
         return new NextResponse(JSON.stringify({message: "Logged In"}), { status: 200 });
     } catch (error) {
         console.error("Session login error:", error);

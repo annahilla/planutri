@@ -7,27 +7,38 @@ import { generateShoppingList } from "@/services/shoppingListService";
 import { toast } from "react-toastify";
 import { IngredientInterface, MenuInterface } from "@/types/types";
 
-const ShoppingListPageHeader = ({
-  setList,
-  menu,
-  shoppingList,
-}: {
+interface ShoppingListPageHeaderProps {
   setList: (list: IngredientInterface[]) => void;
+  dismissAlert: () => void;
   menu: MenuInterface[];
   shoppingList: IngredientInterface[];
-}) => {
+}
+
+const ShoppingListPageHeader = ({
+  setList,
+  dismissAlert,
+  menu,
+  shoppingList,
+}: ShoppingListPageHeaderProps) => {
   const handleShoppingList = async () => {
     if (menu.length === 0 && shoppingList.length === 0) {
       toast.info("You can't generate a shopping list without a menu.");
-    } else {
+      return;
+    }
+
+    try {
       const { list } = await generateShoppingList();
+
       if (list) {
-        localStorage.setItem("lastUpdatedMenu", JSON.stringify(menu));
         setList(list);
+        toast.success("Shopping list updated successfully");
       } else {
         setList([]);
       }
-      toast.success("Shopping list updated successfully!");
+      dismissAlert();
+    } catch (error) {
+      console.error("Error generating shopping list:", error);
+      toast.error("An error occurred while generating the shopping list.");
     }
   };
 

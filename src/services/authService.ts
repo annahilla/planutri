@@ -31,7 +31,7 @@ export async function signUpUser(email: string, password: string) {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
         const token = await user.getIdToken();
-        const userData: AuthUser = { email: user.email!,  token };
+        const userData: AuthUser = { email: user.email!,  token  };
         return userData;
     } catch (error) {
         console.error("Login error:", error);
@@ -71,4 +71,11 @@ export async function logoutUser() {
     } catch(error) {
         console.error("Logout error: ", error)
     }
+}
+
+export async function getUser() {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/user`, { credentials: "include" });
+    if (!res.ok) throw new Error("Failed to fetch user");
+    const data = await res.json();
+    return data.user as AuthUser;
 }

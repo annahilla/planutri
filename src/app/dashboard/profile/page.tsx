@@ -1,43 +1,81 @@
 "use client";
 
-import { useAuth } from "@/components/providers/AuthProvider";
 import Button from "@/components/ui/buttons/Button";
 import PageTitle from "@/components/ui/PageTitle";
-import { logoutUser } from "@/services/authService";
+import { getUser, logoutUser } from "@/services/authService";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React from "react";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const ProfilePage = () => {
-  const user = useAuth();
+  const queryClient = useQueryClient();
+
+  const { data: user, isLoading } = useQuery({
+    queryKey: ["user"],
+    queryFn: getUser,
+  });
+
   const router = useRouter();
 
   const handleLogout = async () => {
     await logoutUser();
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+    queryClient.removeQueries({ queryKey: ["user"] });
     router.push("/");
   };
 
   return (
     <div>
-      <div className="mb-4 md:mb-6">
+      <div className="mb-6">
         <PageTitle>Profile</PageTitle>
       </div>
-      <div className="my-3 flex flex-col gap-4 rounded px-7 border border-neutral-200 py-6 w-full lg:w-96">
-        {user?.name && (
-          <div className="flex gap-2">
-            <p className="font-bold">Name:</p>
-            <p>{user?.name}</p>
+      <div className="my-3 flex flex-col gap-5 rounded px-7 border border-neutral-200 py-6 w-full lg:w-96">
+        <div className="w-full flex justify-center mb-5">
+          <div className="w-28 h-28 rounded-full">
+            {isLoading ? (
+              <Skeleton borderRadius={100} height="100%" width="100%" />
+            ) : (
+              user?.picture && (
+                <Image
+                  className="w-full rounded-full"
+                  width={50}
+                  height={50}
+                  alt={`${user.name} profile picture`}
+                  src={user.picture}
+                  priority
+                />
+              )
+            )}
           </div>
-        )}
-        <div className="flex gap-2">
-          <p className="font-bold">Email:</p>
-          <p>{user?.email}</p>
         </div>
-        {user?.joined && (
-          <div className="flex gap-2">
-            <p className="font-bold">Joined:</p>
-            <p>{user?.joined}</p>
+        <div className="w-full h-5">
+          <div className="w-full h-full">
+            {isLoading ? (
+              <Skeleton height="100%" width="100%" />
+            ) : (
+              <div className="flex gap-2 items-center w-full">
+                <p className="font-bold">Name:</p>
+                <p>{user?.name}</p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
+        <div className="w-full h-5">
+          <div className="w-full h-full">
+            {isLoading ? (
+              <Skeleton height="100%" width="100%" />
+            ) : (
+              <div className="flex gap-2 items-center w-full">
+                <p className="font-bold">Email:</p>
+                <p>{user?.email}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="my-4 w-full">
           <Button color="white" filled handleClick={handleLogout}>
             Log Out

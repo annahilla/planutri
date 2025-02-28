@@ -2,12 +2,12 @@
 
 import { RecipeInterface } from "@/types/types";
 import Link from "next/link";
-import Button from "../ui/buttons/Button";
 import RecipeImage from "./RecipeImage";
 import { useState } from "react";
 import ConfirmModal from "../ui/modals/ConfirmModal";
 import { deleteRecipe } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
+import { CiEdit, CiTrash } from "react-icons/ci";
 
 const RecipeCard = ({
   recipe,
@@ -80,11 +80,19 @@ const RecipeCard = ({
                 )}
               </Link>
               {!recipe.isPublic && (
-                <div className="flex gap-2 mt-5 text-sm">
-                  <Button handleClick={openRecipeEdit} color="white" filled>
-                    Edit
-                  </Button>
-                  <Button handleClick={openDeleteRecipe}>Delete</Button>
+                <div className="flex gap-2 mt-5 text-sm items-center justify-end">
+                  <button
+                    className="bg-brown p-2 rounded-full text-white"
+                    onClick={openRecipeEdit}
+                  >
+                    <CiEdit />
+                  </button>
+                  <button
+                    className="bg-white border border-brown p-2 rounded-full text-brown"
+                    onClick={openDeleteRecipe}
+                  >
+                    <CiTrash />
+                  </button>
                 </div>
               )}
             </>

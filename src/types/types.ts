@@ -2,8 +2,8 @@ export interface AuthUser  {
   name?:string | null;
   email: string | null;
   token: string;
-  joined?: string;
-  refreshToken?:string;
+  joined?:string;
+  picture?: string;
 }
 
 export interface User {
