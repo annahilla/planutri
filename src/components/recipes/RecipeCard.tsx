@@ -8,17 +8,21 @@ import ConfirmModal from "../ui/modals/ConfirmModal";
 import { deleteRecipe } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
 import { CiEdit, CiTrash } from "react-icons/ci";
+import RecipeServingsCard from "./RecipeServingsCard";
 
 const RecipeCard = ({
   recipe,
-  showLinks = true,
+  isModal = false,
 }: {
   recipe: RecipeInterface;
-  showLinks?: boolean;
+  isModal?: boolean;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
   const [isRecipe, setIsRecipe] = useState(true);
+  const [servings, setServings] = useState(
+    recipe.servings ? recipe.servings : 1
+  );
 
   const ingredientsList = recipe.ingredients
     .map((ingredient) => ingredient.ingredient)
@@ -49,7 +53,7 @@ const RecipeCard = ({
     <>
       {isRecipe && (
         <div className="border p-5 rounded h-full flex flex-col justify-between">
-          {showLinks ? (
+          {!isModal ? (
             <>
               <Link
                 className="flex flex-col gap-3 hover:opacity-80"
@@ -93,21 +97,31 @@ const RecipeCard = ({
               )}
             </>
           ) : (
-            <div className="flex flex-col gap-3 cursor-pointer hover:opacity-80">
-              <RecipeImage imageUrl={recipe.imageUrl} height="h-56" />
-              <h3 className="font-bold">{recipe.name}</h3>
-              <div className="flex flex-col gap-1">
-                <p className="text-sm">Ingredients: </p>
-                <p className="text-sm text-neutral-700">{ingredientsList}</p>
-              </div>
-              {recipe.description && (
+            <div className="flex flex-col justify-between h-full cursor-pointer hover:opacity-80">
+              <div className="flex flex-col gap-3 cursor-pointer hover:opacity-80">
+                <RecipeImage imageUrl={recipe.imageUrl} height="h-56" />
+                <h3 className="font-bold">{recipe.name}</h3>
                 <div className="flex flex-col gap-1">
-                  <p className="text-sm">Description: </p>
-                  <p className="text-sm text-neutral-700 line-clamp-2">
-                    {recipe.description}
-                  </p>
+                  <p className="text-sm">Ingredients: </p>
+                  <p className="text-sm text-neutral-700">{ingredientsList}</p>
                 </div>
-              )}
+                {recipe.description && (
+                  <div className="flex flex-col gap-1">
+                    <p className="text-sm">Description: </p>
+                    <p className="text-sm text-neutral-700 line-clamp-2">
+                      {recipe.description}
+                    </p>
+                  </div>
+                )}
+              </div>
+              <div className="mt-4" onClick={(e) => e.stopPropagation()}>
+                <RecipeServingsCard
+                  servings={servings}
+                  setServings={setServings}
+                  recipe={recipe}
+                  isRecipeCardModal
+                />
+              </div>
             </div>
           )}
           {isModalOpen && (

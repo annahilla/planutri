@@ -8,13 +8,13 @@ import useSearchRecipe from "@/hooks/useSearchRecipe";
 interface RecipeListProps {
   recipes: RecipeInterface[];
   onSelect?: (recipe: RecipeInterface) => void;
-  showLinks?: boolean;
+  isModal?: boolean;
 }
 
 const RecipesList = ({
   recipes,
   onSelect,
-  showLinks = true,
+  isModal = false,
 }: RecipeListProps) => {
   const { filteredRecipes, searchRecipe } = useSearchRecipe(recipes);
 
@@ -29,7 +29,7 @@ const RecipesList = ({
             onClick={() => onSelect?.(recipe)}
           >
             <div className="h-full">
-              <RecipeCard recipe={recipe} showLinks={showLinks} />
+              <RecipeCard recipe={recipe} isModal={isModal} />
             </div>
           </div>
         ))}

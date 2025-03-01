@@ -1,29 +1,33 @@
-import { useState } from "react";
 import { validateCreateRecipeForm } from "@/utils/validation";
 import { updateRecipe } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
 import useEditMode from "./useEditMode";
-import { useRecipe } from "@/context/RecipeContext";
+import { IngredientInterface } from "@/types/types";
 
 const useSaveRecipe = (
+  recipeId: string | undefined,
+  recipeName: string,
+  description: string | undefined,
+  ingredients: IngredientInterface[],
+  servings: number,
   deleteIngredient: (id: string) => void,
   isModal: boolean,
-  closeModal?: () => void) => {
-    const { recipe } = useRecipe();
-  const [error, setError] = useState<string>("");
-  const { closeEditMode } = useEditMode(recipe._id);
+  setError: (value: string) => void,
+  closeModal?: () => void, ) => {
+
+  const { closeEditMode } = useEditMode(recipeId);
   const router = useRouter();
 
 
   const saveRecipe = async () => {
-    const updatedIngredients = recipe.ingredients.filter(
+    const updatedIngredients = ingredients.filter(
       (ingredient) => ingredient.ingredient !== ""
     );
-    const emptyIngredients = recipe.ingredients.filter(
+    const emptyIngredients = ingredients.filter(
       (ingredient) => ingredient.ingredient === ""
     );
 
-    const validationError = validateCreateRecipeForm(recipe.name, recipe.ingredients, recipe.servings);
+    const validationError = validateCreateRecipeForm(recipeName, ingredients, servings);
     if (validationError) {
       setError(validationError);
       return;
@@ -36,11 +40,11 @@ const useSaveRecipe = (
     });
 
     const updatedRecipe = {
-      _id: recipe._id,
-      name: recipe.name,
+      _id: recipeId,
+      name: recipeName,
       ingredients: ingredientsForDB,
-      servings: recipe.servings,
-      description: recipe.description,
+      servings: servings,
+      description: description,
     };
 
     try {
@@ -58,7 +62,7 @@ const useSaveRecipe = (
     }
   };
 
-  return { saveRecipe, error };
+  return { saveRecipe };
 };
 
 export default useSaveRecipe;

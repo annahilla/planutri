@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { IngredientInterface } from "@/types/types";
 
-const useEditRecipeIngredients = (initialIngredients: IngredientInterface[]) => {
+const useEditRecipeIngredients = (initialIngredients: IngredientInterface[], setError: (value: string) =>void) => {
   const [ingredients, setIngredients] = useState<IngredientInterface[]>(initialIngredients);
-  const [error, setError] = useState<string>("");
 
   const addIngredientInput = () => {
     const newIngredient: IngredientInterface = {
@@ -30,7 +29,6 @@ const useEditRecipeIngredients = (initialIngredients: IngredientInterface[]) => 
     ingredients,
     addIngredientInput,
     deleteIngredient,
-    error,
     setIngredients,
     setError,
   };

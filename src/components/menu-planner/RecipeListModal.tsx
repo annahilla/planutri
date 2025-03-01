@@ -56,7 +56,7 @@ const RecipeListModal = ({
       </h3>
       <RecipesList
         recipes={recipes}
-        showLinks={false}
+        isModal
         onSelect={(recipe) => selectRecipe(recipe, selectedMeal!)}
       />
     </Modal>

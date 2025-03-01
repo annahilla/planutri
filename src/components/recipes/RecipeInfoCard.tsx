@@ -1,5 +1,3 @@
-import { useRecipe } from "@/context/RecipeContext";
-import useEditMode from "@/hooks/useEditMode";
 import React, { ReactNode } from "react";
 
 interface RecipeInfoInterface {
@@ -7,50 +5,38 @@ interface RecipeInfoInterface {
   icon: ReactNode;
   quantity: number;
   setServings?: (value: number) => void;
+  isRecipeCardModal?: boolean;
 }
 
 const RecipeInfoCard = ({
   text,
   icon,
   quantity,
-  setServings,
+  isRecipeCardModal = false,
 }: RecipeInfoInterface) => {
-  const { recipe } = useRecipe();
-  const { isEditMode } = useEditMode(recipe._id);
-
-  const increase = () => {
-    if (setServings) setServings(quantity + 1);
-  };
-
-  const decrease = () => {
-    if (setServings) setServings(quantity - 1);
-  };
-
   return (
-    <div className="flex gap-4 items-center justify-center my-6 border border-neutral-300 rounded p-3 h-24 w-full md:w-48 md:gap-6">
-      <div className="flex flex-col items-center justify-center gap-1">
-        <span className="flex gap-3 items-center text-brown">
+    <div
+      className={`flex gap-4 items-center border border-neutral-300 rounded p-3  w-full ${
+        isRecipeCardModal
+          ? "px-10 py-6"
+          : "justify-center h-24 md:w-48 md:gap-6"
+      } `}
+    >
+      <div
+        className={`flex  items-center justify-center ${
+          isRecipeCardModal ? "gap-4" : "flex-col gap-1"
+        }`}
+      >
+        <span
+          className={`flex items-center text-brown ${
+            isRecipeCardModal ? "gap-2" : "gap-3"
+          }`}
+        >
           {icon}
           <p className="text-xl font-bold">{quantity}</p>
         </span>
         <p className="tracking-wider">{text}</p>
       </div>
-      {setServings && isEditMode && (
-        <div className="flex flex-col items-center">
-          <button
-            onClick={increase}
-            className="flex items-center justify-center w-7 h-7 text-lg text-neutral-500 border border-neutral-400 rounded-t border-b-0 hover:bg-neutral-100"
-          >
-            +
-          </button>
-          <button
-            onClick={decrease}
-            className="flex items-center justify-center w-7 h-7 text-lg text-neutral-500 border border-neutral-400 rounded-b hover:bg-neutral-100"
-          >
-            -
-          </button>
-        </div>
-      )}
     </div>
   );
 };
