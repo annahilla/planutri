@@ -12,9 +12,7 @@ import { useRouter } from "next/navigation";
 const RecipeHeader = () => {
   const router = useRouter();
   const { recipe, setDiscardChanges } = useRecipe();
-  const { isEditMode, openEditMode, closeEditMode } = useEditMode({
-    recipeId: recipe._id,
-  });
+  const { isEditMode, openEditMode, closeEditMode } = useEditMode(recipe._id);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const goBack = () => {

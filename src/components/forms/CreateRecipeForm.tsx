@@ -67,7 +67,7 @@ const CreateRecipeForm = () => {
     );
   };
 
-  const handleCreateRecipe = (event: FormEvent) => {
+  const handleCreateRecipe = async (event: FormEvent) => {
     event.preventDefault();
     const formattedServings = Number(servings);
 
@@ -97,7 +97,7 @@ const CreateRecipeForm = () => {
     };
 
     try {
-      addRecipe(newRecipe);
+      await addRecipe(newRecipe);
       router.push("/dashboard/recipes");
       setSelectedIngredients([]);
       setRecipeName("");

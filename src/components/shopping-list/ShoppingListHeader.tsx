@@ -6,6 +6,7 @@ import PageTitle from "../ui/PageTitle";
 import { generateShoppingList } from "@/services/shoppingListService";
 import { toast } from "react-toastify";
 import { IngredientInterface, MenuInterface } from "@/types/types";
+import DashboardHeader from "../ui/DashboardHeader";
 
 interface ShoppingListPageHeaderProps {
   setList: (list: IngredientInterface[]) => void;
@@ -43,7 +44,7 @@ const ShoppingListPageHeader = ({
   };
 
   return (
-    <div className="flex items-center justify-between mb-6 md:mb-6">
+    <DashboardHeader>
       <PageTitle>Shopping List</PageTitle>
       <DashboardButton
         handleClick={handleShoppingList}
@@ -51,7 +52,7 @@ const ShoppingListPageHeader = ({
       >
         {shoppingList.length > 0 ? "Update List" : "Generate List"}
       </DashboardButton>
-    </div>
+    </DashboardHeader>
   );
 };
 

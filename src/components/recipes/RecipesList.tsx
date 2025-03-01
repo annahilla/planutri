@@ -2,8 +2,8 @@
 
 import { RecipeInterface } from "@/types/types";
 import RecipeCard from "./RecipeCard";
-import { ChangeEvent, useEffect, useState } from "react";
 import SearchInput from "../ui/SearchInput";
+import useSearchRecipe from "@/hooks/useSearchRecipe";
 
 interface RecipeListProps {
   recipes: RecipeInterface[];
@@ -16,23 +16,7 @@ const RecipesList = ({
   onSelect,
   showLinks = true,
 }: RecipeListProps) => {
-  const [filteredRecipes, setFilteredRecipes] =
-    useState<RecipeInterface[]>(recipes);
-
-  useEffect(() => {
-    setFilteredRecipes(recipes);
-  }, [recipes]);
-
-  const searchRecipe = (event: ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value.toLowerCase();
-    if (query === "") {
-      setFilteredRecipes(recipes);
-    } else {
-      setFilteredRecipes(
-        recipes.filter((recipe) => recipe.name.toLowerCase().includes(query))
-      );
-    }
-  };
+  const { filteredRecipes, searchRecipe } = useSearchRecipe(recipes);
 
   return (
     <div>

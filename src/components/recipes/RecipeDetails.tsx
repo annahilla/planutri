@@ -31,9 +31,7 @@ const RecipeDetails = ({
 }: RecipeDetailsProps) => {
   const router = useRouter();
   const { recipe, discardChanges } = useRecipe();
-  const { isEditMode, closeEditMode } = useEditMode({
-    recipeId: recipe._id,
-  });
+  const { isEditMode, closeEditMode } = useEditMode(recipe._id);
 
   const [error, setError] = useState("");
   const [recipeName, setRecipeName] = useState(recipe.name);

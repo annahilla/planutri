@@ -4,20 +4,21 @@ import Link from "next/link";
 import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiSquarePlus } from "react-icons/ci";
 import { fetchRecipes } from "@/services/recipeServiceServer";
+import DashboardHeader from "@/components/ui/DashboardHeader";
 
 const RecipesPage = async () => {
   const recipes = await fetchRecipes();
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4 md:mb-6">
+      <DashboardHeader>
         <PageTitle>Recipes</PageTitle>
         <Link href={"/dashboard/create-recipe"}>
           <DashboardButton icon={<CiSquarePlus size={17} />}>
             Create Recipe
           </DashboardButton>
         </Link>
-      </div>
+      </DashboardHeader>
       {recipes.length > 0 ? (
         <RecipesList recipes={recipes} showLinks={true} />
       ) : (

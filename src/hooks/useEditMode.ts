@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 
-const useEditMode = ({recipeId} : {recipeId: string | undefined}) => {
+const useEditMode = (recipeId: string | undefined) => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const params = new URLSearchParams(searchParams);

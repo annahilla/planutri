@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import ConfirmModal from "../ui/modals/ConfirmModal";
 import { deleteFullMenu } from "@/services/menuService";
 import { useMenu } from "@/context/MenuContext";
+import DashboardHeader from "../ui/DashboardHeader";
 
 const MenuHeader = () => {
   const { setMenu } = useMenu();
@@ -29,7 +30,7 @@ const MenuHeader = () => {
   };
 
   return (
-    <div className="flex justify-between items-center mb-4 md:mb-6">
+    <DashboardHeader>
       <PageTitle>Meal Planner</PageTitle>
       <div className="flex items-center gap-2">
         <DashboardButton
@@ -51,7 +52,7 @@ const MenuHeader = () => {
         handleFunction={clearAll}
         text="Are you sure you want to delete the menu? The shopping list will also be deleted."
       />
-    </div>
+    </DashboardHeader>
   );
 };
 
