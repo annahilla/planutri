@@ -1,12 +1,9 @@
 "use client";
 
 import Button from "../ui/buttons/Button";
-import { deleteRecipe, updateRecipe } from "@/services/recipeService";
-import { IngredientInterface } from "@/types/types";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import ErrorMessage from "../ui/ErrorMessage";
-import { validateCreateRecipeForm } from "@/utils/validation";
 import IngredientInput from "./IngredientInput";
 import DescriptionInput from "./DescriptionInput";
 import ConfirmModal from "../ui/modals/ConfirmModal";
@@ -17,125 +14,50 @@ import { PiNotebook, PiUser } from "react-icons/pi";
 import RecipeInfoCard from "./RecipeInfoCard";
 import { useRecipe } from "@/context/RecipeContext";
 import useEditMode from "@/hooks/useEditMode";
+import useEditRecipeIngredients from "@/hooks/useEditRecipeIngredients";
+import useSaveRecipe from "@/hooks/useSaveRecipe";
+import useConfirmDelete from "@/hooks/useConfirmDelete";
+import { RecipeInterface } from "@/types/types";
 
 interface RecipeDetailsProps {
+  recipe: RecipeInterface;
   isModal?: boolean;
   closeModal?: () => void;
   clearRecipe?: (id: string) => void;
 }
 
 const RecipeDetails = ({
+  recipe,
   isModal = false,
   closeModal,
   clearRecipe,
 }: RecipeDetailsProps) => {
   const router = useRouter();
-  const { recipe, discardChanges } = useRecipe();
-  const { isEditMode, closeEditMode } = useEditMode(recipe._id);
+  const { discardChanges } = useRecipe();
+  const { isEditMode } = useEditMode(recipe._id);
+  const {
+    ingredients,
+    addIngredientInput,
+    deleteIngredient,
+    error,
+    setIngredients,
+    setError,
+  } = useEditRecipeIngredients(recipe.ingredients);
+  const { saveRecipe } = useSaveRecipe(deleteIngredient, isModal, closeModal);
+  const { openDeleteRecipe, handleDeleteRecipe, isModalOpen, setIsModalOpen } =
+    useConfirmDelete(closeModal, clearRecipe);
 
-  const [error, setError] = useState("");
   const [recipeName, setRecipeName] = useState(recipe.name);
   const [description, setDescription] = useState(recipe.description);
-  const [ingredients, setIngredients] = useState(recipe.ingredients);
+
   const [servings, setServings] = useState(
     recipe.servings ? recipe.servings : 1
   );
   const [imageUrl, setImageUrl] = useState(recipe.imageUrl);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  useEffect(() => {
-    setIngredients((prevIngredients) =>
-      prevIngredients.map((ingredient, index) => ({
-        ...ingredient,
-        quantity: recipe.ingredients[index].quantity * servings,
-      }))
-    );
-  }, [servings]);
-
-  const saveRecipe = async () => {
-    if (!recipe) return;
-
-    const updatedIngredients = ingredients.filter(
-      (ingredient) => ingredient.ingredient !== ""
-    );
-    const emptyIngredients = ingredients.filter(
-      (ingredient) => ingredient.ingredient === ""
-    );
-
-    const validationError = validateCreateRecipeForm(
-      recipeName,
-      ingredients,
-      servings
-    );
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
-
-    emptyIngredients.map((ingredient) => deleteIngredient(ingredient._id!));
-    const ingredientsForDB = updatedIngredients.map((ingredient) => {
-      const { ...rest } = ingredient;
-      return rest;
-    });
-
-    const updatedRecipe = {
-      _id: recipe._id,
-      name: recipeName,
-      ingredients: ingredientsForDB,
-      servings,
-      description,
-    };
-
-    try {
-      await updateRecipe(updatedRecipe);
-      router.push(`/dashboard/recipes/${updatedRecipe._id}?edit=false`);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      console.log(error);
-    }
-
-    if (isModal) {
-      closeModal?.();
-    } else {
-      closeEditMode();
-    }
-  };
 
   const changeRecipeName = (event: ChangeEvent<HTMLInputElement>) => {
     setRecipeName(event.target.value);
     setError("");
-  };
-
-  const deleteIngredient = (id: string) => {
-    if (ingredients.length <= 1) {
-      setError("You can't delete all ingredients");
-      return;
-    }
-    setError("");
-    setIngredients((prevIngredients) =>
-      prevIngredients.filter((ingredient) => ingredient._id !== id)
-    );
-  };
-
-  const openDeleteRecipe = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleDeleteRecipe = async () => {
-    if (recipe && recipe._id) {
-      try {
-        if (isModal) {
-          clearRecipe?.(recipe._id);
-          closeModal?.();
-        } else {
-          router.push("/dashboard/recipes");
-        }
-        await deleteRecipe(recipe._id);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
-        console.log(error);
-      }
-    }
   };
 
   useEffect(() => {
@@ -150,18 +72,6 @@ const RecipeDetails = ({
     router.replace(window.location.pathname);
     return null;
   }
-
-  const addIngredientInput = () => {
-    const newEmptyIngredient: IngredientInterface = {
-      _id: crypto.randomUUID(),
-      ingredient: "",
-      quantity: 0,
-      unit: "g",
-    };
-    setIngredients((prevIngredients) => {
-      return [...prevIngredients, newEmptyIngredient];
-    });
-  };
 
   return (
     <div className="w-full">
@@ -247,14 +157,12 @@ const RecipeDetails = ({
           </div>
         )}
       </div>
-      {isModalOpen && (
-        <ConfirmModal
-          isModalOpen={isModalOpen}
-          setIsModalOpen={setIsModalOpen}
-          handleFunction={handleDeleteRecipe}
-          text="Are you sure you want to delete this recipe?"
-        />
-      )}
+      <ConfirmModal
+        isModalOpen={isModalOpen}
+        setIsModalOpen={setIsModalOpen}
+        handleFunction={handleDeleteRecipe}
+        text="Are you sure you want to delete this recipe?"
+      />
     </div>
   );
 };

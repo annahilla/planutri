@@ -21,7 +21,7 @@ const RecipeDetailsModal = ({
         <RecipeDetails
           isModal={true}
           closeModal={closeModal}
-          currentRecipe={selectedRecipe ?? ({} as RecipeInterface)}
+          recipe={selectedRecipe ?? ({} as RecipeInterface)}
           clearRecipe={handleClearRecipe}
         />
       </div>

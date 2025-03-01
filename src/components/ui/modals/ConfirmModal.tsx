@@ -3,15 +3,15 @@ import Modal from "../Modal";
 
 interface ConfirmModalProps {
   isModalOpen: boolean;
+  setIsModalOpen: (value: boolean) => void;
   text: string;
-  setIsModalOpen: (isOpen: boolean) => void;
   handleFunction: () => void;
 }
 
 const ConfirmModal = ({
   isModalOpen,
-  text,
   setIsModalOpen,
+  text,
   handleFunction,
 }: ConfirmModalProps) => {
   return (

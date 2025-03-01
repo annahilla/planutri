@@ -12,7 +12,7 @@ const RecipesPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     <RecipeProvider fetchedRecipe={recipe}>
       <div className="flex bg-white h-full pb-5 flex-col rounded text-black md:items-start md:w-full">
         <RecipeHeader />
-        <RecipeDetails />
+        <RecipeDetails recipe={recipe} />
       </div>
     </RecipeProvider>
   );

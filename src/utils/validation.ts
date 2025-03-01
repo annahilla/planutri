@@ -33,7 +33,7 @@ export const firebaseError = (error: string) => {
   }
 }
 
-export const validateCreateRecipeForm = (recipeName: string, ingredients: IngredientInterface[], servings: number) => {
+export const validateCreateRecipeForm = (recipeName: string, ingredients: IngredientInterface[], servings: number | undefined) => {
       if (!recipeName.trim()) {
       return "Please enter a recipe name";
     }

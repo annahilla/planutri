@@ -16,7 +16,7 @@ const RecipeInfoCard = ({
   setServings,
 }: RecipeInfoInterface) => {
   const { recipe } = useRecipe();
-  const { isEditMode } = useEditMode({ recipeId: recipe._id });
+  const { isEditMode } = useEditMode(recipe._id);
 
   const increase = () => {
     if (setServings) setServings(quantity + 1);
