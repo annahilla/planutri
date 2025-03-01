@@ -3,7 +3,7 @@ import { toast } from "react-toastify";
 
 export const addRecipe = async (recipe: RecipeInterface) => {
     try {
-    const response = await fetch(`/api/recipes`, {
+    const response = await fetch("/api/recipes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -7,16 +7,15 @@ import { useState } from "react";
 import Button from "../ui/buttons/Button";
 import Image from "next/image";
 import { updateRecipe, uploadRecipeImage } from "@/services/recipeService";
-import { RecipeInterface } from "@/types/types";
 import { PulseLoader } from "react-spinners";
+import { useRecipe } from "@/context/RecipeContext";
 
 const EditRecipeImageButton = ({
-  recipe,
   setImageUrl,
 }: {
-  recipe: RecipeInterface;
   setImageUrl: (image: string) => void;
 }) => {
+  const { recipe } = useRecipe();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

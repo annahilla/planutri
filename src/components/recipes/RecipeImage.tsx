@@ -1,21 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { RecipeInterface } from "@/types/types";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useState } from "react";
+import { useRecipe } from "@/context/RecipeContext";
 
 const RecipeImage = ({
-  recipe,
   imageUrl,
   height = "h-96",
 }: {
-  recipe: RecipeInterface;
   imageUrl: string | undefined;
   height: string;
 }) => {
   const [isLoading, setIsLoading] = useState(true);
+  const { recipe } = useRecipe();
 
   return (
     <div className={`relative w-full rounded overflow-hidden ${height}`}>

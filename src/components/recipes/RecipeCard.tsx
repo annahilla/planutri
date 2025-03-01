@@ -55,11 +55,7 @@ const RecipeCard = ({
                 className="flex flex-col gap-3 hover:opacity-80"
                 href={`/dashboard/recipes/${recipe._id}`}
               >
-                <RecipeImage
-                  imageUrl={recipe.imageUrl}
-                  height="h-56"
-                  recipe={recipe}
-                />
+                <RecipeImage imageUrl={recipe.imageUrl} height="h-56" />
                 <h3 className="font-bold">{recipe.name}</h3>
                 {recipe.isPublic && (
                   <p className="text-xs bg-beige p-1 rounded text-neutral-700 w-fit">
@@ -98,11 +94,7 @@ const RecipeCard = ({
             </>
           ) : (
             <div className="flex flex-col gap-3 cursor-pointer hover:opacity-80">
-              <RecipeImage
-                imageUrl={recipe.imageUrl}
-                height="h-56"
-                recipe={recipe}
-              />
+              <RecipeImage imageUrl={recipe.imageUrl} height="h-56" />
               <h3 className="font-bold">{recipe.name}</h3>
               <div className="flex flex-col gap-1">
                 <p className="text-sm">Ingredients: </p>

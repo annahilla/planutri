@@ -100,7 +100,7 @@ const IngredientInput = ({
         <div className="flex gap-2">
           <input
             className="border text-center py-2 px-4 rounded outline-none w-12 md:w-24 md:text-left"
-            step={0.1}
+            step={0.25}
             name="quantity"
             type="number"
             value={ingredient.quantity}

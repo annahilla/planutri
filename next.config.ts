@@ -7,7 +7,7 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['images.pexels.com', 'res.cloudinary.com', 'plus.unsplash.com', 'lh3.googleusercontent.com']
+    domains: ['images.pexels.com', 'res.cloudinary.com', 'plus.unsplash.com', 'lh3.googleusercontent.com', 'images.unsplash.com']
   },
   env: {
     CLOUDINARY_UPLOAD_URL: process.env.CLOUDINARY_UPLOAD_URL,

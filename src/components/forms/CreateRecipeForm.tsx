@@ -21,6 +21,7 @@ const CreateRecipeForm = () => {
   const [recipeName, setRecipeName] = useState("");
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
+  const [servings, setServings] = useState("");
 
   const { data: units } = useQuery({
     queryKey: ["units"],
@@ -68,8 +69,13 @@ const CreateRecipeForm = () => {
 
   const handleCreateRecipe = (event: FormEvent) => {
     event.preventDefault();
+    const formattedServings = Number(servings);
 
-    const validationError = validateCreateRecipeForm(recipeName, ingredients);
+    const validationError = validateCreateRecipeForm(
+      recipeName,
+      ingredients,
+      formattedServings
+    );
     if (validationError) {
       setError(validationError);
       return;
@@ -87,6 +93,7 @@ const CreateRecipeForm = () => {
       name: recipeName,
       ingredients: formattedIngredients,
       description,
+      servings: formattedServings,
     };
 
     try {
@@ -95,6 +102,7 @@ const CreateRecipeForm = () => {
       setSelectedIngredients([]);
       setRecipeName("");
       setDescription("");
+      setServings("");
       setIngredients([]);
     } catch (error) {
       console.log(error);
@@ -126,7 +134,7 @@ const CreateRecipeForm = () => {
       className="py-5 flex flex-col gap-5 w-full rounded text-black"
       noValidate
     >
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1 flex-1">
         <label htmlFor="name">
           Recipe name <span className="text-red-600">*</span>
         </label>
@@ -140,6 +148,21 @@ const CreateRecipeForm = () => {
           required
         />
       </div>
+      <div className="flex flex-col gap-1">
+        <label htmlFor="servings">
+          Servings <span className="text-red-600">*</span>
+        </label>
+        <input
+          className="border py-2 px-4 rounded outline-none w-full md:w-24"
+          name="servings"
+          id="servings"
+          type="number"
+          value={servings}
+          onChange={(event) => setServings(event.target.value)}
+          required
+        />
+      </div>
+
       <div className="flex flex-col justify-between items-start gap-10 sm:flex-row">
         <div className="flex-1 flex flex-col gap-1 w-full">
           <label htmlFor="ingredients">

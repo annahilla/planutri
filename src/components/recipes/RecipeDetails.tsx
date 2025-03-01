@@ -2,8 +2,8 @@
 
 import Button from "../ui/buttons/Button";
 import { deleteRecipe, updateRecipe } from "@/services/recipeService";
-import { IngredientInterface, RecipeInterface } from "@/types/types";
-import { useRouter, useSearchParams } from "next/navigation";
+import { IngredientInterface } from "@/types/types";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import ErrorMessage from "../ui/ErrorMessage";
 import { validateCreateRecipeForm } from "@/utils/validation";
@@ -13,37 +13,49 @@ import ConfirmModal from "../ui/modals/ConfirmModal";
 import RecipeImage from "./RecipeImage";
 import EditRecipeImageButton from "./EditRecipeImage";
 import AddButton from "../ui/buttons/AddButton";
+import { PiNotebook, PiUser } from "react-icons/pi";
+import RecipeInfoCard from "./RecipeInfoCard";
+import { useRecipe } from "@/context/RecipeContext";
+import useEditMode from "@/hooks/useEditMode";
 
 interface RecipeDetailsProps {
-  currentRecipe: RecipeInterface;
   isModal?: boolean;
-  discardChanges?: boolean;
   closeModal?: () => void;
   clearRecipe?: (id: string) => void;
 }
 
 const RecipeDetails = ({
-  currentRecipe,
-  discardChanges,
   isModal = false,
   closeModal,
   clearRecipe,
 }: RecipeDetailsProps) => {
-  const searchParams = useSearchParams();
-  const isEditMode =
-    currentRecipe &&
-    searchParams.get("edit") === "true" &&
-    !currentRecipe.isPublic;
   const router = useRouter();
+  const { recipe, discardChanges } = useRecipe();
+  const { isEditMode, closeEditMode } = useEditMode({
+    recipeId: recipe._id,
+  });
+
   const [error, setError] = useState("");
-  const [recipeName, setRecipeName] = useState(currentRecipe.name);
-  const [description, setDescription] = useState(currentRecipe.description);
-  const [ingredients, setIngredients] = useState(currentRecipe.ingredients);
-  const [imageUrl, setImageUrl] = useState(currentRecipe.imageUrl);
+  const [recipeName, setRecipeName] = useState(recipe.name);
+  const [description, setDescription] = useState(recipe.description);
+  const [ingredients, setIngredients] = useState(recipe.ingredients);
+  const [servings, setServings] = useState(
+    recipe.servings ? recipe.servings : 1
+  );
+  const [imageUrl, setImageUrl] = useState(recipe.imageUrl);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  useEffect(() => {
+    setIngredients((prevIngredients) =>
+      prevIngredients.map((ingredient, index) => ({
+        ...ingredient,
+        quantity: recipe.ingredients[index].quantity * servings,
+      }))
+    );
+  }, [servings]);
+
   const saveRecipe = async () => {
-    if (!currentRecipe) return;
+    if (!recipe) return;
 
     const updatedIngredients = ingredients.filter(
       (ingredient) => ingredient.ingredient !== ""
@@ -52,7 +64,11 @@ const RecipeDetails = ({
       (ingredient) => ingredient.ingredient === ""
     );
 
-    const validationError = validateCreateRecipeForm(recipeName, ingredients);
+    const validationError = validateCreateRecipeForm(
+      recipeName,
+      ingredients,
+      servings
+    );
     if (validationError) {
       setError(validationError);
       return;
@@ -65,9 +81,10 @@ const RecipeDetails = ({
     });
 
     const updatedRecipe = {
-      _id: currentRecipe._id,
+      _id: recipe._id,
       name: recipeName,
       ingredients: ingredientsForDB,
+      servings,
       description,
     };
 
@@ -82,8 +99,7 @@ const RecipeDetails = ({
     if (isModal) {
       closeModal?.();
     } else {
-      const params = new URLSearchParams(searchParams);
-      params.set("edit", "false");
+      closeEditMode();
     }
   };
 
@@ -108,15 +124,15 @@ const RecipeDetails = ({
   };
 
   const handleDeleteRecipe = async () => {
-    if (currentRecipe && currentRecipe._id) {
+    if (recipe && recipe._id) {
       try {
         if (isModal) {
-          clearRecipe?.(currentRecipe._id);
+          clearRecipe?.(recipe._id);
           closeModal?.();
         } else {
           router.push("/dashboard/recipes");
         }
-        await deleteRecipe(currentRecipe._id);
+        await deleteRecipe(recipe._id);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.log(error);
@@ -126,17 +142,13 @@ const RecipeDetails = ({
 
   useEffect(() => {
     if (discardChanges) {
-      setIngredients(currentRecipe.ingredients);
-      setRecipeName(currentRecipe.name);
-      setDescription(currentRecipe.description);
+      setIngredients(recipe.ingredients);
+      setRecipeName(recipe.name);
+      setDescription(recipe.description);
     }
-  }, [discardChanges, currentRecipe]);
+  }, [discardChanges, recipe]);
 
-  if (
-    currentRecipe &&
-    searchParams.get("edit") === "true" &&
-    currentRecipe.isPublic
-  ) {
+  if (recipe && isEditMode && recipe.isPublic) {
     router.replace(window.location.pathname);
     return null;
   }
@@ -156,18 +168,22 @@ const RecipeDetails = ({
   return (
     <div className="w-full">
       <div className="flex flex-col justify-between w-full md:w-full">
-        <div className="relative mb-6">
-          <RecipeImage
-            height="h-96"
-            recipe={currentRecipe}
-            imageUrl={imageUrl}
+        <div className="relative">
+          <RecipeImage height="h-96" imageUrl={imageUrl} />
+          {isEditMode && <EditRecipeImageButton setImageUrl={setImageUrl} />}
+        </div>
+        <div className="flex gap-2 items-center justify-center w-full">
+          <RecipeInfoCard
+            icon={<PiUser size={22} />}
+            text="servings"
+            quantity={servings}
+            setServings={setServings}
           />
-          {isEditMode && (
-            <EditRecipeImageButton
-              recipe={currentRecipe}
-              setImageUrl={setImageUrl}
-            />
-          )}
+          <RecipeInfoCard
+            icon={<PiNotebook size={22} />}
+            text="ingredients"
+            quantity={ingredients.length}
+          />
         </div>
         <div className="flex flex-col gap-5 md:gap-10 md:items-strech lg:flex-row">
           <div className="flex-shrink lg:max-w-80 xl:max-w-96">
@@ -225,7 +241,7 @@ const RecipeDetails = ({
             <Button handleClick={saveRecipe} color="white" filled type="button">
               Save
             </Button>
-            {currentRecipe && currentRecipe._id && (
+            {recipe && recipe._id && (
               <Button handleClick={openDeleteRecipe} type="button">
                 Delete
               </Button>

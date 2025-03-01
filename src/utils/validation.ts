@@ -33,9 +33,13 @@ export const firebaseError = (error: string) => {
   }
 }
 
-export const validateCreateRecipeForm = (recipeName: string, ingredients: IngredientInterface[]) => {
+export const validateCreateRecipeForm = (recipeName: string, ingredients: IngredientInterface[], servings: number) => {
       if (!recipeName.trim()) {
       return "Please enter a recipe name";
+    }
+
+      if (!servings) {
+      return "Please enter the servings";
     }
 
     if (ingredients.length === 0) {
@@ -48,6 +52,10 @@ export const validateCreateRecipeForm = (recipeName: string, ingredients: Ingred
           return `Please enter a valid quantity for ${ing.ingredient}`;
         }
       }
+    }
+
+    if(servings <= 0) {
+      return "Please enter a valid quantity of servings"
     }
 
     return null;

@@ -25,7 +25,8 @@ export interface RecipeInterface {
   ingredients: IngredientInterface[],
   description?:string,
   imageUrl?: string,
-  isPublic?: boolean
+  isPublic?: boolean,
+  servings?: number
 }
 
 export type DayOfTheWeek =

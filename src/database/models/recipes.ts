@@ -22,7 +22,8 @@ const RecipesSchema = new Schema(
       type: Boolean,
       required: false
     },
-    imageUrl: {type: String, required: false}
+    imageUrl: {type: String, required: false},
+    servings: {type: Number, required: false}
   },
   { timestamps: true }
 );
