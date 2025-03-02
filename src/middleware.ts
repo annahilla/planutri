@@ -48,5 +48,5 @@ function handleCORS(response: NextResponse, req: NextRequest) {
 }
 
 export const config = {
-  matcher: "/api/:path*",
+    matcher: ["/api/:path*", "/dashboard/:path*"],
 };
