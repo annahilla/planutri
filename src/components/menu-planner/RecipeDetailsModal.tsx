@@ -3,6 +3,7 @@
 import { RecipeInterface } from "@/types/types";
 import RecipeDetails from "../recipes/RecipeDetails";
 import Modal from "../ui/Modal";
+import { useMenu } from "@/context/MenuContext";
 
 interface RecipeDetailsModalProps {
   isModalOpen: boolean;
@@ -17,14 +18,23 @@ const RecipeDetailsModal = ({
   handleClearRecipe,
   closeModal,
 }: RecipeDetailsModalProps) => {
+  const { menu } = useMenu();
+
+  const currentRecipeServings = menu.find(
+    (menu) => menu.recipe === selectedRecipe?._id
+  )?.servings;
+  console.log(currentRecipeServings);
+
   return (
     <Modal isSmall={false} isOpen={isModalOpen} closeModal={closeModal}>
       <div className="px-5 w-full">
+        <div></div>
         <RecipeDetails
           isModal={true}
           closeModal={closeModal}
           recipe={selectedRecipe ?? ({} as RecipeInterface)}
           clearRecipe={handleClearRecipe}
+          menuServings={currentRecipeServings}
         />
       </div>
     </Modal>

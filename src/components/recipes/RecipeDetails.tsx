@@ -25,6 +25,7 @@ interface RecipeDetailsProps {
   isModal?: boolean;
   closeModal?: () => void;
   clearRecipe?: (id: string) => void;
+  menuServings?: number;
 }
 
 const RecipeDetails = ({
@@ -32,6 +33,7 @@ const RecipeDetails = ({
   isModal = false,
   closeModal,
   clearRecipe,
+  menuServings,
 }: RecipeDetailsProps) => {
   const router = useRouter();
   const [error, setError] = useState<string>("");
@@ -48,7 +50,7 @@ const RecipeDetails = ({
   const [description, setDescription] = useState(recipe.description);
 
   const [servings, setServings] = useState(
-    recipe.servings ? recipe.servings : 1
+    menuServings || recipe.servings || 1
   );
   const [imageUrl, setImageUrl] = useState(recipe.imageUrl);
 
@@ -130,6 +132,7 @@ const RecipeDetails = ({
                     ingredient={ingredient}
                     setIngredients={setIngredients}
                     setError={setError}
+                    menuServings={menuServings}
                   />
                 ))}
               </ul>

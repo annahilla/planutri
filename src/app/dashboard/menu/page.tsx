@@ -1,8 +1,8 @@
-import Week from "@/components/menu-planner/Week";
 import MenuHeader from "@/components/menu-planner/MenuHeader";
 import { fetchMenu } from "@/services/menuServiceServer";
 import { fetchRecipes } from "@/services/recipeServiceServer";
 import { MenuProvider } from "@/context/MenuContext";
+import Week from "@/components/menu-planner/Week";
 
 const MenuPage = async () => {
   const menu = await fetchMenu();

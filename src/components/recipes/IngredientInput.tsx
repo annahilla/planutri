@@ -20,6 +20,7 @@ interface IngredientInputProps {
       | ((prev: IngredientInterface[]) => IngredientInterface[])
   ) => void;
   setError: (prev: string) => void;
+  menuServings?: number;
 }
 
 const IngredientInput = ({
@@ -28,6 +29,7 @@ const IngredientInput = ({
   index,
   setIngredients,
   setError,
+  menuServings,
 }: IngredientInputProps) => {
   const searchParams = useSearchParams();
   const isEditMode = searchParams.get("edit") === "true";
@@ -147,7 +149,10 @@ const IngredientInput = ({
       ) : (
         <div className="min-w-56 flex items-center gap-2">
           <BiSolidCheckboxChecked size={22} />
-          <IngredientQuantityAndUnit ingredient={ingredient} />
+          <IngredientQuantityAndUnit
+            menuServings={menuServings}
+            ingredient={ingredient}
+          />
           <p className="text-neutral-800">{ingredient.ingredient}</p>
         </div>
       )}
