@@ -34,6 +34,7 @@ const RecipeServingsCard = ({
         quantity={servings}
         setServings={setServings}
         isRecipeCardModal={isRecipeCardModal}
+        isEditMode={isEditMode}
       />
       {(isEditMode || isRecipeCardModal) && (
         <div className="absolute right-3 md:right-5 top-1/2 transform -translate-y-1/2 flex flex-col items-center">

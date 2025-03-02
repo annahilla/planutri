@@ -6,6 +6,7 @@ interface RecipeInfoInterface {
   quantity: number;
   setServings?: (value: number) => void;
   isRecipeCardModal?: boolean;
+  isEditMode?: boolean;
 }
 
 const RecipeInfoCard = ({
@@ -13,6 +14,7 @@ const RecipeInfoCard = ({
   icon,
   quantity,
   isRecipeCardModal = false,
+  isEditMode = false,
 }: RecipeInfoInterface) => {
   return (
     <div
@@ -21,7 +23,7 @@ const RecipeInfoCard = ({
           ? "px-10 py-6"
           : "justify-center h-24 md:w-48 md:gap-6"
       } 
-      ${text === "servings" && "pr-8"}
+      ${text === "servings" && isEditMode && "pr-8"}
       `}
     >
       <div
