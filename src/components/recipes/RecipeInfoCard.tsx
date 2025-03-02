@@ -20,10 +20,12 @@ const RecipeInfoCard = ({
         isRecipeCardModal
           ? "px-10 py-6"
           : "justify-center h-24 md:w-48 md:gap-6"
-      } `}
+      } 
+      ${text === "servings" && "pr-8"}
+      `}
     >
       <div
-        className={`flex  items-center justify-center ${
+        className={`flex items-center justify-center ${
           isRecipeCardModal ? "gap-4" : "flex-col gap-1"
         }`}
       >

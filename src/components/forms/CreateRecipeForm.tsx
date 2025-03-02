@@ -244,7 +244,7 @@ const CreateRecipeForm = () => {
           <textarea
             className="border py-2 px-4 rounded outline-none"
             name="description"
-            rows={10}
+            rows={12}
             value={description}
             onChange={(event) => setDescription(event.target.value)}
           />

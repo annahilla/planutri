@@ -27,7 +27,7 @@ const RecipeServingsCard = ({
   };
 
   return (
-    <div className="relative flex items-center justify-center">
+    <div className="relative flex items-center justify-center w-full md:w-48">
       <RecipeInfoCard
         icon={<PiUser size={22} />}
         text="servings"
@@ -36,7 +36,7 @@ const RecipeServingsCard = ({
         isRecipeCardModal={isRecipeCardModal}
       />
       {(isEditMode || isRecipeCardModal) && (
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
+        <div className="absolute right-3 md:right-5 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
           <button
             onClick={increase}
             className="outline-none flex items-center justify-center w-7 h-7 text-lg text-neutral-500 border border-neutral-400 rounded-t border-b-0 hover:bg-neutral-100"

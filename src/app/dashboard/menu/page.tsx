@@ -6,16 +6,24 @@ import Week from "@/components/menu-planner/Week";
 import Loader from "@/components/ui/Loader";
 
 const MenuPage = async () => {
-  const menu = await fetchMenu();
-  const recipes = await fetchRecipes();
+  const [menuResult, recipesResult] = await Promise.allSettled([
+    fetchMenu(),
+    fetchRecipes(),
+  ]);
 
-  if (!menu || !recipes) {
+  if (
+    menuResult.status !== "fulfilled" ||
+    recipesResult.status !== "fulfilled"
+  ) {
     return <Loader />;
   }
 
   return (
     <div className="w-full flex flex-col gap-2">
-      <MenuProvider fetchedMenu={menu} fetchedRecipes={recipes}>
+      <MenuProvider
+        fetchedMenu={menuResult.value}
+        fetchedRecipes={recipesResult.value}
+      >
         <MenuHeader />
         <Week />
       </MenuProvider>
