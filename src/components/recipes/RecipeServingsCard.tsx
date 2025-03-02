@@ -27,7 +27,11 @@ const RecipeServingsCard = ({
   };
 
   return (
-    <div className="relative flex items-center justify-center w-full md:w-48">
+    <div
+      className={`relative flex items-center justify-center w-full ${
+        !isRecipeCardModal && "md:w-48"
+      } `}
+    >
       <RecipeInfoCard
         icon={<PiUser size={22} />}
         text="servings"
