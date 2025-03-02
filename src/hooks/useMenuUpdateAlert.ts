@@ -7,7 +7,7 @@ export const useMenuUpdateAlert = (menu: MenuInterface[]) => {
   const [showMenuUpdateAlert, setShowMenuUpdateAlert] = useState(false);
 
   useEffect(() => {
-    if (typeof window === "undefined" || !menu || menu.length === 0) return;
+    if (typeof window === "undefined") return;
 
     const storedMenuJSON = localStorage.getItem("lastUpdatedMenu");
     const currentMenuJSON = JSON.stringify(menu);
