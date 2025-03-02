@@ -9,6 +9,9 @@ import { deleteRecipe } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import RecipeServingsCard from "./RecipeServingsCard";
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "@/services/authService";
+import MadeByTag from "../ui/MadeByTag";
 
 const RecipeCard = ({
   recipe,
@@ -41,6 +44,11 @@ const RecipeCard = ({
     setMenuServings(servings);
   }, [servings]);
 
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: getUser,
+  });
+
   const handleDeleteRecipe = async () => {
     if (recipe && recipe._id) {
       try {
@@ -72,10 +80,10 @@ const RecipeCard = ({
           >
             <RecipeImage imageUrl={recipe.imageUrl} height="h-56" />
             <h3 className="font-bold">{recipe.name}</h3>
-            {recipe.isPublic && (
-              <p className="text-xs bg-beige p-1 rounded text-neutral-700 w-fit">
-                Made by planutri
-              </p>
+            {recipe.isPublic ? (
+              <MadeByTag name="planutri" />
+            ) : (
+              <MadeByTag name={user?.email?.split("@")[0]} />
             )}
             <div className="flex flex-col gap-1">
               <p className="text-sm text-neutral-800">Ingredients: </p>
