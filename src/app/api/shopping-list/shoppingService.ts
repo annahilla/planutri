@@ -22,7 +22,7 @@ export class shoppingService {
         }
 
         const existingShoppingList = await ShoppingList.find({ userId: userId });
-        const shoppingList = this.getIngredients(recipes);
+        const shoppingList = this.getIngredients(menu, recipes);
         const shoppingListIngredientsCalculated = this.sumOfIngredients(shoppingList);
 
         if(existingShoppingList.length > 0) {
@@ -107,12 +107,33 @@ async updateShoppingList(userId: string, ingredientName: string, checked: boolea
 
     }
 
-    private getIngredients(recipes: RecipeInterface[]): IngredientInterface[] {
-    return recipes
-        .flatMap(recipe => recipe.ingredients)
-        .sort((a, b) => a.ingredient.localeCompare(b.ingredient));
+    private getIngredients(menuItems: MenuInterface[], recipes: RecipeInterface[]): IngredientInterface[] {
+    const ingredientList: IngredientInterface[] = [];
+
+    menuItems.forEach(menuItem => {
+        const recipe = recipes.find(recipe => recipe._id?.toString() === menuItem.recipe.toString());
+        if (!recipe) return;
+
+        const ingredients = recipe.ingredients;
+        console.log("INGREDIENTS", ingredients);
+
+        ingredients.forEach(ingredient => {
+            const adjustedQuantity = ingredient.quantity * (menuItem.servings || 1);
+            
+            ingredientList.push({
+                ingredient: ingredient.ingredient,
+                quantity: adjustedQuantity,
+                unit: ingredient.unit,
+                checked: ingredient.checked
+            });
+        });
+    });
+
+    console.log("INGREDIENT LIST", ingredientList);
+
+    return ingredientList.sort((a, b) => a.ingredient.localeCompare(b.ingredient));
     }
-    
+
     private sumOfIngredients(list: IngredientInterface[]): IngredientInterface[] {
     const ingredientMap = new Map<string, IngredientInterface>();
 
