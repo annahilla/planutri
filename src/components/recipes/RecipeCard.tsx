@@ -44,7 +44,7 @@ const RecipeCard = ({
     setMenuServings(servings);
   }, [servings]);
 
-  const { data: user } = useQuery({
+  const { data: user, isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: getUser,
   });
@@ -83,7 +83,10 @@ const RecipeCard = ({
             {recipe.isPublic ? (
               <MadeByTag name="planutri" />
             ) : (
-              <MadeByTag name={user?.email?.split("@")[0]} />
+              <MadeByTag
+                name={user?.email?.split("@")[0]}
+                isLoading={isLoading}
+              />
             )}
             <div className="flex flex-col gap-1">
               <p className="text-sm text-neutral-800">Ingredients: </p>
