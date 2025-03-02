@@ -153,8 +153,11 @@ describe("Create Recipe Component - User Flow Tests", () => {
   test("Show error if try to send recipe without any ingredients", async () => {
     renderWithProviders(<CreateRecipeForm />);
 
-    const input = screen.getByLabelText(/Recipe name */i);
-    fireEvent.change(input, { target: { value: "Pancakes" } });
+    const nameInput = screen.getByLabelText(/Recipe name */i);
+    fireEvent.change(nameInput, { target: { value: "Pancakes" } });
+
+    const servingsInput = screen.getByLabelText(/Servings */i);
+    fireEvent.change(servingsInput, { target: { value: "4" } });
 
     const submitButton = screen.getByText("Create");
     fireEvent.click(submitButton);
@@ -176,6 +179,9 @@ describe("Create Recipe Component - User Flow Tests", () => {
 
     const nameInput = screen.getByLabelText(/Recipe name/i);
     fireEvent.change(nameInput, { target: { value: "Pancakes" } });
+
+    const servingsInput = screen.getByLabelText(/Servings */i);
+    fireEvent.change(servingsInput, { target: { value: "4" } });
 
     const ingredientInput = screen.getByLabelText(/Ingredients/i);
     fireEvent.change(ingredientInput, { target: { value: "Flour" } });
