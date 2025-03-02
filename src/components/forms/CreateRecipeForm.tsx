@@ -11,6 +11,7 @@ import { addRecipe } from "@/services/recipeService";
 import { validateCreateRecipeForm } from "@/utils/validation";
 import { fetchUnits } from "@/services/unitService";
 import { useQuery } from "@tanstack/react-query";
+import TextAreaResizable from "./TextAreaResizable";
 
 const CreateRecipeForm = () => {
   const router = useRouter();
@@ -241,13 +242,7 @@ const CreateRecipeForm = () => {
         </div>
         <div className="flex-1 flex flex-col gap-1 w-full">
           <label htmlFor="name">Description</label>
-          <textarea
-            className="border py-2 px-4 rounded outline-none"
-            name="description"
-            rows={12}
-            value={description}
-            onChange={(event) => setDescription(event.target.value)}
-          />
+          <TextAreaResizable value={description} setValue={setDescription} />
         </div>
       </div>
       {error && <ErrorMessage message={error} />}

@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation";
-import { ChangeEvent, useEffect, useRef } from "react";
+import TextAreaResizable from "../forms/TextAreaResizable";
 
 interface DescriptionInputProps {
   description: string | undefined;
@@ -12,40 +12,12 @@ const DescriptionInput = ({
 }: DescriptionInputProps) => {
   const searchParams = useSearchParams();
   const isEditMode = searchParams.get("edit") === "true";
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const adjustTextareaRows = () => {
-    if (textareaRef.current) {
-      textareaRef.current.rows = 1;
-
-      const newRows = Math.ceil(textareaRef.current.scrollHeight / 28);
-      textareaRef.current.rows = newRows;
-    }
-  };
-
-  const handleInputChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(event.target.value);
-    adjustTextareaRows();
-  };
-
-  useEffect(() => {
-    adjustTextareaRows();
-  }, [description]);
-
-  useEffect(() => {
-    adjustTextareaRows();
-  }, []);
 
   return (
     <div className="flex-1 flex flex-col w-full">
       <h5 className="text-xl mb-3">Description</h5>
       {isEditMode ? (
-        <textarea
-          ref={textareaRef}
-          className="whitespace-pre-wrap border p-5 rounded outline-none w-full flex-1 resize-none"
-          onChange={handleInputChange}
-          value={description}
-        />
+        <TextAreaResizable value={description} setValue={setDescription} />
       ) : (
         <span className="whitespace-pre-wrap border text-neutral-900 rounded p-5">
           {description
