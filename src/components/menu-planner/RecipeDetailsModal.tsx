@@ -1,11 +1,13 @@
 "use client";
 
-import { RecipeInterface } from "@/types/types";
+import { DayOfTheWeek, Meal, RecipeInterface } from "@/types/types";
 import RecipeDetails from "../recipes/RecipeDetails";
 import Modal from "../ui/Modal";
 import { useMenu } from "@/context/MenuContext";
 
 interface RecipeDetailsModalProps {
+  dayOfTheWeek: DayOfTheWeek;
+  meal: Meal;
   isModalOpen: boolean;
   selectedRecipe: RecipeInterface | null;
   handleClearRecipe: (id: string) => void;
@@ -13,6 +15,8 @@ interface RecipeDetailsModalProps {
 }
 
 const RecipeDetailsModal = ({
+  dayOfTheWeek,
+  meal,
   isModalOpen,
   selectedRecipe,
   handleClearRecipe,
@@ -21,9 +25,11 @@ const RecipeDetailsModal = ({
   const { menu } = useMenu();
 
   const currentRecipeServings = menu.find(
-    (menu) => menu.recipe === selectedRecipe?._id
+    (menuItem) =>
+      menuItem.recipe === selectedRecipe?._id &&
+      menuItem.dayOfTheWeek === dayOfTheWeek &&
+      menuItem.meal === meal
   )?.servings;
-  console.log(currentRecipeServings);
 
   return (
     <Modal isSmall={false} isOpen={isModalOpen} closeModal={closeModal}>

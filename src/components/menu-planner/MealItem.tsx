@@ -108,6 +108,8 @@ const MealItem = ({
         closeModal={closeModal}
         selectedRecipe={selectedRecipe}
         handleClearRecipe={handleClearRecipe}
+        dayOfTheWeek={dayOfTheWeek}
+        meal={meal}
       />
     </>
   );
