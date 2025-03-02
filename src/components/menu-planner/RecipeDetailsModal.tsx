@@ -34,7 +34,7 @@ const RecipeDetailsModal = ({
   return (
     <Modal isSmall={false} isOpen={isModalOpen} closeModal={closeModal}>
       <div className="px-5 w-full">
-        <div></div>
+        <div className="mt-2 mb-4 text-2xl">{selectedRecipe?.name}</div>
         <RecipeDetails
           isModal={true}
           closeModal={closeModal}

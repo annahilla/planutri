@@ -88,7 +88,7 @@ const RecipeDetails = ({
     <div className="w-full">
       <div className="flex flex-col justify-between w-full md:w-full">
         <div className="relative">
-          <RecipeImage height="h-96" imageUrl={imageUrl} />
+          <RecipeImage height="h-64 md:h-96" imageUrl={imageUrl} />
           {isEditMode && <EditRecipeImageButton setImageUrl={setImageUrl} />}
         </div>
         <div className="flex gap-2 my-6 items-center justify-center w-full">
@@ -103,8 +103,8 @@ const RecipeDetails = ({
             quantity={ingredients.length}
           />
         </div>
-        <div className="flex flex-col gap-5 mt-4 md:gap-10 md:items-strech lg:flex-row">
-          <div className="flex-shrink lg:max-w-80 xl:max-w-96">
+        <div className="flex flex-col gap-5 md:mt-4 md:gap-10 md:items-strech lg:flex-row h-full">
+          <div className="lg:max-w-80 xl:max-w-96">
             {isEditMode && (
               <div className="mb-7">
                 <h5 className="text-xl mb-4">Recipe Name</h5>

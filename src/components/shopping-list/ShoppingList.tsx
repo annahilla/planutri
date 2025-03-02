@@ -37,7 +37,7 @@ const ShoppingList = ({
   return (
     <>
       {shoppingList.length > 0 ? (
-        <div className="mt-3 flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:w-72">
+        <div className="mt-3 flex flex-col gap-2 border border-neutral-400 rounded px-7 py-5 w-full md:w-fit md:min-w-72">
           {currentShoppingList
             .slice()
             .sort((a, b) => Number(a.checked) - Number(b.checked))

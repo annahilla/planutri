@@ -1,5 +1,6 @@
 "use client";
 
+import ProfileItem from "@/components/profile/ProfileItem";
 import Button from "@/components/ui/buttons/Button";
 import DashboardHeader from "@/components/ui/DashboardHeader";
 import PageTitle from "@/components/ui/PageTitle";
@@ -52,30 +53,13 @@ const ProfilePage = () => {
             )}
           </div>
         </div>
-        <div className="w-full h-5">
-          <div className="w-full h-full">
-            {isLoading ? (
-              <Skeleton height="100%" width="100%" />
-            ) : (
-              <div className="flex gap-2 items-center w-full">
-                <p className="font-bold">Name:</p>
-                <p>{user?.name}</p>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="w-full h-5">
-          <div className="w-full h-full">
-            {isLoading ? (
-              <Skeleton height="100%" width="100%" />
-            ) : (
-              <div className="flex gap-2 items-center w-full">
-                <p className="font-bold">Email:</p>
-                <p>{user?.email}</p>
-              </div>
-            )}
-          </div>
-        </div>
+        <ProfileItem isLoading={isLoading} item="Name" value={user?.name} />
+        <ProfileItem
+          isLoading={isLoading}
+          item="Username"
+          value={user?.email?.split("@")[0]}
+        />
+        <ProfileItem isLoading={isLoading} item="Email" value={user?.email} />
 
         <div className="my-4 w-full">
           <Button color="white" filled handleClick={handleLogout}>

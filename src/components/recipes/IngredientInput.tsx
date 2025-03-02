@@ -147,7 +147,7 @@ const IngredientInput = ({
           </div>
         </div>
       ) : (
-        <div className="min-w-56 flex items-center gap-2">
+        <div className="min-w-56 flex items-start gap-2">
           <BiSolidCheckboxChecked size={22} />
           <IngredientQuantityAndUnit
             menuServings={menuServings}
