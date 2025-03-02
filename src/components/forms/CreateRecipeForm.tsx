@@ -185,7 +185,7 @@ const CreateRecipeForm = () => {
               setIsDropdownOpen={setIsDropdownOpen}
             />
           </div>
-          <div className="mt-2 border bg-white py-2 px-4 rounded outline-none min-h-80 flex flex-col gap-3">
+          <div className="mt-2 border bg-white py-4 px-4 rounded outline-none min-h-60 flex flex-col gap-3">
             {selectedIngredients.map((ingredient) => (
               <div
                 key={ingredient}
@@ -244,14 +244,14 @@ const CreateRecipeForm = () => {
           <textarea
             className="border py-2 px-4 rounded outline-none"
             name="description"
-            rows={15}
+            rows={10}
             value={description}
             onChange={(event) => setDescription(event.target.value)}
           />
         </div>
       </div>
       {error && <ErrorMessage message={error} />}
-      <div className="w-32 m-auto md:m-0">
+      <div className="w-full md:w-32">
         <Button filled color="white" type="submit">
           Create
         </Button>
