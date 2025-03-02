@@ -19,7 +19,7 @@ const useSearchRecipe = (recipes: RecipeInterface[]) => {
     );
   };
 
-  return { filteredRecipes, searchRecipe };
+  return { filteredRecipes, searchRecipe, setFilteredRecipes };
 }
 
 export default useSearchRecipe;

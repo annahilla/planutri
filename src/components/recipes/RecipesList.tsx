@@ -17,7 +17,8 @@ const RecipesList = ({
   onSelect,
   isMenu = false,
 }: RecipeListProps) => {
-  const { filteredRecipes, searchRecipe } = useSearchRecipe(recipes);
+  const { filteredRecipes, setFilteredRecipes, searchRecipe } =
+    useSearchRecipe(recipes);
   const [menuServings, setMenuServings] = useState(1);
 
   return (
@@ -33,8 +34,10 @@ const RecipesList = ({
             <div className="h-full">
               <RecipeCard
                 recipe={recipe}
+                recipes={recipes}
                 setMenuServings={setMenuServings}
                 isMenu={isMenu}
+                setRecipes={setFilteredRecipes}
               />
             </div>
           </div>
