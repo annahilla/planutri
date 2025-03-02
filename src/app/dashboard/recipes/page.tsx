@@ -20,7 +20,7 @@ const RecipesPage = async () => {
         </Link>
       </DashboardHeader>
       {recipes.length > 0 ? (
-        <RecipesList recipes={recipes} showLinks={true} />
+        <RecipesList recipes={recipes} />
       ) : (
         <div className="my-4 text-neutral-600">
           You haven&apos;t created any recipe yet.{" "}

@@ -11,7 +11,7 @@ const RecipeServingsCard = ({
 }: {
   recipe: RecipeInterface;
   servings: number;
-  setServings: (value: number) => void;
+  setServings: (prev: number) => void;
   isRecipeCardModal?: boolean;
 }) => {
   const { isEditMode } = useEditMode(recipe._id);
@@ -21,7 +21,9 @@ const RecipeServingsCard = ({
   };
 
   const decrease = () => {
-    if (setServings) setServings(servings - 1);
+    if (setServings) {
+      setServings(servings > 1 ? servings - 1 : 1);
+    }
   };
 
   return (
@@ -37,13 +39,13 @@ const RecipeServingsCard = ({
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex flex-col items-center">
           <button
             onClick={increase}
-            className="flex items-center justify-center w-7 h-7 text-lg text-neutral-500 border border-neutral-400 rounded-t border-b-0 hover:bg-neutral-100"
+            className="outline-none flex items-center justify-center w-7 h-7 text-lg text-neutral-500 border border-neutral-400 rounded-t border-b-0 hover:bg-neutral-100"
           >
             +
           </button>
           <button
             onClick={decrease}
-            className="flex items-center justify-center w-7 h-7 text-lg text-neutral-500 border border-neutral-400 rounded-b hover:bg-neutral-100"
+            className="outline-none flex items-center justify-center w-7 h-7 text-lg text-neutral-500 border border-neutral-400 rounded-b hover:bg-neutral-100"
           >
             -
           </button>

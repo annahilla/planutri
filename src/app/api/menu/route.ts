@@ -22,7 +22,7 @@ export const POST = async (req: NextRequest) => {
         const userId = await getUserId();
         await connect();
         const body = await req.json();
-        const { recipe, dayOfTheWeek, meal } = body;
+        const { recipe, dayOfTheWeek, meal, servings } = body;
 
         if (!recipe || !dayOfTheWeek || !meal) {
             return new NextResponse("Required fields are missing", { status: 400 });
@@ -32,6 +32,7 @@ export const POST = async (req: NextRequest) => {
             recipe,
             dayOfTheWeek,
             meal,
+            servings,
             userId
         });
 

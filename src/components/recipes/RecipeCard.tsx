@@ -3,7 +3,7 @@
 import { RecipeInterface } from "@/types/types";
 import Link from "next/link";
 import RecipeImage from "./RecipeImage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ConfirmModal from "../ui/modals/ConfirmModal";
 import { deleteRecipe } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
@@ -12,17 +12,19 @@ import RecipeServingsCard from "./RecipeServingsCard";
 
 const RecipeCard = ({
   recipe,
-  isModal = false,
+  isMenu = false,
+  setMenuServings,
 }: {
   recipe: RecipeInterface;
-  isModal?: boolean;
+  isMenu?: boolean;
+  setMenuServings: (value: number) => void;
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const router = useRouter();
-  const [isRecipe, setIsRecipe] = useState(true);
   const [servings, setServings] = useState(
     recipe.servings ? recipe.servings : 1
   );
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const [isRecipe, setIsRecipe] = useState(true);
 
   const ingredientsList = recipe.ingredients
     .map((ingredient) => ingredient.ingredient)
@@ -31,6 +33,10 @@ const RecipeCard = ({
   const openDeleteRecipe = () => {
     setIsModalOpen(true);
   };
+
+  useEffect(() => {
+    setMenuServings(servings);
+  }, [servings]);
 
   const handleDeleteRecipe = async () => {
     if (recipe && recipe._id) {
@@ -53,7 +59,7 @@ const RecipeCard = ({
     <>
       {isRecipe && (
         <div className="border p-5 rounded h-full flex flex-col justify-between">
-          {!isModal ? (
+          {!isMenu ? (
             <>
               <Link
                 className="flex flex-col gap-3 hover:opacity-80"

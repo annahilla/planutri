@@ -26,7 +26,8 @@ const MenuSchema = new Schema(
         type: String,
         ref: "User",
         required: true
-    }
+    },
+    servings: {type: Number, required: true}
   },
   { timestamps: true }
 );

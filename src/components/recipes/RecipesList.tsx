@@ -4,19 +4,21 @@ import { RecipeInterface } from "@/types/types";
 import RecipeCard from "./RecipeCard";
 import SearchInput from "../ui/SearchInput";
 import useSearchRecipe from "@/hooks/useSearchRecipe";
+import { useState } from "react";
 
 interface RecipeListProps {
   recipes: RecipeInterface[];
-  onSelect?: (recipe: RecipeInterface) => void;
-  isModal?: boolean;
+  onSelect?: (recipe: RecipeInterface, servings: number) => void;
+  isMenu?: boolean;
 }
 
 const RecipesList = ({
   recipes,
   onSelect,
-  isModal = false,
+  isMenu = false,
 }: RecipeListProps) => {
   const { filteredRecipes, searchRecipe } = useSearchRecipe(recipes);
+  const [menuServings, setMenuServings] = useState(1);
 
   return (
     <div>
@@ -26,10 +28,14 @@ const RecipesList = ({
           <div
             className="w-full h-full"
             key={recipe._id}
-            onClick={() => onSelect?.(recipe)}
+            onClick={() => onSelect?.(recipe, menuServings)}
           >
             <div className="h-full">
-              <RecipeCard recipe={recipe} isModal={isModal} />
+              <RecipeCard
+                recipe={recipe}
+                setMenuServings={setMenuServings}
+                isMenu={isMenu}
+              />
             </div>
           </div>
         ))}

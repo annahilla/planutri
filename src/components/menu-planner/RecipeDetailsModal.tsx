@@ -1,3 +1,5 @@
+"use client";
+
 import { RecipeInterface } from "@/types/types";
 import RecipeDetails from "../recipes/RecipeDetails";
 import Modal from "../ui/Modal";

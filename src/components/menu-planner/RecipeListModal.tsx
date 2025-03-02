@@ -29,12 +29,17 @@ const RecipeListModal = ({
   setMenu,
   closeModal,
 }: RecipeListModalProps) => {
-  const selectRecipe = async (recipe: RecipeInterface, selectedMeal: Meal) => {
+  const selectRecipe = async (
+    recipe: RecipeInterface,
+    selectedMeal: Meal,
+    servings: number
+  ) => {
     try {
       const newMenu: MenuInterface = {
         recipe,
         dayOfTheWeek,
         meal: selectedMeal,
+        servings,
       };
 
       const addedMenuItem = await addRecipeToMenu(newMenu);
@@ -56,8 +61,10 @@ const RecipeListModal = ({
       </h3>
       <RecipesList
         recipes={recipes}
-        isModal
-        onSelect={(recipe) => selectRecipe(recipe, selectedMeal!)}
+        isMenu
+        onSelect={(recipe, servings) =>
+          selectRecipe(recipe, selectedMeal!, servings)
+        }
       />
     </Modal>
   );

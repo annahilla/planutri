@@ -36,7 +36,14 @@ export const MenuProvider = ({
   const [recipes, setRecipes] = useState<RecipeInterface[]>(fetchedRecipes);
 
   return (
-    <MenuContext.Provider value={{ menu, recipes, setMenu, setRecipes }}>
+    <MenuContext.Provider
+      value={{
+        menu,
+        recipes,
+        setMenu,
+        setRecipes,
+      }}
+    >
       {children}
     </MenuContext.Provider>
   );
