@@ -48,7 +48,7 @@ const FavoriteButton = ({ recipeId }: { recipeId: string | undefined }) => {
   }, []);
 
   return (
-    <button onClick={handleFavorite}>
+    <button className="text-red-500" onClick={handleFavorite}>
       {isFavorite ? <GoHeartFill size={20} /> : <GoHeart size={20} />}
     </button>
   );

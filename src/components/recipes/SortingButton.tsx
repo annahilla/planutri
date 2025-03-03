@@ -4,6 +4,7 @@ import useClickOutside from "@/hooks/useClickOutside";
 import { RecipeInterface } from "@/types/types";
 import { useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { BsSortDownAlt } from "react-icons/bs";
 
 const SortingButton = ({
   recipes,
@@ -57,13 +58,14 @@ const SortingButton = ({
     <div className="relative" ref={buttonRef}>
       <button
         onClick={toggleDropdown}
-        className="outline-none flex items-center gap-2 bg-neutral-100 text-neutral-500 py-1 px-3 rounded-full text-sm hover:text-neutral-600"
+        className="outline-none flex items-center gap-2 bg-neutral-100 text-neutral-500 h-8 px-3 rounded-full text-sm hover:text-neutral-600"
       >
-        Sort
+        <BsSortDownAlt />
+        <p className="hidden md:block">Sort</p>
         {isDropdownOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
       </button>
       {isDropdownOpen && (
-        <div className="flex flex-col items-center gap-3 p-3 absolute bg-neutral-50 text-neutral-500 z-[1000] right-0 top-8 text-sm rounded shadow-sm">
+        <div className="flex flex-col items-start gap-5 p-5 absolute bg-neutral-50 text-neutral-500 z-[1000] right-0 top-8 text-sm rounded shadow-sm">
           <button onClick={sortByNewest} className="hover:text-neutral-600">
             Newest first
           </button>

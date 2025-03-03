@@ -23,7 +23,7 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   return (
     <div>
       <SearchInput search={searchRecipe} />
-      <div className="flex gap-1 flex-wrap justify-between">
+      <div className="flex gap-2 flex-wrap justify-between">
         <FilterTags recipes={recipes} setFilteredRecipes={setFilteredRecipes} />
         <SortingButton
           recipes={recipes}
