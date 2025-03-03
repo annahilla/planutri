@@ -2,7 +2,7 @@ import { validateCreateRecipeForm } from "@/utils/validation";
 import { updateRecipe } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
 import useEditMode from "./useEditMode";
-import { IngredientInterface } from "@/types/types";
+import { IngredientInterface, Meal } from "@/types/types";
 
 const useSaveRecipe = (
   recipeId: string | undefined,
@@ -10,6 +10,7 @@ const useSaveRecipe = (
   description: string | undefined,
   ingredients: IngredientInterface[],
   servings: number,
+  meals: Meal[],
   deleteIngredient: (id: string) => void,
   isModal: boolean,
   setError: (value: string) => void,
@@ -27,7 +28,7 @@ const useSaveRecipe = (
       (ingredient) => ingredient.ingredient === ""
     );
 
-    const validationError = validateCreateRecipeForm(recipeName, ingredients, servings);
+    const validationError = validateCreateRecipeForm(recipeName, ingredients, servings, meals);
     if (validationError) {
       setError(validationError);
       return;
@@ -45,6 +46,7 @@ const useSaveRecipe = (
       ingredients: ingredientsForDB,
       servings: servings,
       description: description,
+      meals: meals
     };
 
     try {

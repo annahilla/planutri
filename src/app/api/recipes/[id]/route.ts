@@ -25,7 +25,7 @@ export const PUT = async (req: NextRequest, { params } : { params: Promise<{ id:
         const userId = await getUserId();
         await connect();
         const body = await req.json();
-        const { name, ingredients, description, servings, imageUrl } = body;
+        const { name, ingredients, description, servings, meals, imageUrl } = body;
         const { id } = await params;
 
         const recipe = await Recipe.findById(id);
@@ -36,7 +36,7 @@ export const PUT = async (req: NextRequest, { params } : { params: Promise<{ id:
 
         const updatedRecipe = await Recipe.findByIdAndUpdate(
             id,
-            { id, name, ingredients, description, imageUrl, servings, userId },
+            { id, name, ingredients, description, imageUrl, servings, meals, userId },
             { new: true }
         );
 

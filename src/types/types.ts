@@ -28,6 +28,7 @@ export interface RecipeInterface {
   isPublic?: boolean,
   servings?: number,
   createdAt?: number,
+  meals?: Meal[]
 }
 
 export type DayOfTheWeek =

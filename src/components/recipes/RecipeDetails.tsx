@@ -17,8 +17,10 @@ import useEditMode from "@/hooks/useEditMode";
 import useEditRecipeIngredients from "@/hooks/useEditRecipeIngredients";
 import useSaveRecipe from "@/hooks/useSaveRecipe";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
-import { RecipeInterface } from "@/types/types";
+import { Meal, RecipeInterface } from "@/types/types";
 import RecipeServingsCard from "./RecipeServingsCard";
+import FilterTagItem from "./FilterTagItem";
+import MealTags from "./MealTags";
 
 interface RecipeDetailsProps {
   recipe: RecipeInterface;
@@ -52,6 +54,7 @@ const RecipeDetails = ({
   const [servings, setServings] = useState(
     menuServings || recipe.servings || 1
   );
+  const [meals, setMeals] = useState<Meal[]>([]);
   const [imageUrl, setImageUrl] = useState(recipe.imageUrl);
 
   const { saveRecipe } = useSaveRecipe(
@@ -60,6 +63,7 @@ const RecipeDetails = ({
     description,
     ingredients,
     servings,
+    meals,
     deleteIngredient,
     isModal,
     setError,
@@ -104,7 +108,23 @@ const RecipeDetails = ({
             quantity={ingredients.length}
           />
         </div>
-        <div className="flex flex-col gap-5 md:mt-4 md:gap-10 md:items-strech lg:flex-row h-full">
+
+        <div className="m-auto">
+          {isEditMode ? (
+            <MealTags meals={recipe.meals} setMeals={setMeals} />
+          ) : (
+            <div className="flex flex-wrap items-center gap-2">
+              {recipe.meals &&
+                recipe.meals.map((meal) => (
+                  <FilterTagItem key={meal} isActive isStatic>
+                    {meal}
+                  </FilterTagItem>
+                ))}
+            </div>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-5 mt-8 md:gap-10 md:items-strech lg:flex-row h-full">
           <div className="lg:max-w-80 xl:max-w-96">
             {isEditMode && (
               <div className="mb-7">
@@ -118,7 +138,7 @@ const RecipeDetails = ({
                 />
               </div>
             )}
-            <div className="w-full">
+            <div className="w-full mt-6">
               <h5 className="text-xl mb-3">Ingredients</h5>
               <ul
                 className={`flex flex-col gap-3 rounded ${

@@ -4,65 +4,52 @@ import { useEffect, useState } from "react";
 import FilterTagItem from "./FilterTagItem";
 import { Meal } from "@/types/types";
 
-const MealTags = ({ setMeals }: { setMeals: (meal: Meal[]) => void }) => {
+const MealTags = ({
+  meals = [],
+  setMeals,
+}: {
+  meals?: Meal[];
+  setMeals?: (meal: Meal[]) => void;
+}) => {
   const [activeFilters, setActiveFilters] = useState<Meal[]>([]);
 
-  const handleMealClick = (meal: string) => {
-    if (meal === "Breakfast") {
-      setActiveFilters((prev) => [...prev, "Breakfast"]);
-    } else if (meal === "Lunch") {
-      setActiveFilters((prev) => [...prev, "Lunch"]);
-    } else if (meal === "Snack") {
-      setActiveFilters((prev) => [...prev, "Snack"]);
-    } else if (meal === "Dinner") {
-      setActiveFilters((prev) => [...prev, "Dinner"]);
-    }
+  const handleMealClick = (meal: Meal) => {
+    setActiveFilters((prev) => (prev.includes(meal) ? prev : [...prev, meal]));
   };
 
-  const closeFilter = (activeFilter: string) => {
-    const updatedFilters = activeFilters.filter(
-      (filter) => filter !== activeFilter
-    );
+  const closeFilter = (meal: Meal) => {
+    const updatedFilters = activeFilters.filter((filter) => filter !== meal);
     setActiveFilters(updatedFilters);
-    setMeals(updatedFilters);
+    setMeals?.(updatedFilters);
   };
 
   useEffect(() => {
-    if (typeof setMeals === "function") {
-      setMeals(activeFilters);
-    }
+    setMeals?.(activeFilters);
+    console.log(activeFilters);
   }, [activeFilters]);
 
+  const getSelectedResults = (meal: Meal) => {
+    setActiveFilters((prev) => (prev.includes(meal) ? prev : [...prev, meal]));
+  };
+
+  useEffect(() => {
+    if (meals) {
+      meals.map((meal) => getSelectedResults(meal));
+    }
+  }, []);
+
   return (
-    <div className="flex gap-2 items-center max-w-full">
-      <FilterTagItem
-        handleFilter={() => handleMealClick("Breakfast")}
-        closeTag={() => closeFilter("Breakfast")}
-        isActive={activeFilters.includes("Breakfast")}
-      >
-        Breakfast
-      </FilterTagItem>
-      <FilterTagItem
-        handleFilter={() => handleMealClick("Lunch")}
-        closeTag={() => closeFilter("Lunch")}
-        isActive={activeFilters.includes("Lunch")}
-      >
-        Lunch
-      </FilterTagItem>
-      <FilterTagItem
-        handleFilter={() => handleMealClick("Snack")}
-        closeTag={() => closeFilter("Snack")}
-        isActive={activeFilters.includes("Snack")}
-      >
-        Snack
-      </FilterTagItem>
-      <FilterTagItem
-        handleFilter={() => handleMealClick("Dinner")}
-        closeTag={() => closeFilter("Dinner")}
-        isActive={activeFilters.includes("Dinner")}
-      >
-        Dinner
-      </FilterTagItem>
+    <div className="flex flex-wrap gap-2 items-center max-w-full">
+      {["Breakfast", "Lunch", "Snack", "Dinner"].map((meal) => (
+        <FilterTagItem
+          key={meal}
+          handleFilter={() => handleMealClick(meal as Meal)}
+          closeTag={() => closeFilter(meal as Meal)}
+          isActive={activeFilters.includes(meal as Meal)}
+        >
+          {meal}
+        </FilterTagItem>
+      ))}
     </div>
   );
 };
