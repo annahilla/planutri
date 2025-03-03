@@ -7,6 +7,7 @@ import useSearchRecipe from "@/hooks/useSearchRecipe";
 import { useState } from "react";
 import FilterTags from "./FilterTags";
 import { useRecipes } from "@/context/RecipesContext";
+import SortingButton from "./SortingButton";
 
 interface RecipeListProps {
   onSelect?: (recipe: RecipeInterface, servings: number) => void;
@@ -22,7 +23,13 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   return (
     <div>
       <SearchInput search={searchRecipe} />
-      <FilterTags recipes={recipes} setFilteredRecipes={setFilteredRecipes} />
+      <div className="flex gap-1 flex-wrap justify-between">
+        <FilterTags recipes={recipes} setFilteredRecipes={setFilteredRecipes} />
+        <SortingButton
+          recipes={recipes}
+          setFilteredRecipes={setFilteredRecipes}
+        />
+      </div>
       <div
         className={`grid grid-cols-1 gap-3 mt-4 items-center md:items-start md:w-full md:grid-cols-2 lg:gap-4  ${
           isMenu

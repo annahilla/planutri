@@ -20,8 +20,6 @@ export const fecthFavoriteRecipes = async () => {
 
     const data = await response.json();
 
-    console.log(data);
-
     if (!data || data.length === 0) {
       return [];
     }
