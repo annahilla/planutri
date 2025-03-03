@@ -5,6 +5,7 @@ import RecipeCard from "./RecipeCard";
 import SearchInput from "../ui/SearchInput";
 import useSearchRecipe from "@/hooks/useSearchRecipe";
 import { useState } from "react";
+import FilterTags from "./FilterTags";
 
 interface RecipeListProps {
   recipes: RecipeInterface[];
@@ -24,6 +25,7 @@ const RecipesList = ({
   return (
     <div>
       <SearchInput search={searchRecipe} />
+      <FilterTags recipes={recipes} setFilteredRecipes={setFilteredRecipes} />
       <div className="grid grid-cols-1 gap-3 mt-4 items-center md:items-start md:w-full md:grid-cols-2 lg:gap-4 lg:grid-cols-3 xl:grid-cols-4">
         {filteredRecipes.map((recipe) => (
           <div
