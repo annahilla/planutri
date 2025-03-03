@@ -4,6 +4,7 @@ import { DayOfTheWeek, Meal, RecipeInterface } from "@/types/types";
 import RecipeDetails from "../recipes/RecipeDetails";
 import Modal from "../ui/Modal";
 import { useMenu } from "@/context/MenuContext";
+import Link from "next/link";
 
 interface RecipeDetailsModalProps {
   dayOfTheWeek: DayOfTheWeek;
@@ -34,7 +35,14 @@ const RecipeDetailsModal = ({
   return (
     <Modal isSmall={false} isOpen={isModalOpen} closeModal={closeModal}>
       <div className="px-5 w-full">
-        <div className="mt-2 mb-4 text-2xl">{selectedRecipe?.name}</div>
+        <div className="mb-3">
+          <Link
+            href={`/dashboard/recipes/${selectedRecipe?._id}`}
+            className="text-2xl"
+          >
+            {selectedRecipe?.name}
+          </Link>
+        </div>
         <RecipeDetails
           isModal={true}
           closeModal={closeModal}

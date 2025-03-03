@@ -1,6 +1,6 @@
 "use client";
 
-import { useRecipes } from "@/context/RecipesContext";
+import { useFavoriteRecipes } from "@/context/FavoriteRecipesContext";
 import {
   addFavoriteRecipe,
   deleteFavoriteRecipe,
@@ -10,8 +10,10 @@ import { GoHeart } from "react-icons/go";
 import { GoHeartFill } from "react-icons/go";
 
 const FavoriteButton = ({ recipeId }: { recipeId: string | undefined }) => {
-  const { favoriteRecipes } = useRecipes();
+  const { favoriteRecipes } = useFavoriteRecipes();
   const [isFavorite, setIsFavorite] = useState(false);
+
+  console.log(favoriteRecipes);
 
   const handleFavorite = async () => {
     if (!recipeId) return;

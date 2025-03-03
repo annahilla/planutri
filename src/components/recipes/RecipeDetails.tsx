@@ -91,6 +91,7 @@ const RecipeDetails = ({
           <RecipeImage height="h-64 md:h-96" imageUrl={imageUrl} />
           {isEditMode && <EditRecipeImageButton setImageUrl={setImageUrl} />}
         </div>
+
         <div className="flex gap-2 my-6 items-center justify-center w-full">
           <RecipeServingsCard
             servings={servings}

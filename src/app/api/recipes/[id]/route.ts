@@ -8,9 +8,7 @@ export const GET = async (req: NextRequest, { params } : { params: Promise<{ id:
         await getUserId();
         await connect();
         const { id } = await params;
-        console.log("recipeId", id);
         const recipe = await Recipe.findById(id);
-        console.log("recipe", recipe);
         if (!recipe) {
             return NextResponse.json({ message: "Recipe not found" }, { status: 404 });
         }

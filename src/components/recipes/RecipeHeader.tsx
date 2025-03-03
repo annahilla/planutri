@@ -8,6 +8,7 @@ import { useRecipe } from "@/context/RecipeContext";
 import ConfirmModal from "../ui/modals/ConfirmModal";
 import useEditMode from "@/hooks/useEditMode";
 import { useRouter } from "next/navigation";
+import FavoriteButton from "../ui/buttons/FavoriteButton";
 
 const RecipeHeader = () => {
   const router = useRouter();
@@ -40,13 +41,14 @@ const RecipeHeader = () => {
         </button>
         <h2 className="text-2xl">{recipe.name}</h2>
       </div>
-      {!isEditMode && !recipe?.isPublic && (
-        <div>
+      <div className="flex gap-4">
+        {!isEditMode && !recipe?.isPublic && (
           <DashboardButton handleClick={openEditMode} icon={<CiEdit />}>
             Edit
           </DashboardButton>
-        </div>
-      )}
+        )}
+        <FavoriteButton recipeId={recipe._id} />
+      </div>
       <ConfirmModal
         isModalOpen={isModalOpen}
         setIsModalOpen={setIsModalOpen}
