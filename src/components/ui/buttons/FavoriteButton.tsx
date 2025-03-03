@@ -13,8 +13,6 @@ const FavoriteButton = ({ recipeId }: { recipeId: string | undefined }) => {
   const { favoriteRecipes } = useFavoriteRecipes();
   const [isFavorite, setIsFavorite] = useState(false);
 
-  console.log(favoriteRecipes);
-
   const handleFavorite = async () => {
     if (!recipeId) return;
 

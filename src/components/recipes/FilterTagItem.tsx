@@ -18,6 +18,7 @@ const FilterTagItem = ({
       className={`h-8 outline-none flex gap-2 py-1 justify-between items-center rounded-full text-sm transition-all ease-out duration-500  ${
         isActive ? "bg-lightBrown text-neutral-200 pl-3 pr-1" : "border px-3"
       }`}
+      type="button"
     >
       {children}
       {isActive && <IoIosClose onClick={closeTag} size={24} />}

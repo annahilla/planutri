@@ -1,4 +1,4 @@
-import { IngredientInterface } from "@/types/types";
+import { IngredientInterface, Meal } from "@/types/types";
 
 export const validateUserInput = (email: string, password: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -33,7 +33,7 @@ export const firebaseError = (error: string) => {
   }
 }
 
-export const validateCreateRecipeForm = (recipeName: string, ingredients: IngredientInterface[], servings: number | undefined) => {
+export const validateCreateRecipeForm = (recipeName: string, ingredients: IngredientInterface[], servings: number | undefined, meals: Meal[]) => {
       if (!recipeName.trim()) {
       return "Please enter a recipe name";
     }
@@ -52,6 +52,10 @@ export const validateCreateRecipeForm = (recipeName: string, ingredients: Ingred
           return `Please enter a valid quantity for ${ing.ingredient}`;
         }
       }
+    }
+
+    if(meals.length === 0) {
+      return "Please select at least one meal"
     }
 
     if(servings <= 0) {

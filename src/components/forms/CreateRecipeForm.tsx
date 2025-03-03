@@ -6,12 +6,13 @@ import ErrorMessage from "../ui/ErrorMessage";
 import IngredientDropdown from "../ui/IngredientDropdown";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { IngredientInterface } from "@/types/types";
+import { IngredientInterface, Meal } from "@/types/types";
 import { addRecipe } from "@/services/recipeService";
 import { validateCreateRecipeForm } from "@/utils/validation";
 import { fetchUnits } from "@/services/unitService";
 import { useQuery } from "@tanstack/react-query";
 import TextAreaResizable from "./TextAreaResizable";
+import MealTags from "../recipes/MealTags";
 
 const CreateRecipeForm = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const CreateRecipeForm = () => {
   const [description, setDescription] = useState("");
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
   const [servings, setServings] = useState("");
+  const [meals, setMeals] = useState<Meal[]>([]);
 
   const { data: units } = useQuery({
     queryKey: ["units"],
@@ -75,8 +77,10 @@ const CreateRecipeForm = () => {
     const validationError = validateCreateRecipeForm(
       recipeName,
       ingredients,
-      formattedServings
+      formattedServings,
+      meals
     );
+
     if (validationError) {
       setError(validationError);
       return;
@@ -95,16 +99,12 @@ const CreateRecipeForm = () => {
       ingredients: formattedIngredients,
       description,
       servings: formattedServings,
+      meals,
     };
 
     try {
       await addRecipe(newRecipe);
       router.push("/dashboard/recipes");
-      setSelectedIngredients([]);
-      setRecipeName("");
-      setDescription("");
-      setServings("");
-      setIngredients([]);
     } catch (error) {
       console.log(error);
     }
@@ -149,19 +149,27 @@ const CreateRecipeForm = () => {
           required
         />
       </div>
-      <div className="flex flex-col gap-1">
-        <label htmlFor="servings">
-          Servings <span className="text-red-600">*</span>
-        </label>
-        <input
-          className="border py-2 px-4 rounded outline-none w-full md:w-24"
-          name="servings"
-          id="servings"
-          type="number"
-          value={servings}
-          onChange={(event) => setServings(event.target.value)}
-          required
-        />
+      <div className="flex gap-20">
+        <div className="flex flex-col gap-1">
+          <label htmlFor="servings">
+            Servings <span className="text-red-600">*</span>
+          </label>
+          <input
+            className="border py-2 px-4 rounded outline-none w-full md:w-24"
+            name="servings"
+            id="servings"
+            type="number"
+            value={servings}
+            onChange={(event) => setServings(event.target.value)}
+            required
+          />
+        </div>
+        <div className="flex flex-col gap-1">
+          <label className="mb-1" htmlFor="servings">
+            Meals <span className="text-red-600">*</span>
+          </label>
+          <MealTags setMeals={setMeals} />
+        </div>
       </div>
 
       <div className="flex flex-col justify-between items-start gap-10 sm:flex-row">

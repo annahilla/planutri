@@ -8,6 +8,7 @@ import { useState } from "react";
 import FilterTags from "./FilterTags";
 import { useRecipes } from "@/context/RecipesContext";
 import SortingButton from "./SortingButton";
+import MealTags from "./MealTags";
 
 interface RecipeListProps {
   onSelect?: (recipe: RecipeInterface, servings: number) => void;
@@ -24,7 +25,13 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
     <div>
       <SearchInput search={searchRecipe} />
       <div className="flex gap-2 flex-wrap justify-between">
-        <FilterTags recipes={recipes} setFilteredRecipes={setFilteredRecipes} />
+        <div className="flex flex-wrap gap-2">
+          <FilterTags
+            recipes={recipes}
+            setFilteredRecipes={setFilteredRecipes}
+          />
+          <MealTags />
+        </div>
         <SortingButton
           recipes={recipes}
           setFilteredRecipes={setFilteredRecipes}
