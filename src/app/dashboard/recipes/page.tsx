@@ -5,9 +5,12 @@ import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiSquarePlus } from "react-icons/ci";
 import { fetchRecipes } from "@/services/recipeServiceServer";
 import DashboardHeader from "@/components/ui/DashboardHeader";
+import { fecthFavoriteRecipes } from "@/services/favoriteRecipesServiceServer";
+import { RecipesProvider } from "@/context/RecipesContext";
 
 const RecipesPage = async () => {
   const recipes = await fetchRecipes();
+  const favoriteRecipes = await fecthFavoriteRecipes();
 
   return (
     <div>
@@ -20,7 +23,12 @@ const RecipesPage = async () => {
         </Link>
       </DashboardHeader>
       {recipes.length > 0 ? (
-        <RecipesList recipes={recipes} />
+        <RecipesProvider
+          fetchedRecipes={recipes}
+          fetchedFavoriteRecipes={favoriteRecipes}
+        >
+          <RecipesList />
+        </RecipesProvider>
       ) : (
         <div className="my-4 text-neutral-600">
           You haven&apos;t created any recipe yet.{" "}

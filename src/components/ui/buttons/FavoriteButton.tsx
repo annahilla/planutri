@@ -1,15 +1,16 @@
 "use client";
 
+import { useRecipes } from "@/context/RecipesContext";
 import {
   addFavoriteRecipe,
   deleteFavoriteRecipe,
-  getFavoriteRecipes,
 } from "@/services/favoriteRecipeService";
 import { useEffect, useState } from "react";
 import { GoHeart } from "react-icons/go";
 import { GoHeartFill } from "react-icons/go";
 
 const FavoriteButton = ({ recipeId }: { recipeId: string | undefined }) => {
+  const { favoriteRecipes } = useRecipes();
   const [isFavorite, setIsFavorite] = useState(false);
 
   const handleFavorite = async () => {
@@ -29,10 +30,9 @@ const FavoriteButton = ({ recipeId }: { recipeId: string | undefined }) => {
   };
 
   const isAlreadyFavorited = async () => {
-    const favoritesList = await getFavoriteRecipes();
-    if (favoritesList !== undefined) {
-      const currentRecipe = favoritesList.find(
-        (favoriteRecipeId: string) => favoriteRecipeId === recipeId
+    if (favoriteRecipes !== undefined) {
+      const currentRecipe = favoriteRecipes.find(
+        (favoriteRecipe) => favoriteRecipe === recipeId
       );
 
       if (currentRecipe) {

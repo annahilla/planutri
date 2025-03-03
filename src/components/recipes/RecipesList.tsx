@@ -6,18 +6,15 @@ import SearchInput from "../ui/SearchInput";
 import useSearchRecipe from "@/hooks/useSearchRecipe";
 import { useState } from "react";
 import FilterTags from "./FilterTags";
+import { useRecipes } from "@/context/RecipesContext";
 
 interface RecipeListProps {
-  recipes: RecipeInterface[];
   onSelect?: (recipe: RecipeInterface, servings: number) => void;
   isMenu?: boolean;
 }
 
-const RecipesList = ({
-  recipes,
-  onSelect,
-  isMenu = false,
-}: RecipeListProps) => {
+const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
+  const { recipes } = useRecipes();
   const { filteredRecipes, setFilteredRecipes, searchRecipe } =
     useSearchRecipe(recipes);
   const [menuServings, setMenuServings] = useState(1);
