@@ -23,7 +23,13 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
     <div>
       <SearchInput search={searchRecipe} />
       <FilterTags recipes={recipes} setFilteredRecipes={setFilteredRecipes} />
-      <div className="grid grid-cols-1 gap-3 mt-4 items-center md:items-start md:w-full md:grid-cols-2 lg:gap-4 lg:grid-cols-3 xl:grid-cols-4">
+      <div
+        className={`grid grid-cols-1 gap-3 mt-4 items-center md:items-start md:w-full md:grid-cols-2 lg:gap-4  ${
+          isMenu
+            ? "lg:grid-cols-2 xl:grid-cols-3"
+            : "lg:grid-cols-3 xl:grid-cols-4"
+        }`}
+      >
         {filteredRecipes.map((recipe) => (
           <div
             className="w-full h-full"
