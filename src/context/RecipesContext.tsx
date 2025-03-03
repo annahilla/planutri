@@ -11,7 +11,7 @@ interface RecipeContextInterface {
 interface RecipeProviderInterface {
   children: ReactNode;
   fetchedRecipes: RecipeInterface[];
-  fetchedFavoriteRecipes: string[];
+  fetchedFavoriteRecipes?: string[];
 }
 
 const RecipesContext = createContext<RecipeContextInterface>({
@@ -29,7 +29,7 @@ export const RecipesProvider = ({
   fetchedFavoriteRecipes,
 }: RecipeProviderInterface) => {
   const recipes = fetchedRecipes;
-  const favoriteRecipes = fetchedFavoriteRecipes;
+  const favoriteRecipes = fetchedFavoriteRecipes || [];
 
   return (
     <RecipesContext.Provider

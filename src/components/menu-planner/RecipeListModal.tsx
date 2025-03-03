@@ -9,6 +9,7 @@ import {
   RecipeInterface,
 } from "@/types/types";
 import { addRecipeToMenu } from "@/services/menuService";
+import { RecipesProvider } from "@/context/RecipesContext";
 
 interface RecipeListModalProps {
   isModalOpen: boolean;
@@ -59,13 +60,14 @@ const RecipeListModal = ({
       <h3 className="text-lg md:text-xl">
         Choose a recipe for {selectedMeal} on {dayOfTheWeek}
       </h3>
-      <RecipesList
-        recipes={recipes}
-        isMenu
-        onSelect={(recipe, servings) =>
-          selectRecipe(recipe, selectedMeal!, servings)
-        }
-      />
+      <RecipesProvider fetchedRecipes={recipes}>
+        <RecipesList
+          isMenu
+          onSelect={(recipe, servings) =>
+            selectRecipe(recipe, selectedMeal!, servings)
+          }
+        />
+      </RecipesProvider>
     </Modal>
   );
 };
