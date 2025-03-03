@@ -1,14 +1,13 @@
 import { useState, useEffect } from "react";
 
 const useSidebarState = () => {
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("sidebar-collapsed") === "true";
-    }
-    return false;
-  });
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsCollapsed(localStorage.getItem("sidebar-collapsed") === "true");
+    }
+
     const handleStorageChange = () => {
       setIsCollapsed(localStorage.getItem("sidebar-collapsed") === "true");
     };

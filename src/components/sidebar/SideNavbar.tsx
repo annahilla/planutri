@@ -14,6 +14,7 @@ const SideNavbar = () => {
       className={`transition-all duration-300 ${
         isCollapsed ? "md:w-16" : "md:w-56"
       }`}
+      suppressHydrationWarning={true}
     >
       <nav
         className={`${
