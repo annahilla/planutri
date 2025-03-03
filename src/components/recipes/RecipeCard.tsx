@@ -12,6 +12,7 @@ import RecipeServingsCard from "./RecipeServingsCard";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/services/authService";
 import MadeByTag from "../ui/MadeByTag";
+import FavoriteButton from "../ui/buttons/FavoriteButton";
 
 const RecipeCard = ({
   recipe,
@@ -103,22 +104,25 @@ const RecipeCard = ({
               </div>
             )}
           </Link>
-          {!recipe.isPublic && (
-            <div className="flex gap-2 mt-5 text-sm items-center justify-end">
-              <button
-                className="bg-brown p-2 rounded-full text-white"
-                onClick={openRecipeEdit}
-              >
-                <CiEdit />
-              </button>
-              <button
-                className="bg-white border border-brown p-2 rounded-full text-brown"
-                onClick={openDeleteRecipe}
-              >
-                <CiTrash />
-              </button>
-            </div>
-          )}
+          <div className="flex justify-between items-center w-full mt-5">
+            <FavoriteButton recipeId={recipe._id} />
+            {!recipe.isPublic && (
+              <div className="flex gap-2 text-sm items-center">
+                <button
+                  className="bg-brown p-2 rounded-full text-white"
+                  onClick={openRecipeEdit}
+                >
+                  <CiEdit />
+                </button>
+                <button
+                  className="bg-white border border-brown p-2 rounded-full text-brown"
+                  onClick={openDeleteRecipe}
+                >
+                  <CiTrash />
+                </button>
+              </div>
+            )}
+          </div>
         </>
       ) : (
         <div className="flex flex-col justify-between h-full cursor-pointer hover:opacity-80">

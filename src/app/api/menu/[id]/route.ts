@@ -10,9 +10,7 @@ export const DELETE = async (req: NextRequest, context: { params: Promise<{ id: 
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
-
-        console.log("User id: ", userId);
-
+        
         await connect();
         const id = (await context.params).id;
 
