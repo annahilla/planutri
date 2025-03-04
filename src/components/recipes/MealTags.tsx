@@ -7,9 +7,11 @@ import { Meal } from "@/types/types";
 const MealTags = ({
   meals = [],
   setMeals,
+  setMealFilters,
 }: {
   meals?: Meal[];
   setMeals?: (meal: Meal[]) => void;
+  setMealFilters?: (filters: Meal[]) => void;
 }) => {
   const [activeFilters, setActiveFilters] = useState<Meal[]>([]);
 
@@ -24,8 +26,7 @@ const MealTags = ({
   };
 
   useEffect(() => {
-    setMeals?.(activeFilters);
-    console.log(activeFilters);
+    setMealFilters?.(activeFilters);
   }, [activeFilters]);
 
   const getSelectedResults = (meal: Meal) => {
@@ -39,7 +40,7 @@ const MealTags = ({
   }, []);
 
   return (
-    <div className="flex flex-wrap gap-2 items-center max-w-full">
+    <div className="flex gap-2 items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide">
       {["Breakfast", "Lunch", "Snack", "Dinner"].map((meal) => (
         <FilterTagItem
           key={meal}

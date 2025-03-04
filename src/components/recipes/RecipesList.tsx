@@ -4,11 +4,12 @@ import { RecipeInterface } from "@/types/types";
 import RecipeCard from "./RecipeCard";
 import SearchInput from "../ui/SearchInput";
 import useSearchRecipe from "@/hooks/useSearchRecipe";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import FilterTags from "./FilterTags";
 import { useRecipes } from "@/context/RecipesContext";
 import SortingButton from "./SortingButton";
 import MealTags from "./MealTags";
+import { getFavoriteRecipes } from "@/services/favoriteRecipeService";
 
 interface RecipeListProps {
   onSelect?: (recipe: RecipeInterface, servings: number) => void;
@@ -20,22 +21,72 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   const { filteredRecipes, setFilteredRecipes, searchRecipe } =
     useSearchRecipe(recipes);
   const [menuServings, setMenuServings] = useState(1);
+  const [mealFilters, setMealFilters] = useState<string[]>([]);
+  const [typeFilters, setTypeFilters] = useState<string[]>([]);
+  const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchFavoriteRecipes = async () => {
+      const favoriteIds = await getFavoriteRecipes();
+      setFavoriteRecipeIds(favoriteIds);
+    };
+
+    fetchFavoriteRecipes();
+  }, [recipes]);
+
+  const filterRecipes = () => {
+    let filtered = [...recipes];
+
+    if (typeFilters.includes("public")) {
+      filtered = filtered.filter((recipe) => recipe.isPublic);
+    } else if (typeFilters.includes("owned")) {
+      filtered = filtered.filter((recipe) => !recipe.isPublic);
+    }
+
+    if (typeFilters.includes("favorites")) {
+      filtered = filtered.filter(
+        (recipe) => recipe._id && favoriteRecipeIds.includes(recipe._id)
+      );
+    }
+
+    if (mealFilters.length > 0) {
+      filtered = filtered.filter((recipe) =>
+        recipe.meals?.some((meal) => mealFilters.includes(meal))
+      );
+    }
+
+    setFilteredRecipes(filtered);
+  };
+
+  useEffect(() => {
+    const fetchFavoriteRecipes = async () => {
+      const favoriteIds = await getFavoriteRecipes();
+      setFavoriteRecipeIds(favoriteIds);
+    };
+
+    fetchFavoriteRecipes();
+  }, [recipes]);
+
+  useEffect(() => {
+    if (favoriteRecipeIds.length > 0) {
+      filterRecipes();
+    }
+  }, [mealFilters, typeFilters, recipes, favoriteRecipeIds]);
 
   return (
     <div>
       <SearchInput search={searchRecipe} />
-      <div className="flex gap-2 flex-wrap justify-between">
-        <div className="flex flex-wrap gap-2">
-          <FilterTags
+      <div className="flex gap-2 flex-wrap overflow-x-auto snap-x snap-mandatory invisible-scrollbar">
+        <div className="flex snap-start gap-2 md:justify-between md:w-full">
+          <div className="flex gap-2">
+            <FilterTags setTypeFilters={setTypeFilters} />
+            <MealTags setMealFilters={setMealFilters} />
+          </div>
+          <SortingButton
             recipes={recipes}
             setFilteredRecipes={setFilteredRecipes}
           />
-          <MealTags />
         </div>
-        <SortingButton
-          recipes={recipes}
-          setFilteredRecipes={setFilteredRecipes}
-        />
       </div>
       <div
         className={`grid grid-cols-1 gap-3 mt-4 items-center md:items-start md:w-full md:grid-cols-2 lg:gap-4  ${

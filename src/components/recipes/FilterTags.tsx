@@ -1,98 +1,49 @@
-import { RecipeInterface } from "@/types/types";
-import FilterTagItem from "./FilterTagItem";
 import { useEffect, useState } from "react";
-import { getFavoriteRecipes } from "@/services/favoriteRecipeService";
+import FilterTagItem from "./FilterTagItem";
 
 const FilterTags = ({
-  recipes,
-  setFilteredRecipes,
+  setTypeFilters,
 }: {
-  recipes: RecipeInterface[];
-  setFilteredRecipes: (recipes: RecipeInterface[]) => void;
+  setTypeFilters: (filters: string[]) => void;
 }) => {
-  const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
   const [activeFilters, setActiveFilters] = useState<string[]>([]);
 
-  useEffect(() => {
-    const fetchFavoriteRecipes = async () => {
-      const favoriteIds = await getFavoriteRecipes();
-      setFavoriteRecipeIds(favoriteIds);
-    };
+  const toggleFilter = (filter: string) => {
+    setActiveFilters((prevFilters) => {
+      let updatedFilters = [...prevFilters];
 
-    fetchFavoriteRecipes();
-  }, [recipes]);
-
-  const applyFilter = (filter: string) => {
-    let updatedFilters = [...activeFilters];
-
-    if (filter === "public" || filter === "owned") {
-      updatedFilters = updatedFilters.filter(
-        (currentFilter) =>
-          currentFilter !== "public" && currentFilter !== "owned"
-      );
-      updatedFilters.push(filter);
-    } else {
-      if (updatedFilters.includes("favorites")) {
-        updatedFilters = updatedFilters.filter(
-          (currentFilter) => currentFilter !== "favorites"
-        );
+      if (filter === "public") {
+        updatedFilters = updatedFilters.filter((f) => f !== "owned");
+      } else if (filter === "owned") {
+        updatedFilters = updatedFilters.filter((f) => f !== "public");
       }
-      updatedFilters.push(filter);
-    }
 
-    setActiveFilters(updatedFilters);
-    filterRecipes(updatedFilters);
+      if (updatedFilters.includes(filter)) {
+        updatedFilters = updatedFilters.filter((f) => f !== filter);
+      } else {
+        updatedFilters.push(filter);
+      }
+
+      return updatedFilters;
+    });
   };
 
-  const filterRecipes = (filters: string[]) => {
-    let filteredRecipes = [...recipes];
-
-    if (filters.includes("public")) {
-      filteredRecipes = filteredRecipes.filter((recipe) => recipe.isPublic);
-    } else if (filters.includes("owned")) {
-      filteredRecipes = filteredRecipes.filter((recipe) => !recipe.isPublic);
-    }
-
-    if (filters.includes("favorites")) {
-      filteredRecipes = filteredRecipes.filter(
-        (recipe) => recipe._id && favoriteRecipeIds.includes(recipe._id)
-      );
-    }
-
-    setFilteredRecipes(filteredRecipes);
-  };
-
-  const closeFilter = (activeFilter: string) => {
-    const updatedFilters = activeFilters.filter(
-      (filter) => filter !== activeFilter
-    );
-    setActiveFilters(updatedFilters);
-    filterRecipes(updatedFilters);
-  };
+  useEffect(() => {
+    setTypeFilters(activeFilters);
+  }, [activeFilters]);
 
   return (
-    <div className="flex gap-2 items-center max-w-full">
-      <FilterTagItem
-        handleFilter={() => applyFilter("public")}
-        closeTag={() => closeFilter("public")}
-        isActive={activeFilters.includes("public")}
-      >
-        Public
-      </FilterTagItem>
-      <FilterTagItem
-        handleFilter={() => applyFilter("owned")}
-        closeTag={() => closeFilter("owned")}
-        isActive={activeFilters.includes("owned")}
-      >
-        Owned
-      </FilterTagItem>
-      <FilterTagItem
-        handleFilter={() => applyFilter("favorites")}
-        closeTag={() => closeFilter("favorites")}
-        isActive={activeFilters.includes("favorites")}
-      >
-        Favorites
-      </FilterTagItem>
+    <div className="flex gap-2 items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+      {["public", "owned", "favorites"].map((filter) => (
+        <FilterTagItem
+          key={filter}
+          handleFilter={() => toggleFilter(filter)}
+          closeTag={() => toggleFilter(filter)}
+          isActive={activeFilters.includes(filter)}
+        >
+          {filter.charAt(0).toUpperCase() + filter.slice(1)}
+        </FilterTagItem>
+      ))}
     </div>
   );
 };
