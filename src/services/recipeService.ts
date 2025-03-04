@@ -12,6 +12,8 @@ export const addRecipe = async (recipe: RecipeInterface) => {
       body: JSON.stringify(recipe),
     });
 
+    console.log(response);
+
     if (!response.ok) {
       toast.error("There was an error creating the recipe");
       throw new Error("Error creating recipe");

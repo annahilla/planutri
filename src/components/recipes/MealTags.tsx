@@ -8,10 +8,12 @@ const MealTags = ({
   meals = [],
   setMeals,
   setMealFilters,
+  isSnap = true,
 }: {
   meals?: Meal[];
   setMeals?: (meal: Meal[]) => void;
   setMealFilters?: (filters: Meal[]) => void;
+  isSnap?: boolean;
 }) => {
   const [activeFilters, setActiveFilters] = useState<Meal[]>([]);
 
@@ -27,6 +29,8 @@ const MealTags = ({
 
   useEffect(() => {
     setMealFilters?.(activeFilters);
+    setMeals?.(activeFilters);
+    console.log("Meals from tags", activeFilters);
   }, [activeFilters]);
 
   const getSelectedResults = (meal: Meal) => {
@@ -40,7 +44,13 @@ const MealTags = ({
   }, []);
 
   return (
-    <div className="flex gap-2 items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide">
+    <div
+      className={`${
+        isSnap
+          ? "overflow-x-auto snap-x snap-mandatory scrollbar-invisible"
+          : "flex-wrap"
+      } flex gap-2 items-center`}
+    >
       {["Breakfast", "Lunch", "Snack", "Dinner"].map((meal) => (
         <FilterTagItem
           key={meal}

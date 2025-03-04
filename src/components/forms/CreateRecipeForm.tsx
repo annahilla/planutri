@@ -102,6 +102,8 @@ const CreateRecipeForm = () => {
       meals,
     };
 
+    console.log(newRecipe);
+
     try {
       await addRecipe(newRecipe);
       router.push("/dashboard/recipes");
@@ -129,6 +131,10 @@ const CreateRecipeForm = () => {
     setIsDropdownOpen(false);
   }, [selectedIngredients]);
 
+  useEffect(() => {
+    console.log("Meals from form", meals);
+  }, [meals]);
+
   return (
     <form
       onSubmit={handleCreateRecipe}
@@ -149,7 +155,7 @@ const CreateRecipeForm = () => {
           required
         />
       </div>
-      <div className="flex gap-20">
+      <div className="flex flex-col gap-4 md:gap-8 md:flex-row lg:gap-20">
         <div className="flex flex-col gap-1">
           <label htmlFor="servings">
             Servings <span className="text-red-600">*</span>
@@ -164,11 +170,11 @@ const CreateRecipeForm = () => {
             required
           />
         </div>
-        <div className="flex flex-col gap-1">
-          <label className="mb-1" htmlFor="servings">
+        <div className="flex flex-col gap-1 invisible-scrollbar">
+          <label className="mb-1">
             Meals <span className="text-red-600">*</span>
           </label>
-          <MealTags setMeals={setMeals} />
+          <MealTags isSnap={false} setMeals={setMeals} />
         </div>
       </div>
 

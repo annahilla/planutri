@@ -183,6 +183,12 @@ describe("Create Recipe Component - User Flow Tests", () => {
     const servingsInput = screen.getByLabelText(/Servings */i);
     fireEvent.change(servingsInput, { target: { value: "4" } });
 
+    const mealInput = await screen.findByText(/Breakfast/i);
+    fireEvent.click(mealInput);
+    fireEvent.blur(mealInput);
+
+    console.log(document.body.innerHTML);
+
     const ingredientInput = screen.getByLabelText(/Ingredients/i);
     fireEvent.change(ingredientInput, { target: { value: "Flour" } });
 
@@ -200,6 +206,7 @@ describe("Create Recipe Component - User Flow Tests", () => {
     fireEvent.click(submitButton);
 
     await waitFor(() => {
+      expect(mealInput).toHaveClass("bg-lightBrown");
       expect(screen.queryByRole("error")).not.toBeInTheDocument();
       expect(fetch).toHaveBeenCalledTimes(1);
     });
