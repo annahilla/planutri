@@ -1,9 +1,10 @@
 export interface AuthUser  {
   name?:string | null;
   email: string | null;
-  token: string;
-  joined?:string;
+  token?: string;
+  createdAt?: string;
   picture?: string;
+  username?: string;
 }
 
 export interface User {

@@ -45,6 +45,7 @@ const AuthForm = ({ formType }: { formType: "Sign Up" | "Log In" }) => {
         await loginUser(email, password);
       } else {
         await signUpUser(email, password);
+        await loginUser(email, password);
       }
       router.push("/dashboard/menu");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

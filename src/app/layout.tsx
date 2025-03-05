@@ -3,14 +3,8 @@ import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ToastContainer } from "react-toastify";
 import TanstackProvider from "@/components/providers/TanstackProvider";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import { fetchIngredients } from "@/services/ingredientService";
-import { fetchUnits } from "@/services/unitService";
-import { getUser } from "@/services/authService";
+import { getUser } from "@/services/userService";
+import { UserProvider } from "@/context/UserContext";
 
 const poppins = Poppins({
   weight: ["100", "300", "400"],
@@ -28,32 +22,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: ["ingredients"],
-    queryFn: fetchIngredients,
-  });
-
-  await queryClient.prefetchQuery({
-    queryKey: ["units"],
-    queryFn: fetchUnits,
-  });
-
-  await queryClient.prefetchQuery({
-    queryKey: ["user"],
-    queryFn: getUser,
-  });
-
-  const dehydratedState = dehydrate(queryClient);
+  const user = await getUser();
 
   return (
     <html lang="en">
       <body className={`${poppins.variable} antialiased`}>
         <TanstackProvider>
-          <HydrationBoundary state={dehydratedState}>
-            {children}
-          </HydrationBoundary>
+          <UserProvider fetchedUser={user}>{children}</UserProvider>
         </TanstackProvider>
         <ToastContainer />
       </body>

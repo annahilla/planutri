@@ -23,7 +23,6 @@ export const validateUserInput = (email: string, password: string) => {
 };
 
 export const firebaseError = (error: string) => {
-  console.log(error);
   if (error === "Firebase: Error (auth/invalid-credential).") {
     return "Invalid email or password.";
   } else if (error === "Firebase: Error (auth/email-already-in-use).") {

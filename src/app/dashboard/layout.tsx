@@ -9,7 +9,7 @@ export default async function DashboardLayout({
     <main className="flex flex-col min-h-screen bg-white md:flex-row">
       <SideNavbar />
       <div className="flex-1 m-6 h-auto overflow-hidden lg:mx-10">
-        <div className="mb-12 h-auto md:h-full md:w-full md:mb-5">
+        <div className="mb-16 h-auto md:h-full md:w-full md:mb-5">
           {children}
         </div>
       </div>

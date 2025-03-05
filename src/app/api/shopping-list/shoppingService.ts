@@ -129,8 +129,6 @@ async updateShoppingList(userId: string, ingredientName: string, checked: boolea
         });
     });
 
-    console.log("INGREDIENT LIST", ingredientList);
-
     return ingredientList.sort((a, b) => a.ingredient.localeCompare(b.ingredient));
     }
 

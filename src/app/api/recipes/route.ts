@@ -43,8 +43,6 @@ export const POST = async (req: NextRequest) => {
             imageUrl
         });
 
-        console.log(newRecipe);
-
         await newRecipe.save();
         return new NextResponse(JSON.stringify(newRecipe), { status: 201 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

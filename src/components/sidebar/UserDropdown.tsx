@@ -1,9 +1,9 @@
 "use client";
 
+import { useUser } from "@/context/UserContext";
 import useClickOutside from "@/hooks/useClickOutside";
 import useSidebarState from "@/hooks/useSidebarState";
-import { getUser, logoutUser } from "@/services/authService";
-import { useQuery } from "@tanstack/react-query";
+import { logoutUser } from "@/services/authService";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -18,11 +18,7 @@ const UserDropdown = () => {
   const dropdownRef = useRef<HTMLDivElement>(null!);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useClickOutside(dropdownRef, () => setIsDropdownOpen(false));
-
-  const { data: user } = useQuery({
-    queryKey: ["user"],
-    queryFn: getUser,
-  });
+  const { user } = useUser();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -85,11 +81,7 @@ const UserDropdown = () => {
           <div className="flex flex-1 flex-col gap-1 justify-start hidden md:block">
             <div className="text-sm">
               {user ? (
-                user.name ? (
-                  user.name
-                ) : (
-                  user.email?.split("@")[0]
-                )
+                user.username
               ) : (
                 <Skeleton baseColor="#635F53" highlightColor="#76736B" />
               )}

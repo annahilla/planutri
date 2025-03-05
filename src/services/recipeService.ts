@@ -103,3 +103,24 @@ export const uploadRecipeImage = async (formData: FormData) => {
       return null;
     } 
 }
+
+export const getRecipeUsername = async (recipeId: string | unknown) => {
+  if(!recipeId) {return}
+    try {
+        const response = await fetch(`/api/recipes/${recipeId}/username`,{
+          method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          credentials: "include"
+        });
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error("Failed to fetch username");
+        }
+        return data.username;
+    } catch (error) {
+        console.error("Error fetching username:", error);
+    }
+};

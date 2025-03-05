@@ -5,12 +5,10 @@ import Link from "next/link";
 import RecipeImage from "./RecipeImage";
 import { useEffect, useState } from "react";
 import ConfirmModal from "../ui/modals/ConfirmModal";
-import { deleteRecipe } from "@/services/recipeService";
+import { deleteRecipe, getRecipeUsername } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import RecipeServingsCard from "./RecipeServingsCard";
-import { useQuery } from "@tanstack/react-query";
-import { getUser } from "@/services/authService";
 import MadeByTag from "../ui/MadeByTag";
 import FavoriteButton from "../ui/buttons/FavoriteButton";
 
@@ -32,6 +30,17 @@ const RecipeCard = ({
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getUsername = async () => {
+      const username = await getRecipeUsername(recipe._id);
+      setUsername(username);
+      setLoading(false);
+    };
+    getUsername();
+  }, []);
 
   const ingredientsList = recipe.ingredients
     .map((ingredient) => ingredient.ingredient)
@@ -44,11 +53,6 @@ const RecipeCard = ({
   useEffect(() => {
     setMenuServings(servings);
   }, [servings]);
-
-  const { data: user, isLoading } = useQuery({
-    queryKey: ["user"],
-    queryFn: getUser,
-  });
 
   const handleDeleteRecipe = async () => {
     if (recipe && recipe._id) {
@@ -81,14 +85,7 @@ const RecipeCard = ({
           >
             <RecipeImage imageUrl={recipe.imageUrl} height="h-56" />
             <h3 className="font-bold">{recipe.name}</h3>
-            {recipe.isPublic ? (
-              <MadeByTag name="planutri" />
-            ) : (
-              <MadeByTag
-                name={user?.email?.split("@")[0]}
-                isLoading={isLoading}
-              />
-            )}
+            <MadeByTag isLoading={loading} name={username || "unknown"} />
             <div className="flex flex-col gap-1">
               <p className="text-sm text-neutral-800">Ingredients: </p>
               <p className="text-sm text-neutral-500 line-clamp-2">

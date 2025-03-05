@@ -30,7 +30,6 @@ const MealTags = ({
   useEffect(() => {
     setMealFilters?.(activeFilters);
     setMeals?.(activeFilters);
-    console.log("Meals from tags", activeFilters);
   }, [activeFilters]);
 
   const getSelectedResults = (meal: Meal) => {

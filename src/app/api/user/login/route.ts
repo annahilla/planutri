@@ -1,15 +1,39 @@
 import admin from "@/lib/firebase/firebaseAdmin";
+import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from 'next/headers';
+import { User } from "@/database/models/user";
+import { usernameService } from "../usernameService";
 
 export const POST = async (req: NextRequest) => {
     try{
         const { idToken } = await req.json();
+        await connect();
+
         if (!idToken) {
             return new NextResponse(JSON.stringify({error: "ID token required"}), { status: 400 });
         }
 
-        await admin.auth().verifyIdToken(idToken);
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const userId = decodedToken.uid;
+
+        let user = await User.findOne({ userId });
+
+        if (!user) {
+            const userService = new usernameService();
+            const username = await userService.generateUsername();
+            user = new User({
+                firebaseUid: idToken,
+                name: decodedToken.name,
+                email: decodedToken.email,
+                username,
+                picture: decodedToken.picture,
+                userId,
+            });
+
+            await user.save();
+        }
+
         const expiresIn = 60 * 60 * 24 * 7 * 1000;
         const sessionCookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
 
