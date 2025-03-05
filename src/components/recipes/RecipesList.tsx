@@ -4,12 +4,13 @@ import { RecipeInterface } from "@/types/types";
 import RecipeCard from "./RecipeCard";
 import SearchInput from "../ui/SearchInput";
 import useSearchRecipe from "@/hooks/useSearchRecipe";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FilterTags from "./FilterTags";
 import { useRecipes } from "@/context/RecipesContext";
 import SortingButton from "./SortingButton";
 import MealTags from "./MealTags";
 import { getFavoriteRecipes } from "@/services/favoriteRecipeService";
+import { IoIosArrowForward } from "react-icons/io";
 
 interface RecipeListProps {
   onSelect?: (recipe: RecipeInterface, servings: number) => void;
@@ -24,6 +25,8 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   const [mealFilters, setMealFilters] = useState<string[]>([]);
   const [typeFilters, setTypeFilters] = useState<string[]>([]);
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const filterContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchFavoriteRecipes = async () => {
@@ -59,6 +62,22 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   };
 
   useEffect(() => {
+    const checkOverflow = () => {
+      const container = filterContainerRef.current;
+      if (container) {
+        setIsOverflowing(container.scrollWidth > container.clientWidth);
+      }
+    };
+
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+
+    return () => {
+      window.removeEventListener("resize", checkOverflow);
+    };
+  }, []);
+
+  useEffect(() => {
     const fetchFavoriteRecipes = async () => {
       const favoriteIds = await getFavoriteRecipes();
       setFavoriteRecipeIds(favoriteIds);
@@ -76,8 +95,11 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   return (
     <div>
       <SearchInput search={searchRecipe} />
-      <div className="flex justify-between gap-2">
-        <div className="flex gap-2 flex-wrap overflow-x-auto snap-x snap-mandatory invisible-scrollbar">
+      <div className="flex justify-between items-center gap-2">
+        <div
+          ref={filterContainerRef}
+          className="flex gap-2 flex-wrap overflow-x-auto snap-x snap-mandatory invisible-scrollbar"
+        >
           <div className="flex snap-start gap-2 md:justify-between md:w-full">
             <div className="flex gap-2">
               <FilterTags setTypeFilters={setTypeFilters} />
@@ -85,6 +107,11 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
             </div>
           </div>
         </div>
+        {isOverflowing && (
+          <div className="text-neutral-400">
+            <IoIosArrowForward />
+          </div>
+        )}
         <div>
           <SortingButton
             recipes={recipes}
