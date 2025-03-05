@@ -21,6 +21,7 @@ import { Meal, RecipeInterface } from "@/types/types";
 import RecipeServingsCard from "./RecipeServingsCard";
 import FilterTagItem from "./FilterTagItem";
 import MealTags from "./MealTags";
+import { ToggleSwitch } from "../ui/ToggleSwitch";
 
 interface RecipeDetailsProps {
   recipe: RecipeInterface;
@@ -56,6 +57,7 @@ const RecipeDetails = ({
   );
   const [meals, setMeals] = useState<Meal[]>([]);
   const [imageUrl, setImageUrl] = useState(recipe.imageUrl);
+  const [isPublic, setIsPublic] = useState(recipe.isPublic || false);
 
   const { saveRecipe } = useSaveRecipe(
     recipe._id,
@@ -64,6 +66,7 @@ const RecipeDetails = ({
     ingredients,
     servings,
     meals,
+    isPublic,
     deleteIngredient,
     isModal,
     setError,
@@ -109,9 +112,18 @@ const RecipeDetails = ({
           />
         </div>
 
-        <div className="m-auto">
+        <div className="flex items-center justify-center w-full">
           {isEditMode ? (
-            <MealTags meals={recipe.meals} setMeals={setMeals} />
+            <div className="flex items-center justify-between w-full">
+              <MealTags meals={recipe.meals} setMeals={setMeals} />
+              <div className="flex gap-2">
+                <ToggleSwitch
+                  isOn={isPublic}
+                  setIsOn={() => setIsPublic(!isPublic)}
+                />
+                <p>Public</p>
+              </div>
+            </div>
           ) : (
             <div className="flex flex-wrap items-center gap-2">
               {recipe.meals &&

@@ -11,6 +11,7 @@ const useSaveRecipe = (
   ingredients: IngredientInterface[],
   servings: number,
   meals: Meal[],
+  isPublic: boolean,
   deleteIngredient: (id: string) => void,
   isModal: boolean,
   setError: (value: string) => void,
@@ -46,7 +47,8 @@ const useSaveRecipe = (
       ingredients: ingredientsForDB,
       servings: servings,
       description: description,
-      meals: meals
+      meals: meals,
+      isPublic,
     };
 
     try {
