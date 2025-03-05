@@ -37,6 +37,7 @@ export const POST = async (req: NextRequest) => {
         const username = await userService.generateUsername();
 
         const newUser = new User({
+            firebaseUid: idToken,
             name,
             email,
             username,
@@ -59,11 +60,17 @@ export const PUT = async (req: NextRequest) => {
 
         const { name, username, picture } = await req.json();
 
-        if (!name || !username) {
-            return new NextResponse("Required fields are missing", { status: 400 });
+        if (!username) {
+            return NextResponse.json({message: "Required fields are missing"}, { status: 400 });
         }
 
         const cleanedUsername = username.replace(/\s+/g, '');
+
+        const existingUser = await User.findOne({ username: cleanedUsername });
+
+        if (existingUser && existingUser.userId !== userId) {
+            return NextResponse.json({ message: "Username already taken" }, { status: 409 });
+        }
 
         const updatedUser = await User.findOneAndUpdate({userId}, {
             name,

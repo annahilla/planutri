@@ -33,15 +33,24 @@ const UserInfo = () => {
 
     const cleanedUsername = username.replace(/\s+/g, "");
 
-    await updateUser({ name: name || "", username: cleanedUsername });
-    updateUserInfo({
-      name: name || "",
-      username: cleanedUsername,
-      email: user.email,
-    });
-    setIsEditableMode(false);
-    setName(name);
-    setUsername(cleanedUsername);
+    try {
+      await updateUser({ name: name || "", username: cleanedUsername });
+      updateUserInfo({
+        name: name || "",
+        username: cleanedUsername,
+        email: user.email,
+      });
+      setIsEditableMode(false);
+      setName(name);
+      setUsername(cleanedUsername);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error.message === "Username already taken") {
+        setError("This username is already taken.");
+      } else {
+        setError("There was an error updating your profile.");
+      }
+    }
   };
 
   useEffect(() => {

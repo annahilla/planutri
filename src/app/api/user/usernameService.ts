@@ -1,15 +1,28 @@
 import connect from "@/database/db";
 import Adjective from "@/database/models/adjectives";
 import Ingredient from "@/database/models/ingredients";
+import { User } from "@/database/models/user";
 
 export class usernameService {
-    async generateUsername() {
+    async generateUsername(): Promise<string> {
         await connect(); 
 
-        const ingredient = await this.getIngredient();
-        const adjective = await this.getAdjective();
+        let username = "";
+        let isUnique = false;
 
-        const username = `${adjective}${ingredient}`;
+        while (!isUnique) {
+            const ingredient = await this.getIngredient();
+            const adjective = await this.getAdjective();
+
+            username = `${adjective}${ingredient}`;
+
+            const existingUser = await User.findOne({ username });
+
+            if (!existingUser) {
+                isUnique = true;
+            }
+        }
+
         return username;
     }
 

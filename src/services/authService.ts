@@ -104,8 +104,8 @@ export async function updateUser(user: {name: string, username: string}) {
         });
     
         if (!response.ok) {
-          toast.error("There was an error updating user");
-          throw new Error("Error updating user");
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Error updating user");
         }
     
         const updatedRecipe = await response.json();
