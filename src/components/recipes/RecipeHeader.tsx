@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import FavoriteButton from "../ui/buttons/FavoriteButton";
 
 const RecipeHeader = () => {
+  const { isOwnRecipe } = useRecipe();
   const router = useRouter();
   const { recipe, setDiscardChanges } = useRecipe();
   const { isEditMode, openEditMode, closeEditMode } = useEditMode(recipe._id);
@@ -42,7 +43,7 @@ const RecipeHeader = () => {
         <h2 className="text-2xl">{recipe.name}</h2>
       </div>
       <div className="flex gap-4">
-        {!isEditMode && !recipe?.isPublic && (
+        {!isEditMode && isOwnRecipe && (
           <DashboardButton handleClick={openEditMode} icon={<CiEdit />}>
             Edit
           </DashboardButton>

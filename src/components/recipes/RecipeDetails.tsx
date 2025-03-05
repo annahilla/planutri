@@ -37,9 +37,9 @@ const RecipeDetails = ({
   clearRecipe,
   menuServings,
 }: RecipeDetailsProps) => {
+  const { isOwnRecipe } = useRecipe();
   const router = useRouter();
   const [error, setError] = useState<string>("");
-
   const { discardChanges } = useRecipe();
   const { isEditMode } = useEditMode(recipe._id);
   const { ingredients, addIngredientInput, deleteIngredient, setIngredients } =
@@ -83,7 +83,7 @@ const RecipeDetails = ({
     }
   }, [discardChanges, recipe]);
 
-  if (recipe && isEditMode && recipe.isPublic) {
+  if (recipe && isEditMode && !isOwnRecipe) {
     router.replace(window.location.pathname);
     return null;
   }

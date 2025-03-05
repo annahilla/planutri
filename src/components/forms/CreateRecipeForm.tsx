@@ -13,6 +13,7 @@ import { fetchUnits } from "@/services/unitService";
 import { useQuery } from "@tanstack/react-query";
 import TextAreaResizable from "./TextAreaResizable";
 import MealTags from "../recipes/MealTags";
+import { ToggleSwitch } from "../ui/ToggleSwitch";
 
 const CreateRecipeForm = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const CreateRecipeForm = () => {
   const [ingredients, setIngredients] = useState<IngredientInterface[]>([]);
   const [servings, setServings] = useState("");
   const [meals, setMeals] = useState<Meal[]>([]);
+  const [isPublic, setIsPublic] = useState(false);
 
   const { data: units } = useQuery({
     queryKey: ["units"],
@@ -100,9 +102,8 @@ const CreateRecipeForm = () => {
       description,
       servings: formattedServings,
       meals,
+      isPublic,
     };
-
-    console.log(newRecipe);
 
     try {
       await addRecipe(newRecipe);
@@ -155,7 +156,7 @@ const CreateRecipeForm = () => {
           required
         />
       </div>
-      <div className="flex flex-col gap-4 md:gap-8 md:flex-row lg:gap-20">
+      <div className="flex flex-col gap-4 md:gap-8 md:flex-row md:items-center lg:gap-20">
         <div className="flex flex-col gap-1">
           <label htmlFor="servings">
             Servings <span className="text-red-600">*</span>
@@ -176,6 +177,16 @@ const CreateRecipeForm = () => {
           </label>
           <MealTags isSnap={false} setMeals={setMeals} />
         </div>
+      </div>
+
+      <div className="flex mt-2 gap-1">
+        <ToggleSwitch isOn={isPublic} setIsOn={setIsPublic} />
+        <span className="ms-3 text-md font-medium text-gray-900 dark:text-gray-300">
+          Public recipe
+          <span className="text-xs mx-3 text-neutral-500">
+            - If you mark a recipe as public, other users will see your recipe
+          </span>
+        </span>
       </div>
 
       <div className="flex flex-col justify-between items-start gap-10 sm:flex-row">

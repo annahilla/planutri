@@ -11,6 +11,7 @@ import { CiEdit, CiTrash } from "react-icons/ci";
 import RecipeServingsCard from "./RecipeServingsCard";
 import MadeByTag from "../ui/MadeByTag";
 import FavoriteButton from "../ui/buttons/FavoriteButton";
+import { useUser } from "@/context/UserContext";
 
 const RecipeCard = ({
   recipe,
@@ -25,6 +26,7 @@ const RecipeCard = ({
   setMenuServings: (value: number) => void;
   setRecipes: (recipes: RecipeInterface[]) => void;
 }) => {
+  const { user } = useUser();
   const [servings, setServings] = useState(
     recipe.servings ? recipe.servings : 1
   );
@@ -32,6 +34,7 @@ const RecipeCard = ({
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(true);
+  const isOwnRecipe = recipe.userId === user.userId;
 
   useEffect(() => {
     const getUsername = async () => {
@@ -85,7 +88,9 @@ const RecipeCard = ({
           >
             <RecipeImage imageUrl={recipe.imageUrl} height="h-56" />
             <h3 className="font-bold">{recipe.name}</h3>
-            <MadeByTag isLoading={loading} name={username || "unknown"} />
+            {recipe.isPublic && (
+              <MadeByTag isLoading={loading} name={username || "unknown"} />
+            )}
             <div className="flex flex-col gap-1">
               <p className="text-sm text-neutral-800">Ingredients: </p>
               <p className="text-sm text-neutral-500 line-clamp-2">
@@ -103,7 +108,7 @@ const RecipeCard = ({
           </Link>
           <div className="flex justify-between items-center w-full mt-5">
             <FavoriteButton recipeId={recipe._id} />
-            {!recipe.isPublic && (
+            {isOwnRecipe && (
               <div className="flex gap-2 text-sm items-center">
                 <button
                   className="bg-brown p-2 rounded-full text-white"

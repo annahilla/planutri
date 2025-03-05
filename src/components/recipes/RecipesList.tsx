@@ -76,12 +76,16 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   return (
     <div>
       <SearchInput search={searchRecipe} />
-      <div className="flex gap-2 flex-wrap overflow-x-auto snap-x snap-mandatory invisible-scrollbar">
-        <div className="flex snap-start gap-2 md:justify-between md:w-full">
-          <div className="flex gap-2">
-            <FilterTags setTypeFilters={setTypeFilters} />
-            <MealTags setMealFilters={setMealFilters} />
+      <div className="flex justify-between gap-2">
+        <div className="flex gap-2 flex-wrap overflow-x-auto snap-x snap-mandatory invisible-scrollbar">
+          <div className="flex snap-start gap-2 md:justify-between md:w-full">
+            <div className="flex gap-2">
+              <FilterTags setTypeFilters={setTypeFilters} />
+              <MealTags setMealFilters={setMealFilters} />
+            </div>
           </div>
+        </div>
+        <div>
           <SortingButton
             recipes={recipes}
             setFilteredRecipes={setFilteredRecipes}

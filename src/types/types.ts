@@ -5,6 +5,7 @@ export interface AuthUser  {
   createdAt?: string;
   picture?: string;
   username?: string;
+  userId?: string;
 }
 
 export interface User {
@@ -29,7 +30,8 @@ export interface RecipeInterface {
   isPublic?: boolean,
   servings?: number,
   createdAt?: number,
-  meals?: Meal[]
+  meals?: Meal[],
+  userId?: string,
 }
 
 export type DayOfTheWeek =
