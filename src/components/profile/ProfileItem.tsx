@@ -60,7 +60,7 @@ const ProfileItem = ({
     <div className="w-full h-5 flex gap-3 justify-between items-center group">
       <div className="w-full h-full">
         <div className="flex gap-2 items-center w-full">
-          <p className="font-bold">{item}:</p>
+          <p className="font-bold text-neutral-800">{item}:</p>
           {renderContent()}
         </div>
       </div>

@@ -17,7 +17,7 @@ const FilterTagItem = ({
   return (
     <button
       onClick={isActive ? closeTag : handleFilter}
-      className={`h-8 outline-none flex gap-2 py-1 justify-between items-center rounded-full text-sm transition-all ease-out duration-500  ${
+      className={`h-8 outline-none flex gap-2 py-1 justify-between items-center text-neutral-800 rounded-full text-sm transition-all ease-out duration-500  ${
         isActive && !isStatic ? "text-neutral-200 pl-3 pr-1" : "border px-3"
       } ${isActive && "bg-lightBrown text-neutral-200"}
       `}

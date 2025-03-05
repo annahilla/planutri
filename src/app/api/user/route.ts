@@ -64,9 +64,9 @@ export const PUT = async (req: NextRequest) => {
             return NextResponse.json({message: "Required fields are missing"}, { status: 400 });
         }
 
-        const cleanedUsername = username.replace(/\s+/g, '');
+        const cleanedUsername = (username.replace(/\s+/g, '')).toLowerCase();
 
-        const existingUser = await User.findOne({ username: cleanedUsername });
+        const existingUser = await User.findOne({ username: { $regex: new RegExp(`^${cleanedUsername}$`, 'i') } });
 
         if (existingUser && existingUser.userId !== userId) {
             return NextResponse.json({ message: "Username already taken" }, { status: 409 });

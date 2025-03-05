@@ -87,7 +87,7 @@ const RecipeCard = ({
             href={`/dashboard/recipes/${recipe._id}`}
           >
             <RecipeImage imageUrl={recipe.imageUrl} height="h-56" />
-            <h3 className="font-bold">{recipe.name}</h3>
+            <h3 className="font-bold text-neutral-900">{recipe.name}</h3>
             {recipe.isPublic && (
               <MadeByTag isLoading={loading} name={username || "unknown"} />
             )}
