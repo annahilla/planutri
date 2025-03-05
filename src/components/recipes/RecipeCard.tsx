@@ -17,8 +17,8 @@ const RecipeCard = ({
   recipe,
   recipes,
   isMenu = false,
-  setMenuServings,
   setRecipes,
+  setMenuServings,
 }: {
   recipe: RecipeInterface;
   recipes: RecipeInterface[];
@@ -37,13 +37,21 @@ const RecipeCard = ({
   const isOwnRecipe = recipe.userId === user.userId;
 
   useEffect(() => {
+    if (!recipe || !recipe._id) return;
+
     const getUsername = async () => {
-      const username = await getRecipeUsername(recipe._id);
-      setUsername(username);
-      setLoading(false);
+      try {
+        const username = await getRecipeUsername(recipe._id);
+        setUsername(username);
+      } catch (error) {
+        console.error("Error fetching username:", error);
+      } finally {
+        setLoading(false);
+      }
     };
+
     getUsername();
-  }, []);
+  }, [recipe]);
 
   const ingredientsList = recipe.ingredients
     .map((ingredient) => ingredient.ingredient)
@@ -52,10 +60,6 @@ const RecipeCard = ({
   const openDeleteRecipe = () => {
     setIsModalOpen(true);
   };
-
-  useEffect(() => {
-    setMenuServings(servings);
-  }, [servings]);
 
   const handleDeleteRecipe = async () => {
     if (recipe && recipe._id) {
@@ -77,6 +81,10 @@ const RecipeCard = ({
   const openRecipeEdit = () => {
     router.push(`/dashboard/recipes/${recipe._id}?edit=true`);
   };
+
+  useEffect(() => {
+    setMenuServings(servings);
+  }, [servings]);
 
   return (
     <div className="border p-5 rounded h-full flex flex-col justify-between">

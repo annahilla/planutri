@@ -70,8 +70,8 @@ export const DELETE = async (req: NextRequest) => {
             return new NextResponse("Recipe not found", { status: 404 });
         }
 
-        if (recipe.userId.toString() !== userId?.toString()) {
-            return new NextResponse("Unauthorized: You can only delete your own recipes", { status: 403 });
+        if (recipe.userId !== userId) {
+            return new NextResponse("Unauthorized", { status: 401 });
         }
 
         await Recipe.findByIdAndDelete(id);

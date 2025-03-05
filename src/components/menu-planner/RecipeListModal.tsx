@@ -10,7 +10,6 @@ import {
 } from "@/types/types";
 import { addRecipeToMenu } from "@/services/menuService";
 import { RecipesProvider } from "@/context/RecipesContext";
-
 interface RecipeListModalProps {
   isModalOpen: boolean;
   dayOfTheWeek: DayOfTheWeek;

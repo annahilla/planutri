@@ -132,10 +132,6 @@ const CreateRecipeForm = () => {
     setIsDropdownOpen(false);
   }, [selectedIngredients]);
 
-  useEffect(() => {
-    console.log("Meals from form", meals);
-  }, [meals]);
-
   return (
     <form
       onSubmit={handleCreateRecipe}
