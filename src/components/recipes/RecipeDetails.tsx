@@ -114,8 +114,14 @@ const RecipeDetails = ({
 
         <div className="flex items-center justify-center w-full">
           {isEditMode ? (
-            <div className="flex items-center justify-between w-full">
-              <MealTags meals={recipe.meals} setMeals={setMeals} />
+            <div className="flex flex-col gap-6 items-center justify-between w-full md:gap-2 md:flex-row mb-4">
+              <div className="flex justify-center flex-wrap">
+                <MealTags
+                  meals={recipe.meals}
+                  setMeals={setMeals}
+                  isSnap={false}
+                />
+              </div>
               <div className="flex gap-2">
                 <ToggleSwitch
                   isOn={isPublic}
@@ -125,18 +131,23 @@ const RecipeDetails = ({
               </div>
             </div>
           ) : (
-            <div className="flex flex-wrap items-center gap-2">
-              {recipe.meals &&
-                recipe.meals.map((meal) => (
-                  <FilterTagItem key={meal} isActive isStatic>
-                    {meal}
-                  </FilterTagItem>
-                ))}
+            <div className="flex flex-col gap-6 justify-between gap-2 w-full md:gap-2 md:flex-row">
+              <div className="flex justify-center gap-2 flex-wrap">
+                {recipe.meals &&
+                  recipe.meals.map((meal) => (
+                    <FilterTagItem key={meal} isActive isStatic>
+                      {meal}
+                    </FilterTagItem>
+                  ))}
+              </div>
+              <p className="py-1 px-3 bg-neutral-100 text-center text-neutral-500 rounded-full">
+                {recipe.isPublic ? "Public" : "Private"}
+              </p>
             </div>
           )}
         </div>
 
-        <div className="flex flex-col gap-5 mt-8 md:gap-10 md:items-strech lg:flex-row h-full">
+        <div className="flex flex-col gap-5 mt-4 md:gap-10 md:items-strech lg:flex-row h-full md:mt-8">
           <div className="lg:max-w-80 xl:max-w-96">
             {isEditMode && (
               <div className="mb-7">
