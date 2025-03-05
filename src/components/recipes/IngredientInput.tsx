@@ -7,8 +7,7 @@ import { IoIosClose } from "react-icons/io";
 import IngredientQuantityAndUnit from "../IngredientQuantityAndUnit";
 import { BiSolidCheckboxChecked } from "react-icons/bi";
 import { useSearchParams } from "next/navigation";
-import { fetchUnits } from "@/services/unitService";
-import { useQuery } from "@tanstack/react-query";
+import { useRecipe } from "@/context/RecipeContext";
 
 interface IngredientInputProps {
   ingredient: IngredientInterface;
@@ -31,6 +30,7 @@ const IngredientInput = ({
   setError,
   menuServings,
 }: IngredientInputProps) => {
+  const { units } = useRecipe();
   const searchParams = useSearchParams();
   const isEditMode = searchParams.get("edit") === "true";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -40,11 +40,6 @@ const IngredientInput = ({
   const [ingredientInputValue, setIngredientInputValue] = useState<string>(
     ingredient.ingredient
   );
-
-  const { data: units } = useQuery({
-    queryKey: ["units"],
-    queryFn: fetchUnits,
-  });
 
   const handleCreateIngredient = (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>

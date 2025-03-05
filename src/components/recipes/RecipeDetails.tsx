@@ -168,17 +168,18 @@ const RecipeDetails = ({
                   isEditMode ? "bg-white" : "bg-beige p-5"
                 }`}
               >
-                {ingredients.map((ingredient, index) => (
-                  <IngredientInput
-                    key={ingredient._id || ingredient.ingredient}
-                    index={index}
-                    ingredients={ingredients}
-                    ingredient={ingredient}
-                    setIngredients={setIngredients}
-                    setError={setError}
-                    menuServings={menuServings}
-                  />
-                ))}
+                {ingredients !== undefined &&
+                  ingredients?.map((ingredient, index) => (
+                    <IngredientInput
+                      key={ingredient._id || ingredient.ingredient}
+                      index={index}
+                      ingredients={ingredients}
+                      ingredient={ingredient}
+                      setIngredients={setIngredients}
+                      setError={setError}
+                      menuServings={menuServings}
+                    />
+                  ))}
               </ul>
               {isEditMode && (
                 <div className="mt-8">

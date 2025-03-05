@@ -38,7 +38,6 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   }, [recipes]);
 
   const filterRecipes = () => {
-    console.log(1);
     let filtered = [...recipes];
 
     if (typeFilters.includes("public")) {
@@ -90,10 +89,6 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   useEffect(() => {
     filterRecipes();
   }, [mealFilters, typeFilters, recipes, favoriteRecipeIds]);
-
-  useEffect(() => {
-    console.log(filteredRecipes);
-  }, [filteredRecipes]);
 
   return (
     <div>
