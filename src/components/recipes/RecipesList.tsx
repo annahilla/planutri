@@ -21,7 +21,9 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   const { recipes } = useRecipes();
   const { filteredRecipes, setFilteredRecipes, searchRecipe } =
     useSearchRecipe(recipes);
-  const [menuServings, setMenuServings] = useState(1);
+  const [menuServings, setMenuServings] = useState<{ [key: string]: number }[]>(
+    []
+  );
   const [mealFilters, setMealFilters] = useState<string[]>([]);
   const [typeFilters, setTypeFilters] = useState<string[]>([]);
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
@@ -124,23 +126,33 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
             : "lg:grid-cols-3 xl:grid-cols-4"
         }`}
       >
-        {filteredRecipes.map((recipe) => (
-          <div
-            className="w-full h-full"
-            key={recipe._id}
-            onClick={() => onSelect?.(recipe, menuServings)}
-          >
-            <div className="h-full">
-              <RecipeCard
-                recipe={recipe}
-                recipes={recipes}
-                setMenuServings={setMenuServings}
-                isMenu={isMenu}
-                setRecipes={setFilteredRecipes}
-              />
+        {filteredRecipes.map((recipe) => {
+          const recipeServings =
+            menuServings.find((item) => item[recipe.name] !== undefined)?.[
+              recipe.name
+            ] || 1;
+          return (
+            <div
+              className="w-full h-full"
+              key={recipe._id}
+              onClick={() => {
+                if (recipe._id) {
+                  onSelect?.(recipe, recipeServings);
+                }
+              }}
+            >
+              <div className="h-full">
+                <RecipeCard
+                  recipe={recipe}
+                  recipes={recipes}
+                  setMenuServings={setMenuServings}
+                  isMenu={isMenu}
+                  setRecipes={setFilteredRecipes}
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

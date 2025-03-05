@@ -1,15 +1,18 @@
-import { IngredientInterface } from "@/types/types";
+import { IngredientInterface, RecipeInterface } from "@/types/types";
 
 const IngredientQuantityAndUnit = ({
   ingredient,
   menuServings,
+  recipe,
 }: {
   ingredient: IngredientInterface;
   menuServings?: number;
+  recipe: RecipeInterface;
 }) => {
-  const quantity = menuServings
-    ? ingredient.quantity * menuServings
-    : ingredient.quantity;
+  const quantity =
+    menuServings && recipe.servings
+      ? (ingredient.quantity / recipe.servings) * menuServings
+      : ingredient.quantity;
 
   return (
     <div className="flex gap-1 text-neutral-500">

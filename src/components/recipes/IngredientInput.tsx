@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useState } from "react";
 import IngredientDropdown from "../ui/IngredientDropdown";
-import { IngredientInterface } from "@/types/types";
+import { IngredientInterface, RecipeInterface } from "@/types/types";
 import { IoIosClose } from "react-icons/io";
 import IngredientQuantityAndUnit from "../IngredientQuantityAndUnit";
 import { BiSolidCheckboxChecked } from "react-icons/bi";
@@ -20,6 +20,7 @@ interface IngredientInputProps {
   ) => void;
   setError: (prev: string) => void;
   menuServings?: number;
+  recipe: RecipeInterface;
 }
 
 const IngredientInput = ({
@@ -29,6 +30,7 @@ const IngredientInput = ({
   setIngredients,
   setError,
   menuServings,
+  recipe,
 }: IngredientInputProps) => {
   const { units } = useRecipe();
   const searchParams = useSearchParams();
@@ -145,6 +147,7 @@ const IngredientInput = ({
         <div className="min-w-56 flex items-start gap-2">
           <BiSolidCheckboxChecked size={22} />
           <IngredientQuantityAndUnit
+            recipe={recipe}
             menuServings={menuServings}
             ingredient={ingredient}
           />

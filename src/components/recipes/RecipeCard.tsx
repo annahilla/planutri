@@ -23,7 +23,9 @@ const RecipeCard = ({
   recipe: RecipeInterface;
   recipes: RecipeInterface[];
   isMenu?: boolean;
-  setMenuServings: (value: number) => void;
+  setMenuServings: (
+    value: (prev: { [key: string]: number }[]) => { [key: string]: number }[]
+  ) => void;
   setRecipes: (recipes: RecipeInterface[]) => void;
 }) => {
   const { user } = useUser();
@@ -83,7 +85,17 @@ const RecipeCard = ({
   };
 
   useEffect(() => {
-    setMenuServings(servings);
+    setMenuServings((prev: { [key: string]: number }[]) => {
+      const existingRecipeIndex = prev.findIndex((item) => item[recipe.name]);
+
+      if (existingRecipeIndex !== -1) {
+        const updatedMenuServings = [...prev];
+        updatedMenuServings[existingRecipeIndex] = { [recipe.name]: servings };
+        return updatedMenuServings;
+      } else {
+        return [...prev, { [recipe.name]: servings }];
+      }
+    });
   }, [servings]);
 
   return (

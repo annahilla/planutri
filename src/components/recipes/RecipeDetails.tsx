@@ -178,6 +178,7 @@ const RecipeDetails = ({
                       setIngredients={setIngredients}
                       setError={setError}
                       menuServings={menuServings}
+                      recipe={recipe}
                     />
                   ))}
               </ul>
