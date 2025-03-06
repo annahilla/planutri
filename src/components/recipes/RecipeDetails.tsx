@@ -22,6 +22,7 @@ import RecipeServingsCard from "./RecipeServingsCard";
 import FilterTagItem from "./FilterTagItem";
 import MealTags from "./MealTags";
 import { ToggleSwitch } from "../ui/ToggleSwitch";
+import { useUser } from "@/context/UserContext";
 
 interface RecipeDetailsProps {
   recipe: RecipeInterface;
@@ -39,6 +40,8 @@ const RecipeDetails = ({
   menuServings,
 }: RecipeDetailsProps) => {
   const { isOwnRecipe } = useRecipe();
+  const { user } = useUser();
+  const ownRecipe = recipe.userId === user.userId;
   const router = useRouter();
   const [error, setError] = useState<string>("");
   const { discardChanges, username } = useRecipe();
@@ -128,9 +131,9 @@ const RecipeDetails = ({
                   ))}
               </div>
               <div className="text-center text-neutral-500 w-28">
-                {
+                {!isModal && (
                   <div className="flex items-center justify-center rounded-full bg-neutral-100 h-8">
-                    {isOwnRecipe ? (
+                    {isOwnRecipe || ownRecipe ? (
                       recipe.isPublic ? (
                         "Public"
                       ) : (
@@ -140,7 +143,7 @@ const RecipeDetails = ({
                       <button>{username}</button>
                     )}
                   </div>
-                }
+                )}
               </div>
             </div>
           )}
