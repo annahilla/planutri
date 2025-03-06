@@ -28,6 +28,11 @@ const FilterTags = ({
     });
   };
 
+  const closeFilter = (filter: string) => {
+    const updatedFilters = activeFilters.filter((filt) => filt !== filter);
+    setActiveFilters(updatedFilters);
+  };
+
   useEffect(() => {
     setTypeFilters(activeFilters);
   }, [activeFilters]);
@@ -38,7 +43,7 @@ const FilterTags = ({
         <FilterTagItem
           key={filter}
           handleFilter={() => toggleFilter(filter)}
-          closeTag={() => toggleFilter(filter)}
+          closeTag={() => closeFilter(filter)}
           isActive={activeFilters.includes(filter)}
         >
           {filter.charAt(0).toUpperCase() + filter.slice(1)}

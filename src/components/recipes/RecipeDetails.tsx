@@ -22,6 +22,8 @@ import RecipeServingsCard from "./RecipeServingsCard";
 import FilterTagItem from "./FilterTagItem";
 import MealTags from "./MealTags";
 import { ToggleSwitch } from "../ui/ToggleSwitch";
+import useUsername from "@/hooks/useUsername";
+import Skeleton from "react-loading-skeleton";
 
 interface RecipeDetailsProps {
   recipe: RecipeInterface;
@@ -58,6 +60,7 @@ const RecipeDetails = ({
   const [meals, setMeals] = useState<Meal[]>([]);
   const [imageUrl, setImageUrl] = useState(recipe.imageUrl);
   const [isPublic, setIsPublic] = useState(recipe.isPublic || false);
+  const { username, loading } = useUsername(recipe);
 
   const { saveRecipe } = useSaveRecipe(
     recipe._id,
@@ -99,20 +102,7 @@ const RecipeDetails = ({
           {isEditMode && <EditRecipeImageButton setImageUrl={setImageUrl} />}
         </div>
 
-        <div className="flex gap-2 my-6 items-center justify-center w-full">
-          <RecipeServingsCard
-            servings={servings}
-            setServings={setServings}
-            recipe={recipe}
-          />
-          <RecipeInfoCard
-            icon={<PiNotebook size={22} />}
-            text="ingredients"
-            quantity={ingredients.length}
-          />
-        </div>
-
-        <div className="flex items-center justify-center w-full">
+        <div className="flex items-center justify-center w-full my-6">
           {isEditMode ? (
             <div className="flex flex-col gap-6 items-center justify-between w-full md:gap-2 md:flex-row mb-4">
               <div className="flex justify-center flex-wrap">
@@ -131,8 +121,8 @@ const RecipeDetails = ({
               </div>
             </div>
           ) : (
-            <div className="flex flex-col gap-6 justify-between gap-2 w-full md:gap-2 md:flex-row">
-              <div className="flex justify-center gap-2 flex-wrap">
+            <div className="flex gap-6 items-start justify-between gap-2 w-full md:items-center">
+              <div className="flex justify-start gap-2 flex-wrap md:justify-center">
                 {recipe.meals &&
                   recipe.meals.map((meal) => (
                     <FilterTagItem key={meal} isActive isStatic>
@@ -140,11 +130,38 @@ const RecipeDetails = ({
                     </FilterTagItem>
                   ))}
               </div>
-              <p className="py-1 px-3 bg-neutral-100 text-center text-neutral-500 rounded-full">
-                {recipe.isPublic ? "Public" : "Private"}
-              </p>
+              <div className="text-center text-neutral-500 w-28">
+                {loading ? (
+                  <Skeleton className="rounded-full" height={25} />
+                ) : (
+                  <div className="flex items-center justify-center rounded-full bg-neutral-100 h-8">
+                    {isOwnRecipe ? (
+                      recipe.isPublic ? (
+                        "Public"
+                      ) : (
+                        "Private"
+                      )
+                    ) : (
+                      <button>{username}</button>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
+        </div>
+
+        <div className="flex gap-2 items-center justify-center w-full">
+          <RecipeServingsCard
+            servings={servings}
+            setServings={setServings}
+            recipe={recipe}
+          />
+          <RecipeInfoCard
+            icon={<PiNotebook size={22} />}
+            text="ingredients"
+            quantity={ingredients.length}
+          />
         </div>
 
         <div className="flex flex-col gap-5 mt-4 md:gap-10 md:items-strech lg:flex-row h-full md:mt-8">

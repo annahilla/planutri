@@ -5,13 +5,14 @@ import Link from "next/link";
 import RecipeImage from "./RecipeImage";
 import { useEffect, useState } from "react";
 import ConfirmModal from "../ui/modals/ConfirmModal";
-import { deleteRecipe, getRecipeUsername } from "@/services/recipeService";
+import { deleteRecipe } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
 import { CiEdit, CiTrash } from "react-icons/ci";
 import RecipeServingsCard from "./RecipeServingsCard";
 import MadeByTag from "../ui/MadeByTag";
 import FavoriteButton from "../ui/buttons/FavoriteButton";
 import { useUser } from "@/context/UserContext";
+import useUsername from "@/hooks/useUsername";
 
 const RecipeCard = ({
   recipe,
@@ -34,26 +35,8 @@ const RecipeCard = ({
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [loading, setLoading] = useState(true);
   const isOwnRecipe = recipe.userId === user.userId;
-
-  useEffect(() => {
-    if (!recipe || !recipe._id) return;
-
-    const getUsername = async () => {
-      try {
-        const username = await getRecipeUsername(recipe._id);
-        setUsername(username);
-      } catch (error) {
-        console.error("Error fetching username:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getUsername();
-  }, [recipe]);
+  const { username, loading } = useUsername(recipe);
 
   const ingredientsList = recipe.ingredients
     .map((ingredient) => ingredient.ingredient)
