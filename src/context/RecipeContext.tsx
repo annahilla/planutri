@@ -11,12 +11,14 @@ interface RecipeContextInterface {
   setDiscardChanges: (value: boolean) => void;
   isOwnRecipe: boolean;
   units: string[];
+  username: string;
 }
 
 interface RecipeProviderInterface {
   children: ReactNode;
   fetchedRecipe: RecipeInterface;
   fetchedUnits: string[];
+  fetchedUsername: string;
 }
 
 const RecipeContext = createContext<RecipeContextInterface>({
@@ -29,6 +31,7 @@ const RecipeContext = createContext<RecipeContextInterface>({
   setDiscardChanges: () => {},
   isOwnRecipe: false,
   units: [],
+  username: "",
 });
 
 export const useRecipe = () => {
@@ -39,12 +42,14 @@ export const RecipeProvider = ({
   children,
   fetchedRecipe,
   fetchedUnits,
+  fetchedUsername,
 }: RecipeProviderInterface) => {
   const { user } = useUser();
   const [recipe, setRecipe] = useState<RecipeInterface>(fetchedRecipe);
   const [discardChanges, setDiscardChanges] = useState(false);
   const isOwnRecipe = recipe.userId === user.userId;
   const units = fetchedUnits;
+  const username = fetchedUsername;
 
   return (
     <RecipeContext.Provider
@@ -55,6 +60,7 @@ export const RecipeProvider = ({
         setDiscardChanges,
         isOwnRecipe,
         units,
+        username,
       }}
     >
       {children}

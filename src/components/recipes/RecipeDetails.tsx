@@ -22,8 +22,6 @@ import RecipeServingsCard from "./RecipeServingsCard";
 import FilterTagItem from "./FilterTagItem";
 import MealTags from "./MealTags";
 import { ToggleSwitch } from "../ui/ToggleSwitch";
-import useUsername from "@/hooks/useUsername";
-import Skeleton from "react-loading-skeleton";
 
 interface RecipeDetailsProps {
   recipe: RecipeInterface;
@@ -43,7 +41,7 @@ const RecipeDetails = ({
   const { isOwnRecipe } = useRecipe();
   const router = useRouter();
   const [error, setError] = useState<string>("");
-  const { discardChanges } = useRecipe();
+  const { discardChanges, username } = useRecipe();
   const { isEditMode } = useEditMode(recipe._id);
   const { ingredients, addIngredientInput, deleteIngredient, setIngredients } =
     useEditRecipeIngredients(recipe.ingredients, setError);
@@ -60,7 +58,6 @@ const RecipeDetails = ({
   const [meals, setMeals] = useState<Meal[]>([]);
   const [imageUrl, setImageUrl] = useState(recipe.imageUrl);
   const [isPublic, setIsPublic] = useState(recipe.isPublic || false);
-  const { username, loading } = useUsername(recipe);
 
   const { saveRecipe } = useSaveRecipe(
     recipe._id,
@@ -131,9 +128,7 @@ const RecipeDetails = ({
                   ))}
               </div>
               <div className="text-center text-neutral-500 w-28">
-                {loading ? (
-                  <Skeleton className="rounded-full" height={25} />
-                ) : (
+                {
                   <div className="flex items-center justify-center rounded-full bg-neutral-100 h-8">
                     {isOwnRecipe ? (
                       recipe.isPublic ? (
@@ -145,7 +140,7 @@ const RecipeDetails = ({
                       <button>{username}</button>
                     )}
                   </div>
-                )}
+                }
               </div>
             </div>
           )}

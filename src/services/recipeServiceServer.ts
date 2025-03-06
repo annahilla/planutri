@@ -55,3 +55,27 @@ export async function fetchRecipe(recipeId: string) {
     throw error;
   }
 }
+
+export const getRecipeUsername = async (recipeId: string | unknown) => {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("session");
+  if(!recipeId) {return}
+    try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recipes/${recipeId}/username`,{
+          method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Cookie": `session=${sessionCookie?.value}`,
+            },
+          credentials: "include"
+        });
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error("Failed to fetch username");
+        }
+        return data.username;
+    } catch (error) {
+        console.error("Error fetching username:", error);
+    }
+};
