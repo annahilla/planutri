@@ -1,7 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-import Button from "@/components/ui/buttons/Button";
-import Link from "next/link";
+import GetStartedButton from "@/components/home/GetStartedButton";
 
 export default function Home() {
   return (
@@ -17,9 +16,7 @@ export default function Home() {
             Plan your meals and fill your pantry
           </p>
           <div className="w-40 m-auto lg:m-0">
-            <Link href={"/signup"}>
-              <Button color="white">Get Started</Button>
-            </Link>
+            <GetStartedButton />
           </div>
         </div>
       </div>

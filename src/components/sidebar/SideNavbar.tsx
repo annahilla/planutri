@@ -11,7 +11,7 @@ const SideNavbar = () => {
 
   return (
     <div
-      className={`transition-all duration-300 ${
+      className={`relative transition-all duration-300 ${
         isCollapsed ? "md:w-16" : "md:w-56"
       }`}
       suppressHydrationWarning={true}

@@ -10,7 +10,7 @@ import { useRecipes } from "@/context/RecipesContext";
 import SortingButton from "./SortingButton";
 import MealTags from "./MealTags";
 import { getFavoriteRecipes } from "@/services/favoriteRecipeService";
-import { IoIosArrowForward } from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 interface RecipeListProps {
   onSelect?: (recipe: RecipeInterface, servings: number) => void;
@@ -28,6 +28,7 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   const [typeFilters, setTypeFilters] = useState<string[]>([]);
   const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
   const [isOverflowing, setIsOverflowing] = useState(false);
+  const [scrollEnd, setScrollEnd] = useState(false);
   const filterContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -63,19 +64,34 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
     setFilteredRecipes(filtered);
   };
 
+  const checkOverflow = () => {
+    const container = filterContainerRef.current;
+    if (container) {
+      setIsOverflowing(container.scrollWidth > container.clientWidth);
+    }
+  };
+
   useEffect(() => {
-    const checkOverflow = () => {
+    checkOverflow();
+    window.addEventListener("resize", checkOverflow);
+
+    const handleScroll = () => {
       const container = filterContainerRef.current;
       if (container) {
-        setIsOverflowing(container.scrollWidth > container.clientWidth);
+        setScrollEnd(
+          container.scrollLeft >=
+            container.scrollWidth - container.clientWidth - 1
+        );
       }
     };
 
     checkOverflow();
     window.addEventListener("resize", checkOverflow);
+    filterContainerRef.current?.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("resize", checkOverflow);
+      filterContainerRef.current?.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -95,24 +111,29 @@ const RecipesList = ({ onSelect, isMenu = false }: RecipeListProps) => {
   return (
     <div>
       <SearchInput search={searchRecipe} />
-      <div className="flex justify-between items-center gap-2">
-        <div
-          ref={filterContainerRef}
-          className="flex gap-2 flex-wrap overflow-x-auto snap-x snap-mandatory invisible-scrollbar"
-        >
-          <div className="flex snap-start gap-2 md:justify-between md:w-full">
-            <div className="flex gap-2">
-              <FilterTags setTypeFilters={setTypeFilters} />
-              <MealTags setMealFilters={setMealFilters} />
+      <div className="flex flex-col gap-5 xl:flex-row xl:gap-2">
+        <div className="flex justify-between items-center gap-2">
+          <div
+            ref={filterContainerRef}
+            className="flex gap-2 flex-wrap overflow-x-auto snap-x snap-mandatory invisible-scrollbar"
+          >
+            <div className="flex snap-start gap-2 xl:justify-between xl:w-full">
+              <div className="flex gap-2">
+                <FilterTags setTypeFilters={setTypeFilters} />
+                <MealTags setMealFilters={setMealFilters} />
+              </div>
             </div>
           </div>
+          {isOverflowing && (
+            <div className="text-neutral-400">
+              {scrollEnd ? <IoIosArrowBack /> : <IoIosArrowForward />}
+            </div>
+          )}
         </div>
-        {isOverflowing && (
-          <div className="text-neutral-400">
-            <IoIosArrowForward />
+        <div className="flex items-center gap-4 w-full justify-end">
+          <div className="text-neutral-500 text-sm">
+            {filteredRecipes.length} results
           </div>
-        )}
-        <div>
           <SortingButton
             recipes={recipes}
             setFilteredRecipes={setFilteredRecipes}

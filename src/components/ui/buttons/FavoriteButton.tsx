@@ -18,11 +18,11 @@ const FavoriteButton = ({ recipeId }: { recipeId: string | undefined }) => {
 
     try {
       if (isFavorite) {
-        await deleteFavoriteRecipe(recipeId);
         setIsFavorite(false);
+        await deleteFavoriteRecipe(recipeId);
       } else {
-        await addFavoriteRecipe(recipeId);
         setIsFavorite(true);
+        await addFavoriteRecipe(recipeId);
       }
     } catch (error) {
       console.error("Error updating favorite status:", error);
