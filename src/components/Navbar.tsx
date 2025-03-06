@@ -6,15 +6,15 @@ import { useUser } from "@/context/UserContext";
 import { IoMdArrowForward } from "react-icons/io";
 import Button from "./ui/buttons/Button";
 import { logoutUser } from "@/services/authService";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 const Navbar = () => {
   const { user } = useUser();
-  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(user ? true : false);
 
   const handleLogout = async () => {
     await logoutUser();
-    router.push("/");
+    setIsLoggedIn(false);
   };
 
   return (
@@ -23,7 +23,7 @@ const Navbar = () => {
         <Logo color="white" />
       </Link>
       <div className="flex gap-10 font-normal">
-        {user ? (
+        {isLoggedIn ? (
           <>
             <Link
               className="flex gap-1 items-center px-3 py-2 border-neutral-600 hover:opacity-70 w-full whitespace-nowrap"
