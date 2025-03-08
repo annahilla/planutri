@@ -31,3 +31,4 @@ export const isAuthenticated = async () => {
   return sessionCookie ? true : false;
   
 }
+

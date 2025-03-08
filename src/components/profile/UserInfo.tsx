@@ -2,15 +2,16 @@
 
 import Skeleton from "react-loading-skeleton";
 import Image from "next/image";
-import ProfileItem from "../profile/ProfileItem";
-import LogoutButton from "./LogoutButton";
+import ProfileItem from "./ProfileItem";
+import LogoutButton from "../auth/LogoutButton";
 import defaultProfile from "../../../public/default-profile.png";
 import { useUser } from "@/context/UserContext";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import Button from "../ui/buttons/Button";
-import { updateUser } from "@/services/authService";
+import { updateUser, uploadUserImage } from "@/services/authService";
 import ErrorMessage from "../ui/ErrorMessage";
 import { formatDate } from "@/utils/formatDate";
+import { ClipLoader } from "react-spinners";
 
 const UserInfo = () => {
   const { user, updateUserInfo } = useUser();
@@ -18,6 +19,12 @@ const UserInfo = () => {
   const [username, setUsername] = useState(user.username);
   const [error, setError] = useState("");
   const [isEditableMode, setIsEditableMode] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    user.picture || defaultProfile.src
+  );
+  const [isUploading, setIsUploading] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const changeEditableMode = () => {
     setIsEditableMode(!isEditableMode);
@@ -34,7 +41,11 @@ const UserInfo = () => {
     const cleanedUsername = username.replace(/\s+/g, "");
 
     try {
-      await updateUser({ name: name || "", username: cleanedUsername });
+      await updateUser({
+        name: name || "",
+        username: cleanedUsername,
+        picture: imageUrl || "",
+      });
       updateUserInfo({
         name: name || "",
         username: cleanedUsername,
@@ -53,6 +64,52 @@ const UserInfo = () => {
     }
   };
 
+  const handleImageClick = () => {
+    if (!isEditableMode) {
+      setIsEditableMode(true);
+    }
+    fileInputRef.current?.click();
+  };
+
+  const handleImageChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      uploadImage(file);
+    }
+  };
+
+  const uploadImage = async (file: File) => {
+    setIsUploading(true);
+    const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME;
+
+    if (!file) {
+      setError("Please select an image first.");
+      return;
+    }
+
+    if (!cloudinaryPreset) {
+      console.error("Cloudinary preset is missing.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", cloudinaryPreset);
+    formData.append("folder", "users");
+    const imageUrl = await uploadUserImage(formData);
+    setImageUrl(imageUrl);
+    setIsUploading(false);
+  };
+
+  const handleCancel = () => {
+    setIsEditableMode(false);
+    setImageUrl(user.picture || defaultProfile.src);
+    setName(user.name);
+    setUsername(user.username);
+  };
+
   useEffect(() => {
     setError("");
   }, [name, username]);
@@ -64,21 +121,45 @@ const UserInfo = () => {
       className="my-3 flex flex-col gap-5 rounded px-7 border border-neutral-200 py-6 w-full lg:w-96"
     >
       <div className="w-full flex justify-center mb-5">
-        <div className="w-28 h-28 rounded-full">
+        <div
+          className="w-28 h-28 rounded-full overflow-hidden cursor-pointer"
+          onClick={handleImageClick}
+        >
           {!user ? (
             <Skeleton borderRadius={100} height="100%" width="100%" />
           ) : (
-            <Image
-              className="w-full rounded-full"
-              width={50}
-              height={50}
-              alt={`${user.name} profile picture`}
-              src={user.picture || defaultProfile}
-              priority
-            />
+            <div
+              className={`relative w-full h-full ${
+                isUploading && "opacity-50"
+              }`}
+            >
+              <Image
+                className="w-full h-full object-cover rounded-full hover:opacity-70 border"
+                width={112}
+                height={112}
+                alt={`${user.name} profile picture`}
+                src={imageUrl || defaultProfile}
+                priority
+              />
+              {isUploading && (
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                  <ClipLoader color="#a1a1a1" />
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
+
+      {isEditableMode && (
+        <input
+          type="file"
+          ref={fileInputRef}
+          className="hidden"
+          accept="image/*"
+          onChange={handleImageChange}
+        />
+      )}
 
       <div className="flex flex-col gap-5 mb-4">
         <ProfileItem
@@ -87,8 +168,8 @@ const UserInfo = () => {
           value={name}
           setValue={setName}
           isEditableMode={isEditableMode}
-          changeEditableMode={changeEditableMode}
           editable
+          changeEditableMode={changeEditableMode}
         />
         <ProfileItem
           isLoading={!user}
@@ -96,8 +177,8 @@ const UserInfo = () => {
           value={username}
           setValue={setUsername}
           isEditableMode={isEditableMode}
-          changeEditableMode={changeEditableMode}
           editable
+          changeEditableMode={changeEditableMode}
         />
         <ProfileItem isLoading={!user} item="Email" value={user.email} />
         <ProfileItem
@@ -112,7 +193,7 @@ const UserInfo = () => {
       <div className="flex flex-col gap-4 my-3 w-full">
         {isEditableMode && (
           <div className="flex gap-2">
-            <Button handleClick={() => setIsEditableMode(false)}>Cancel</Button>
+            <Button handleClick={handleCancel}>Cancel</Button>
             <Button type="submit">Save</Button>
           </div>
         )}

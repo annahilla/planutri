@@ -92,7 +92,7 @@ export async function getUser() {
     return data.user as AuthUser;
 }
 
-export async function updateUser(user: {name: string, username: string}) {
+export async function updateUser(user: {name: string, username: string, picture: string}) {
     try {
         const response = await fetch("/api/user", {
           method: "PUT",
@@ -115,4 +115,32 @@ export async function updateUser(user: {name: string, username: string}) {
         console.error("Error updating user:", error);
         throw error;
       }
+}
+
+export const uploadUserImage = async (formData: FormData) => {
+    const cloudinaryUrl = process.env.CLOUDINARY_UPLOAD_URL;
+
+    if (!cloudinaryUrl) {
+      console.error("Cloudinary URL is missing.");
+      return;
+    }
+
+  try {
+      const response = await fetch(cloudinaryUrl, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.secure_url) {
+        return data.secure_url; 
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      toast.error("An error occurred while uploading.");
+      return null;
+    } 
 }

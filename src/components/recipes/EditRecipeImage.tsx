@@ -9,6 +9,7 @@ import Image from "next/image";
 import { updateRecipe, uploadRecipeImage } from "@/services/recipeService";
 import { PulseLoader } from "react-spinners";
 import { useRecipe } from "@/context/RecipeContext";
+import { toast } from "react-toastify";
 
 const EditRecipeImageButton = ({
   setImageUrl,
@@ -51,7 +52,7 @@ const EditRecipeImageButton = ({
     const cloudinaryPreset = process.env.NEXT_PUBLIC_CLOUDINARY_PRESET_NAME;
 
     if (!selectedImage) {
-      alert("Please select an image first.");
+      toast.info("Please select an image first.");
       return;
     }
 
@@ -120,6 +121,7 @@ const EditRecipeImageButton = ({
                 id="dropzone-file"
                 type="file"
                 className="hidden"
+                accept="image/*"
               />
             </label>
           </div>
