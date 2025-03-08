@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
 
-
 export const getUser = async () => {
   const cookieStore = await cookies();
         const sessionCookie = cookieStore.get("session");
@@ -24,3 +23,11 @@ export const getUser = async () => {
     throw error;
   }
 };
+
+export const isAuthenticated = async () => {
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("session");
+  
+  return sessionCookie ? true : false;
+  
+}

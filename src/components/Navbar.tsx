@@ -2,19 +2,17 @@
 
 import Link from "next/link";
 import Logo from "./Logo";
-import { useUser } from "@/context/UserContext";
 import { IoMdArrowForward } from "react-icons/io";
 import Button from "./ui/buttons/Button";
 import { logoutUser } from "@/services/authService";
 import { useState } from "react";
 
-const Navbar = () => {
-  const { user } = useUser();
-  const [isLoggedIn, setIsLoggedIn] = useState(user ? true : false);
+const Navbar = ({ isLoggedIn }: { isLoggedIn: boolean }) => {
+  const [isUser, setIsUser] = useState(isLoggedIn);
 
   const handleLogout = async () => {
     await logoutUser();
-    setIsLoggedIn(false);
+    setIsUser(false);
   };
 
   return (
@@ -23,7 +21,7 @@ const Navbar = () => {
         <Logo color="white" />
       </Link>
       <div className="flex gap-10 font-normal">
-        {isLoggedIn ? (
+        {isUser ? (
           <>
             <Link
               className="flex gap-1 items-center px-3 py-2 border-neutral-600 hover:opacity-70 w-full whitespace-nowrap"

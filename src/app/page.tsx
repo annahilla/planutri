@@ -1,12 +1,14 @@
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import GetStartedButton from "@/components/home/GetStartedButton";
+import { isAuthenticated } from "@/services/userService";
 
-export default function Home() {
+export default async function Home() {
+  const isLoggedIn = await isAuthenticated();
   return (
     <>
       <div className="z-[10] fixed w-full">
-        <Navbar />
+        <Navbar isLoggedIn={isLoggedIn} />
       </div>
       <div className="h-screen relative">
         <Image className="object-cover" src="/hero.jpg" alt="pantry" fill />
