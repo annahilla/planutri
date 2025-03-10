@@ -31,8 +31,7 @@ jest.mock("@tanstack/react-query", () => {
 });
 
 import "@testing-library/jest-dom";
-import { fireEvent, screen, waitFor } from "@testing-library/react";
-import { render } from "@testing-library/react";
+import { fireEvent, screen, waitFor, render } from "@testing-library/react";
 import CreateRecipeForm from "@/components/forms/CreateRecipeForm";
 import { ReactElement } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
