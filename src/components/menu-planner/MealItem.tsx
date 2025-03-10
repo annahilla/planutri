@@ -34,37 +34,28 @@ const MealItem = ({
     selectedRecipe,
     openRecipeDetailsModal,
   } = useMenuModal();
-
   const { menu, setMenu } = useMenu();
   const dayMenu = menu.filter((menu) => menu.dayOfTheWeek === dayOfTheWeek);
-
   const [isLoading, setIsLoading] = useState(false);
 
   const clearSingleRecipe = async (meal: Meal) => {
     setIsLoading(true);
-    const menuItem = dayMenu.find((menuItem) => menuItem.meal === meal);
-    const recipeId = menuItem ? menuItem._id?.toString() : "";
-    if (recipeId) {
-      const isDeleted = await deleteSingleMenu(recipeId);
-      if (isDeleted) {
-        const updatedMenu = menu.filter((item) => item._id !== recipeId);
-        setMenu(updatedMenu);
-        setIsLoading(false);
-      }
+    const menuItem = dayMenu.find((item) => item.meal === meal);
+    if (!menuItem?._id) return setIsLoading(false);
+
+    const isDeleted = await deleteSingleMenu(menuItem._id.toString());
+    if (isDeleted) {
+      setMenu(menu.filter((item) => item._id !== menuItem._id));
     }
+    setIsLoading(false);
   };
 
   const handleClearRecipe = async (recipeId: string) => {
     setSelectedRecipes((prev) => {
       const updatedRecipes = { ...prev };
-      Object.keys(updatedRecipes).forEach((meal) => {
-        if (updatedRecipes[meal]?._id === recipeId) {
-          updatedRecipes[meal] = null;
-          setSelectedRecipes((prev) => {
-            const updatedRecipes = { ...prev };
-            updatedRecipes[meal] = null;
-            return updatedRecipes;
-          });
+      Object.keys(updatedRecipes).forEach((mealKey) => {
+        if (updatedRecipes[mealKey]?._id === recipeId) {
+          updatedRecipes[mealKey] = null;
         }
       });
       return updatedRecipes;
@@ -72,9 +63,7 @@ const MealItem = ({
   };
 
   const handleRecipeClick = (currentRecipe: RecipeInterface | null) => {
-    if (currentRecipe) {
-      openRecipeDetailsModal(currentRecipe);
-    }
+    if (currentRecipe) openRecipeDetailsModal(currentRecipe);
   };
 
   return (
