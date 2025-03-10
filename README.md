@@ -1,5 +1,7 @@
 # Planutri
 
+![image](public/app-preview.png)
+
 ## Table of contents
 
 - [Description](#description)
