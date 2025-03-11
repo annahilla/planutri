@@ -35,10 +35,8 @@ export const POST = async (req: NextRequest) => {
                 userId,
                 recipeIds: [recipeId]
             });
-        } else {
-            if (!favoriteRecipe.recipeIds.includes(recipeId)) {
-                favoriteRecipe.recipeIds.push(recipeId);
-            }
+        } else if (!favoriteRecipe.recipeIds.includes(recipeId)){
+            favoriteRecipe.recipeIds.push(recipeId);
         }
 
         await favoriteRecipe.save();

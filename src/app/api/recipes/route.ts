@@ -1,8 +1,8 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import { ImageService } from "./ImageService";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserId } from "../auth/auth";
+import { ImageService } from "./ImageService";
 
 export const GET = async () => {
     try {
