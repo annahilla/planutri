@@ -10,14 +10,16 @@ export class ShoppingService {
     async generateShoppingList(userId: string) {
         await connect();
         const menu = await this.getMenu(userId);
+        const isMenu = await this.menuExists(menu);
 
-        if(!this.menuExists(menu)){
+        if(!isMenu){
             return new NextResponse("No menus found", { status: 404 });
         }
 
         const recipes = await this.getRecipes(menu);
+        const isRecipes = await this.recipesExist(recipes);
 
-        if(!this.recipesExist(recipes)) {
+        if(!isRecipes) {
             return new NextResponse("No recipes found", { status: 404 });
         }
 
@@ -115,10 +117,9 @@ async updateShoppingList(userId: string, ingredientName: string, checked: boolea
         if (!recipe) return;
 
         const ingredients = recipe.ingredients;
-        console.log("INGREDIENTS", ingredients);
 
         ingredients.forEach(ingredient => {
-            const adjustedQuantity = ingredient.quantity * (menuItem.servings || 1);
+            const adjustedQuantity = ingredient.quantity * (menuItem.servings ?? 1);
             
             ingredientList.push({
                 ingredient: ingredient.ingredient,

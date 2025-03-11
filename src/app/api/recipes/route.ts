@@ -39,7 +39,7 @@ export const POST = async (req: NextRequest) => {
             userId,
             servings,
             meals,
-            isPublic: isPublic ? isPublic : false,
+            isPublic: isPublic ?? false,
             imageUrl
         });
 
