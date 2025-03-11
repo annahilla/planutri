@@ -162,7 +162,7 @@ const RecipeDetails = ({
           />
         </div>
 
-        <div className="flex flex-col gap-5 mt-4 md:gap-10 md:items-strech lg:flex-row h-full md:mt-8">
+        <div className="flex flex-col gap-5 mt-4 md:gap-10 md:items-start lg:flex-row h-full md:mt-8">
           <div className="lg:max-w-80 xl:max-w-96">
             {isEditMode && (
               <div className="mb-7">
@@ -176,7 +176,7 @@ const RecipeDetails = ({
                 />
               </div>
             )}
-            <div className="w-full mt-6">
+            <div className="w-full mt-6 md:mt-0">
               <h5 className="text-xl mb-3">Ingredients</h5>
               <ul
                 className={`flex flex-col gap-3 rounded ${

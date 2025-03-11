@@ -38,6 +38,8 @@ const IngredientDropdown = ({
     }
   }, [ingredientInputValue, allIngredients]);
 
+  console.log(allIngredients);
+
   return (
     <>
       {isDropdownOpen && (

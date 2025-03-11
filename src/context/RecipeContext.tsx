@@ -12,6 +12,7 @@ interface RecipeContextInterface {
   isOwnRecipe: boolean;
   units: string[];
   username: string;
+  ingredients: string[];
 }
 
 interface RecipeProviderInterface {
@@ -19,6 +20,7 @@ interface RecipeProviderInterface {
   fetchedRecipe: RecipeInterface;
   fetchedUnits: string[];
   fetchedUsername: string;
+  fetchedIngredients: string[];
 }
 
 const RecipeContext = createContext<RecipeContextInterface>({
@@ -32,6 +34,7 @@ const RecipeContext = createContext<RecipeContextInterface>({
   isOwnRecipe: false,
   units: [],
   username: "",
+  ingredients: [],
 });
 
 export const useRecipe = () => {
@@ -43,12 +46,14 @@ export const RecipeProvider = ({
   fetchedRecipe,
   fetchedUnits,
   fetchedUsername,
+  fetchedIngredients,
 }: RecipeProviderInterface) => {
   const { user } = useUser();
   const [recipe, setRecipe] = useState<RecipeInterface>(fetchedRecipe);
   const [discardChanges, setDiscardChanges] = useState(false);
   const isOwnRecipe = recipe.userId === user.userId;
   const units = fetchedUnits;
+  const ingredients = fetchedIngredients;
   const username = fetchedUsername;
 
   return (
@@ -61,6 +66,7 @@ export const RecipeProvider = ({
         isOwnRecipe,
         units,
         username,
+        ingredients,
       }}
     >
       {children}
