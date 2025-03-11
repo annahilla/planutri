@@ -2,7 +2,7 @@ import connect from "@/database/db";
 import { getUserId } from "../auth/auth";
 import { NextRequest, NextResponse } from "next/server";
 import { User } from "@/database/models/user";
-import { usernameService } from "./usernameService";
+import { UsernameService } from "./UsernameService";
 import admin from "@/lib/firebase/firebaseAdmin";
 
 export const GET = async () => {
@@ -33,7 +33,7 @@ export const POST = async (req: NextRequest) => {
             return new NextResponse("Required fields are missing", { status: 400 });
         }
 
-        const userService = new usernameService();
+        const userService = new UsernameService();
         const username = await userService.generateUsername();
 
         const newUser = new User({

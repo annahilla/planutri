@@ -1,6 +1,6 @@
 import connect from "@/database/db";
 import Recipe from "@/database/models/recipes";
-import  { imageService }  from "./imageService";
+import { ImageService } from "./ImageService";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserId } from "../auth/auth";
 
@@ -29,7 +29,7 @@ export const POST = async (req: NextRequest) => {
             return new NextResponse("Required fields are missing", { status: 400 });
         }
         
-        const imgService = new imageService();
+        const imgService = new ImageService();
         const imageUrl = await imgService.generateImage(name);
 
         const newRecipe = new Recipe({

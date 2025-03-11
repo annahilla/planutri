@@ -3,7 +3,7 @@ import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from 'next/headers';
 import { User } from "@/database/models/user";
-import { usernameService } from "../usernameService";
+import { UsernameService } from "../UsernameService";
 
 export const POST = async (req: NextRequest) => {
     try{
@@ -20,7 +20,7 @@ export const POST = async (req: NextRequest) => {
         let user = await User.findOne({ userId });
 
         if (!user) {
-            const userService = new usernameService();
+            const userService = new UsernameService();
             const username = await userService.generateUsername();
             user = new User({
                 firebaseUid: idToken,

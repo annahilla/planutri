@@ -5,7 +5,7 @@ import Recipe from "@/database/models/recipes";
 import { IngredientInterface, MenuInterface, RecipeInterface } from "@/types/types";
 import { NextResponse } from "next/server";
 
-export class shoppingService {
+export class ShoppingService {
 
     async generateShoppingList(userId: string) {
         await connect();

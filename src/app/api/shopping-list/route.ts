@@ -1,7 +1,7 @@
 import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import ShoppingList from "@/database/models/shopping-list";
-import { shoppingService } from "./shoppingService";
+import { ShoppingService } from "./ShoppingService";
 import { getUserId } from "../auth/auth";
 
 export const GET = async (req: NextRequest) => {
@@ -30,7 +30,7 @@ export const POST = async (req: NextRequest) => {
         if (!userId) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
-        const shoppingListService = new shoppingService();
+        const shoppingListService = new ShoppingService();
         const shoppingList = await shoppingListService.generateShoppingList(userId);
 
         return new NextResponse(JSON.stringify(shoppingList), { status: 201 });
@@ -54,7 +54,7 @@ export const PUT = async (req: NextRequest) => {
         const body = await req.json();
         const { ingredient, checked } = body;
 
-        const shoppingListService = new shoppingService();
+        const shoppingListService = new ShoppingService();
         const updatedShoppingList = await shoppingListService.updateShoppingList(userId, ingredient, checked);
 
         return new NextResponse(JSON.stringify(updatedShoppingList), { status: 201 })

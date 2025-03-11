@@ -3,7 +3,7 @@ import Adjective from "@/database/models/adjectives";
 import Ingredient from "@/database/models/ingredients";
 import { User } from "@/database/models/user";
 
-export class usernameService {
+export class UsernameService {
     async generateUsername(): Promise<string> {
         await connect(); 
 

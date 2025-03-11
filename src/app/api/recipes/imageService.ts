@@ -1,10 +1,11 @@
-export class imageService {
+export class ImageService {
 
   async generateImage(recipeName: string): Promise<string | null> {
     const apiKey = process.env.PEXELS_API_KEY;
+    const apiUrl = `https://api.pexels.com/v1/search?query=${recipeName.toLowerCase()}&orientation=landscape&per_page=1`;
 
     try {
-      const response = await fetch(`https://api.pexels.com/v1/search?query=${recipeName.toLowerCase()}&orientation=landscape&per_page=1`, {
+      const response = await fetch(apiUrl, {
       headers: {
         Authorization: `${apiKey}`,
       },
