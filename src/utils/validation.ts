@@ -1,8 +1,7 @@
 import { IngredientInterface, Meal } from "@/types/types";
+import { emailRegex } from "./consts";
 
 export const validateUserInput = (email: string, password: string) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
   if (!email || email.trim() === "") {
     return "Please enter an email.";
   }

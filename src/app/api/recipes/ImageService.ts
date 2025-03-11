@@ -1,8 +1,10 @@
+import { getPexelsApiUrl } from "@/utils/consts";
+
 export class ImageService {
 
   async generateImage(recipeName: string): Promise<string | null> {
     const apiKey = process.env.PEXELS_API_KEY;
-    const apiUrl = `https://api.pexels.com/v1/search?query=${recipeName.toLowerCase()}&orientation=landscape&per_page=1`;
+    const apiUrl = getPexelsApiUrl(recipeName);
 
     try {
       const response = await fetch(apiUrl, {
