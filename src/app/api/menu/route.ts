@@ -2,6 +2,7 @@ import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import Menu from "@/database/models/menu";
 import { getUserId } from "../auth/auth";
+import ShoppingList from "@/database/models/shopping-list";
 
 export const GET = async (req: NextRequest) => {
     try {

@@ -13,7 +13,9 @@ export class ShoppingService {
         const isMenu = await this.menuExists(menu);
 
         if(!isMenu){
-            return new NextResponse("No menus found", { status: 404 });
+            await ShoppingList.deleteMany({userId});
+            const newShoppingList = new ShoppingList({ userId, list: [] });
+            await newShoppingList.save();
         }
 
         const recipes = await this.getRecipes(menu);
@@ -29,6 +31,7 @@ export class ShoppingService {
 
         if(existingShoppingList.length > 0) {
             const existingList = existingShoppingList[0].list;
+
             const mergedList = shoppingListIngredientsCalculated.map(newItem => {
                 const existingItem = existingList.find((item: IngredientInterface) => item.ingredient === newItem.ingredient && item.unit === newItem.unit);
                 const checked = existingItem && existingItem.quantity >= newItem.quantity ? existingItem.checked : false;
