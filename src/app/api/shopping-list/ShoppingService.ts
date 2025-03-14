@@ -148,7 +148,6 @@ async updateShoppingList(userId: string, ingredientName: string, checked: boolea
             ingredientMap.set(key, { _id, ingredient, quantity, unit });
         }
     });
-
     return Array.from(ingredientMap.values());
 }
 }

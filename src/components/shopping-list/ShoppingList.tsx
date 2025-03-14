@@ -16,7 +16,10 @@ const ShoppingList = ({
   const handleCheckboxChange = (updatedItem: IngredientInterface) => {
     setCurrentShoppingList((prevList) => {
       const updatedList = prevList.map((item) =>
-        item.ingredient === updatedItem.ingredient ? updatedItem : item
+        item.ingredient === updatedItem.ingredient &&
+        item.unit === updatedItem.unit
+          ? updatedItem
+          : item
       );
 
       return updatedList.sort((a, b) => {
@@ -43,7 +46,7 @@ const ShoppingList = ({
             .sort((a, b) => Number(a.checked) - Number(b.checked))
             .map((shoppingItem) => (
               <ShoppingListItem
-                key={shoppingItem.ingredient}
+                key={`${shoppingItem.ingredient}-${shoppingItem.unit}`}
                 shoppingItem={shoppingItem}
                 onCheckboxChange={handleCheckboxChange}
               />

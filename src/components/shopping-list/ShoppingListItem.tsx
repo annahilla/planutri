@@ -13,6 +13,7 @@ const ShoppingListItem = ({
   const [isChecked, setIsChecked] = useState(false);
 
   const handleOnCheckboxChange = () => {
+    console.log(shoppingItem);
     setIsChecked(!isChecked);
     const newIngredient = { ...shoppingItem, checked: !isChecked };
     onCheckboxChange(newIngredient);
