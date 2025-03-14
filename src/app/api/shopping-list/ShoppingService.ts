@@ -122,7 +122,7 @@ async updateShoppingList(userId: string, ingredientName: string, checked: boolea
         const ingredients = recipe.ingredients;
 
         ingredients.forEach(ingredient => {
-            const adjustedQuantity = ingredient.quantity * (menuItem.servings ?? 1);
+            const adjustedQuantity = ingredient.quantity * ((menuItem.servings ?? 1) / (recipe.servings || 1));
             
             ingredientList.push({
                 ingredient: ingredient.ingredient,
