@@ -11,7 +11,7 @@ import { addRecipe, getIngredients, getUnits } from "@/services/recipeService";
 import { validateCreateRecipeForm } from "@/utils/validation";
 import { useQuery } from "@tanstack/react-query";
 import TextAreaResizable from "./TextAreaResizable";
-import MealTags from "../recipes/MealTags";
+import MealTags from "../recipes/recipes-list/toolbar/MealTags";
 import { ToggleSwitch } from "../ui/ToggleSwitch";
 
 const CreateRecipeForm = () => {

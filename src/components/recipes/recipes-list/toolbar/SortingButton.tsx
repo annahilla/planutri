@@ -5,16 +5,12 @@ import { RecipeInterface } from "@/types/types";
 import { useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { BsSortDownAlt } from "react-icons/bs";
+import { useFilteredRecipes } from "@/context/FilteredRecipesContext";
 
-const SortingButton = ({
-  recipes,
-  setFilteredRecipes,
-}: {
-  recipes: RecipeInterface[];
-  setFilteredRecipes: (recipes: RecipeInterface[]) => void;
-}) => {
+const SortingButton = ({ recipes }: { recipes: RecipeInterface[] }) => {
   const buttonRef = useRef<HTMLDivElement>(null!);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { setFilteredRecipes } = useFilteredRecipes();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);

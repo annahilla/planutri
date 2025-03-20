@@ -2,9 +2,9 @@
 
 import { CiImageOn } from "react-icons/ci";
 import { CiImport } from "react-icons/ci";
-import Modal from "../ui/Modal";
+import Modal from "@/components/ui/Modal";
 import { useState } from "react";
-import Button from "../ui/buttons/Button";
+import Button from "@/components/ui/buttons/Button";
 import Image from "next/image";
 import { updateRecipe, uploadRecipeImage } from "@/services/recipeService";
 import { PulseLoader } from "react-spinners";
@@ -141,7 +141,12 @@ const EditRecipeImageButton = ({
         </div>
         <div className="flex gap-4 mt-8">
           <Button handleClick={closeModal}>Cancel</Button>
-          <Button handleClick={handleUpload} filled color="white">
+          <Button
+            disabled={isUploading}
+            handleClick={handleUpload}
+            filled
+            color="white"
+          >
             {isUploading ? <PulseLoader size={5} color="white" /> : "Save"}
           </Button>
         </div>

@@ -2,33 +2,33 @@
 
 import { RecipeInterface } from "@/types/types";
 import Link from "next/link";
-import RecipeImage from "./RecipeImage";
+import RecipeImage from "../images/RecipeImage";
 import { useEffect, useState } from "react";
-import ConfirmModal from "../ui/modals/ConfirmModal";
+import ConfirmModal from "@/components/ui/modals/ConfirmModal";
 import { deleteRecipe } from "@/services/recipeService";
 import { useRouter } from "next/navigation";
 import { CiEdit, CiTrash } from "react-icons/ci";
-import RecipeServingsCard from "./RecipeServingsCard";
-import MadeByTag from "../ui/MadeByTag";
-import FavoriteButton from "../ui/buttons/FavoriteButton";
+import RecipeServingsCard from "../recipe/RecipeServingsCard";
+import MadeByTag from "@/components/ui/MadeByTag";
+import FavoriteButton from "@/components/ui/buttons/FavoriteButton";
 import { useUser } from "@/context/UserContext";
 import useUsername from "@/hooks/useUsername";
+import { useFilteredRecipes } from "@/context/FilteredRecipesContext";
+import { ClipLoader } from "react-spinners";
+import IconButton from "@/components/ui/buttons/IconButton";
 
 const RecipeCard = ({
   recipe,
-  recipes,
   isMenu = false,
-  setRecipes,
   setMenuServings,
 }: {
   recipe: RecipeInterface;
-  recipes: RecipeInterface[];
   isMenu?: boolean;
   setMenuServings: (
     value: (prev: { [key: string]: number }[]) => { [key: string]: number }[]
   ) => void;
-  setRecipes: (recipes: RecipeInterface[]) => void;
 }) => {
+  const { filteredRecipes, setFilteredRecipes } = useFilteredRecipes();
   const { user } = useUser();
   const [servings, setServings] = useState(
     recipe.servings ? recipe.servings : 1
@@ -37,6 +37,7 @@ const RecipeCard = ({
   const router = useRouter();
   const isOwnRecipe = recipe.userId === user.userId;
   const { username, loading } = useUsername(recipe);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const ingredientsList = recipe.ingredients
     .map((ingredient) => ingredient.ingredient)
@@ -49,18 +50,21 @@ const RecipeCard = ({
   const handleDeleteRecipe = async () => {
     if (recipe && recipe._id) {
       try {
+        setIsDeleting(true);
         setIsModalOpen(false);
         await deleteRecipe(recipe._id);
-        setRecipes(
-          recipes.filter(
+        setFilteredRecipes(
+          filteredRecipes.filter(
             (deletedRecipe: RecipeInterface) => deletedRecipe._id !== recipe._id
           )
         );
+
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.log(error);
       }
     }
+    setIsDeleting(false);
   };
 
   const openRecipeEdit = () => {
@@ -68,6 +72,7 @@ const RecipeCard = ({
   };
 
   useEffect(() => {
+    if (!recipe || !recipe._id) return;
     setMenuServings((prev: { [key: string]: number }[]) => {
       const existingRecipeIndex = prev.findIndex((item) => item[recipe.name]);
 
@@ -113,18 +118,17 @@ const RecipeCard = ({
             <FavoriteButton recipeId={recipe._id} />
             {isOwnRecipe && (
               <div className="flex gap-2 text-sm items-center">
-                <button
-                  className="bg-brown p-2 rounded-full text-white"
+                <IconButton
+                  variant="filled"
                   onClick={openRecipeEdit}
-                >
-                  <CiEdit />
-                </button>
-                <button
-                  className="bg-white border border-brown p-2 rounded-full text-brown"
+                  icon={<CiEdit />}
+                />
+                <IconButton
+                  variant="outline"
                   onClick={openDeleteRecipe}
-                >
-                  <CiTrash />
-                </button>
+                  icon={isDeleting ? <ClipLoader size={12} /> : <CiTrash />}
+                  disabled={isDeleting}
+                />
               </div>
             )}
           </div>

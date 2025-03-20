@@ -82,11 +82,13 @@ const MealItem = ({
         {!isLoading && (
           <div className="flex items-center gap-1 text-neutral-600 lg:hidden group-hover:flex">
             <IconButton
-              handleClick={() => openSelectRecipeModal(meal)}
+              variant="invisible"
+              onClick={() => openSelectRecipeModal(meal)}
               icon={<LiaExchangeAltSolid />}
             />
             <IconButton
-              handleClick={() => clearSingleRecipe(meal)}
+              variant="invisible"
+              onClick={() => clearSingleRecipe(meal)}
               icon={<IoMdClose />}
             />
           </div>

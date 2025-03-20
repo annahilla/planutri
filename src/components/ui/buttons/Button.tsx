@@ -6,6 +6,7 @@ interface ButtonProps {
   type?: "submit" | "button";
   color?: "black" | "white" | "brown";
   handleClick?: (() => void) | ((id: string) => Promise<void>);
+  disabled?: boolean;
 }
 
 const colors: Record<string, string> = {
@@ -21,6 +22,7 @@ const Button = ({
   rounded = false,
   bg,
   color = "black",
+  disabled = false,
   handleClick,
 }: ButtonProps) => {
   return (
@@ -32,6 +34,7 @@ const Button = ({
         rounded && "rounded-full"
       }`}
       onClick={handleClick ? () => handleClick("some-id") : undefined}
+      disabled={disabled}
     >
       {children}
     </button>

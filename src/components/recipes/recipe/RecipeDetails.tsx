@@ -1,15 +1,15 @@
 "use client";
 
-import Button from "../ui/buttons/Button";
+import Button from "../../ui/buttons/Button";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
-import ErrorMessage from "../ui/ErrorMessage";
+import ErrorMessage from "../../ui/ErrorMessage";
 import IngredientInput from "./IngredientInput";
 import DescriptionInput from "./DescriptionInput";
-import ConfirmModal from "../ui/modals/ConfirmModal";
-import RecipeImage from "./RecipeImage";
-import EditRecipeImageButton from "./EditRecipeImage";
-import AddButton from "../ui/buttons/AddButton";
+import ConfirmModal from "../../ui/modals/ConfirmModal";
+import RecipeImage from "../images/RecipeImage";
+import EditRecipeImageButton from "../images/EditRecipeImage";
+import AddButton from "../../ui/buttons/AddButton";
 import { PiNotebook } from "react-icons/pi";
 import RecipeInfoCard from "./RecipeInfoCard";
 import { useRecipe } from "@/context/RecipeContext";
@@ -19,9 +19,9 @@ import useSaveRecipe from "@/hooks/useSaveRecipe";
 import useConfirmDelete from "@/hooks/useConfirmDelete";
 import { Meal, RecipeInterface } from "@/types/types";
 import RecipeServingsCard from "./RecipeServingsCard";
-import FilterTagItem from "./FilterTagItem";
-import MealTags from "./MealTags";
-import { ToggleSwitch } from "../ui/ToggleSwitch";
+import FilterTagItem from "../recipes-list/toolbar/FilterTagItem";
+import MealTags from "../recipes-list/toolbar/MealTags";
+import { ToggleSwitch } from "../../ui/ToggleSwitch";
 import { useUser } from "@/context/UserContext";
 
 interface RecipeDetailsProps {

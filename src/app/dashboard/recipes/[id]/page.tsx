@@ -1,5 +1,5 @@
-import RecipeDetails from "@/components/recipes/RecipeDetails";
-import RecipeHeader from "@/components/recipes/RecipeHeader";
+import RecipeDetails from "@/components/recipes/recipe/RecipeDetails";
+import RecipeHeader from "@/components/recipes/recipe/RecipeHeader";
 import { FavoriteRecipesProvider } from "@/context/FavoriteRecipesContext";
 import { RecipeProvider } from "@/context/RecipeContext";
 import { fecthFavoriteRecipes } from "@/services/favoriteRecipesServiceServer";

@@ -1,7 +1,7 @@
 "use client";
 
 import { DayOfTheWeek, Meal, RecipeInterface } from "@/types/types";
-import RecipeDetails from "../recipes/RecipeDetails";
+import RecipeDetails from "../recipes/recipe/RecipeDetails";
 import Modal from "../ui/Modal";
 import { useMenu } from "@/context/MenuContext";
 import Link from "next/link";

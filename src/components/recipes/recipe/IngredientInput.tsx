@@ -1,10 +1,10 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
-import IngredientDropdown from "../ui/IngredientDropdown";
+import IngredientDropdown from "@/components/ui/IngredientDropdown";
 import { IngredientInterface, RecipeInterface } from "@/types/types";
 import { IoIosClose } from "react-icons/io";
-import IngredientQuantityAndUnit from "../IngredientQuantityAndUnit";
+import IngredientQuantityAndUnit from "@/components/IngredientQuantityAndUnit";
 import { BiSolidCheckboxChecked } from "react-icons/bi";
 import { useSearchParams } from "next/navigation";
 import { useRecipe } from "@/context/RecipeContext";

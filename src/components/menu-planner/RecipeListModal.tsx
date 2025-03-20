@@ -1,7 +1,7 @@
 "use client";
 
 import Modal from "../ui/Modal";
-import RecipesList from "../recipes/RecipesList";
+import RecipesList from "../recipes/recipes-list/RecipesList";
 import {
   DayOfTheWeek,
   Meal,

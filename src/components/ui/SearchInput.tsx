@@ -1,11 +1,27 @@
-import { ChangeEvent } from "react";
+"use client";
+
+import { useFilteredRecipes } from "@/context/FilteredRecipesContext";
+import { useRecipes } from "@/context/RecipesContext";
+import { ChangeEvent, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 
-const SearchInput = ({
-  search,
-}: {
-  search: (event: ChangeEvent<HTMLInputElement>) => void;
-}) => {
+const SearchInput = () => {
+  const { recipes } = useRecipes();
+  const { setFilteredRecipes } = useFilteredRecipes();
+
+  useEffect(() => {
+    setFilteredRecipes(recipes);
+  }, [recipes]);
+
+  const search = (event: ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value.toLowerCase();
+    setFilteredRecipes(
+      query === ""
+        ? recipes
+        : recipes.filter((recipe) => recipe.name.toLowerCase().includes(query))
+    );
+  };
+
   return (
     <div className="my-6 relative">
       <input

@@ -2,15 +2,36 @@ import { ReactElement } from "react";
 
 const IconButton = ({
   icon,
-  handleClick,
+  onClick,
+  disabled = false,
+  variant,
 }: {
   icon: ReactElement;
-  handleClick: () => void;
+  onClick: () => void;
+  disabled?: boolean;
+  variant: "filled" | "outline" | "invisible";
 }) => {
+  if (variant === "invisible") {
+    return (
+      <button
+        onClick={onClick}
+        className="hover:bg-neutral-100 rounded-full p-1 text-xs"
+      >
+        {icon}
+      </button>
+    );
+  }
   return (
     <button
-      onClick={handleClick}
-      className="hover:bg-neutral-100 rounded-full p-1 text-xs"
+      onClick={onClick}
+      className={`flex items-center justify-center p-2 rounded-full 
+          ${variant === "filled" && "w-8 h-8 bg-brown text-white"}
+          ${
+            variant === "outline" &&
+            "w-8 h-8 border border-brown text-brown bg-white"
+          }
+        `}
+      disabled={disabled}
     >
       {icon}
     </button>

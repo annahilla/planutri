@@ -2,13 +2,13 @@
 
 import React, { useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
-import DashboardButton from "../ui/buttons/DashboardButton";
+import DashboardButton from "@/components/ui/buttons/DashboardButton";
 import { CiEdit } from "react-icons/ci";
 import { useRecipe } from "@/context/RecipeContext";
-import ConfirmModal from "../ui/modals/ConfirmModal";
+import ConfirmModal from "@/components/ui/modals/ConfirmModal";
 import useEditMode from "@/hooks/useEditMode";
 import { useRouter } from "next/navigation";
-import FavoriteButton from "../ui/buttons/FavoriteButton";
+import FavoriteButton from "@/components/ui/buttons/FavoriteButton";
 
 const RecipeHeader = () => {
   const { isOwnRecipe } = useRecipe();

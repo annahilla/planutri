@@ -7,7 +7,19 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ['images.pexels.com', 'res.cloudinary.com', 'plus.unsplash.com', 'lh3.googleusercontent.com', 'images.unsplash.com']
+    domains: ['images.pexels.com', 'res.cloudinary.com', 'plus.unsplash.com', 'lh3.googleusercontent.com', 'images.unsplash.com'],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.pexels.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        pathname: "/**",
+      },
+    ],
   },
   env: {
     CLOUDINARY_UPLOAD_URL: process.env.CLOUDINARY_UPLOAD_URL,

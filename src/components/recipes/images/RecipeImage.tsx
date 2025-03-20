@@ -5,7 +5,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useState } from "react";
 import { useRecipe } from "@/context/RecipeContext";
-import defaultImage from "../../../public/default-image.png";
+import defaultImage from "../../../../public/default-image.png";
 
 const RecipeImage = ({
   imageUrl,

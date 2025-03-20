@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation";
-import TextAreaResizable from "../forms/TextAreaResizable";
+import TextAreaResizable from "@/components/forms/TextAreaResizable";
 
 interface DescriptionInputProps {
   description: string | undefined;
