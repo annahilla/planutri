@@ -122,3 +122,45 @@ export const getRecipeUsername = async (recipeId: string | unknown) => {
         console.error("Error fetching username:", error);
     }
 };
+
+export const getUnits = async () => {
+  try {
+    const response = await fetch(`/api/units`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching units");
+    }
+    const data = await response.json()
+    return data[0].units;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getIngredients = async () => {
+  try {
+    const response = await fetch(`/api/ingredients`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching ingredients");
+    }
+    const data = await response.json();
+    return data[0].ingredients;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

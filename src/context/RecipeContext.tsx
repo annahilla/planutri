@@ -12,7 +12,7 @@ interface RecipeContextInterface {
   isOwnRecipe: boolean;
   units: string[];
   username: string;
-  ingredients: string[];
+  ingredientsList: string[];
 }
 
 interface RecipeProviderInterface {
@@ -34,7 +34,7 @@ const RecipeContext = createContext<RecipeContextInterface>({
   isOwnRecipe: false,
   units: [],
   username: "",
-  ingredients: [],
+  ingredientsList: [],
 });
 
 export const useRecipe = () => {
@@ -53,7 +53,7 @@ export const RecipeProvider = ({
   const [discardChanges, setDiscardChanges] = useState(false);
   const isOwnRecipe = recipe.userId === user.userId;
   const units = fetchedUnits;
-  const ingredients = fetchedIngredients;
+  const ingredientsList = fetchedIngredients;
   const username = fetchedUsername;
 
   return (
@@ -66,7 +66,7 @@ export const RecipeProvider = ({
         isOwnRecipe,
         units,
         username,
-        ingredients,
+        ingredientsList,
       }}
     >
       {children}

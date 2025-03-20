@@ -7,9 +7,8 @@ import IngredientDropdown from "../ui/IngredientDropdown";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import { IngredientInterface, Meal } from "@/types/types";
-import { addRecipe } from "@/services/recipeService";
+import { addRecipe, getIngredients, getUnits } from "@/services/recipeService";
 import { validateCreateRecipeForm } from "@/utils/validation";
-import { fetchUnits } from "@/services/unitService";
 import { useQuery } from "@tanstack/react-query";
 import TextAreaResizable from "./TextAreaResizable";
 import MealTags from "../recipes/MealTags";
@@ -30,7 +29,12 @@ const CreateRecipeForm = () => {
 
   const { data: units } = useQuery({
     queryKey: ["units"],
-    queryFn: fetchUnits,
+    queryFn: getUnits,
+  });
+
+  const { data: allIngredients } = useQuery({
+    queryKey: ["ingredients"],
+    queryFn: getIngredients,
   });
 
   const handleRecipeNameChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -205,6 +209,7 @@ const CreateRecipeForm = () => {
               isDropdownOpen={isDropdownOpen}
               handleIngredientSelect={handleIngredientSelect}
               setIsDropdownOpen={setIsDropdownOpen}
+              allIngredients={allIngredients}
             />
           </div>
           <div className="mt-2 border bg-white py-4 px-4 rounded outline-none min-h-60 flex flex-col gap-3">

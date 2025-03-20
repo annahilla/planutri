@@ -32,7 +32,7 @@ const IngredientInput = ({
   menuServings,
   recipe,
 }: IngredientInputProps) => {
-  const { units } = useRecipe();
+  const { units, ingredientsList } = useRecipe();
   const searchParams = useSearchParams();
   const isEditMode = searchParams.get("edit") === "true";
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -135,6 +135,7 @@ const IngredientInput = ({
                     handleIngredientSelect={(selectedIngredient) =>
                       handleIngredientSelect(selectedIngredient, index)
                     }
+                    allIngredients={ingredientsList}
                   />
                 )}
             </div>

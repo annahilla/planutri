@@ -1,13 +1,12 @@
 import useClickOutside from "@/hooks/useClickOutside";
-import { fetchIngredients } from "@/services/ingredientService";
 import { useEffect, useRef, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 
 interface IngredientDropdownProps {
   isDropdownOpen: boolean;
   ingredientInputValue: string;
   handleIngredientSelect: (ingredient: string) => void;
   setIsDropdownOpen: (value: boolean) => void;
+  allIngredients: string[];
 }
 
 const IngredientDropdown = ({
@@ -15,15 +14,11 @@ const IngredientDropdown = ({
   ingredientInputValue,
   handleIngredientSelect,
   setIsDropdownOpen,
+  allIngredients,
 }: IngredientDropdownProps) => {
   const dropdownRef = useRef<HTMLUListElement>(null!);
   useClickOutside(dropdownRef, () => setIsDropdownOpen(false));
   const [filteredIngredients, setFilteredIngredients] = useState<string[]>([]);
-
-  const { data: allIngredients } = useQuery({
-    queryKey: ["ingredients"],
-    queryFn: fetchIngredients,
-  });
 
   useEffect(() => {
     if (ingredientInputValue === "") {
