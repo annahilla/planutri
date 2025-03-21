@@ -1,31 +1,31 @@
-import { RecipeInterface } from "@/types/types";
 import { cookies } from "next/headers";
 
-export async function fetchRecipes() {
+export async function fetchRecipes(page?: number, search: string = "", mealFilter: string = "", sort: string = "alphabetical", filter:string[] = [], limit=12) {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get("session");
 
+  let url = `${process.env.NEXT_PUBLIC_API_URL}/api/recipes`;
+  if (page && limit) {
+    url += `?page=${page}&search=${search}&meal=${mealFilter}&filter=${filter}&sort=${sort}`;
+  }
+
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/recipes`, {
+    const response = await fetch(url, {
       method: "GET",
-      headers: { 
-      "Content-Type": "application/json",
-      "Cookie": `session=${sessionCookie?.value}`,
+      headers: {
+        "Content-Type": "application/json",
+        "Cookie": `session=${sessionCookie?.value}`,
       },
       credentials: "include",
     });
-    
+
     if (!response.ok) {
       throw new Error("Error fetching recipes");
     }
 
-    const recipes = await response.json();
-    const sortedRecipes = recipes.sort((a: RecipeInterface, b: RecipeInterface) =>
-      a.name.localeCompare(b.name)
-    );
-      
-    return sortedRecipes;
-  } catch(error) {
+    const data = await response.json();
+    return page && limit ? data : data.recipes;
+  } catch (error) {
     console.error(error);
     throw error;
   }

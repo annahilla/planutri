@@ -16,18 +16,18 @@ import useUsername from "@/hooks/useUsername";
 import { useFilteredRecipes } from "@/context/FilteredRecipesContext";
 import { ClipLoader } from "react-spinners";
 import IconButton from "@/components/ui/buttons/IconButton";
+import { useRecipes } from "@/context/RecipesContext";
 
 const RecipeCard = ({
   recipe,
-  isMenu = false,
   setMenuServings,
 }: {
   recipe: RecipeInterface;
-  isMenu?: boolean;
   setMenuServings: (
     value: (prev: { [key: string]: number }[]) => { [key: string]: number }[]
   ) => void;
 }) => {
+  const { isModal } = useRecipes();
   const { filteredRecipes, setFilteredRecipes } = useFilteredRecipes();
   const { user } = useUser();
   const [servings, setServings] = useState(
@@ -88,7 +88,7 @@ const RecipeCard = ({
 
   return (
     <div className="border p-5 rounded h-full flex flex-col justify-between">
-      {!isMenu ? (
+      {!isModal ? (
         <>
           <Link
             className="flex flex-col gap-3 hover:opacity-80"

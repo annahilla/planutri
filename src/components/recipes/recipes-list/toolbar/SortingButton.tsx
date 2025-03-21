@@ -1,16 +1,15 @@
 "use client";
 
 import useClickOutside from "@/hooks/useClickOutside";
-import { RecipeInterface } from "@/types/types";
 import { useRef, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { BsSortDownAlt } from "react-icons/bs";
-import { useFilteredRecipes } from "@/context/FilteredRecipesContext";
+import { useRouter } from "next/navigation";
 
-const SortingButton = ({ recipes }: { recipes: RecipeInterface[] }) => {
+const SortingButton = () => {
   const buttonRef = useRef<HTMLDivElement>(null!);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { setFilteredRecipes } = useFilteredRecipes();
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -22,32 +21,23 @@ const SortingButton = ({ recipes }: { recipes: RecipeInterface[] }) => {
 
   useClickOutside(buttonRef, closeDropdown);
 
+  const updateSort = (newSort: string) => {
+    const params = new URLSearchParams(window.location.search);
+    params.set("sort", newSort);
+
+    router.push(`?${params.toString()}`);
+  };
+
   const sortByNewest = () => {
-    const sortedByNewest = [...recipes].sort(
-      (a, b) =>
-        new Date(b.createdAt ?? 0).getTime() -
-        new Date(a.createdAt ?? 0).getTime()
-    );
-    setFilteredRecipes(sortedByNewest);
-    closeDropdown();
+    updateSort("newest");
   };
 
   const sortByOldest = () => {
-    const sortedByOldest = [...recipes].sort(
-      (a, b) =>
-        new Date(a.createdAt ?? 0).getTime() -
-        new Date(b.createdAt ?? 0).getTime()
-    );
-    setFilteredRecipes(sortedByOldest);
-    closeDropdown();
+    updateSort("oldest");
   };
 
   const sortAlphabetically = () => {
-    const sortedAlphabetically = [...recipes].sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-    setFilteredRecipes(sortedAlphabetically);
-    closeDropdown();
+    updateSort("alphabetical");
   };
 
   return (

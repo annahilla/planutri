@@ -1,46 +1,48 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import FilterTagItem from "./FilterTagItem";
 import { Meal } from "@/types/types";
+import { useSearchParams } from "next/navigation";
 
 const MealTags = ({
   meals = [],
-  setMeals,
-  setMealFilters,
   isSnap = true,
 }: {
   meals?: Meal[];
-  setMeals?: (meal: Meal[]) => void;
-  setMealFilters?: (filters: Meal[]) => void;
   isSnap?: boolean;
 }) => {
-  const [activeFilters, setActiveFilters] = useState<Meal[]>([]);
+  const searchParams = useSearchParams();
+  const mealFilters: Meal[] =
+    (searchParams.get("meal")?.split(",") as Meal[]) || [];
 
   const handleMealClick = (meal: Meal) => {
-    setActiveFilters((prev) => (prev.includes(meal) ? prev : [...prev, meal]));
+    const updatedFilters = mealFilters.includes(meal)
+      ? mealFilters.filter((filter) => filter !== meal)
+      : [...mealFilters, meal];
+
+    updateURLParams(updatedFilters);
   };
 
-  const closeFilter = (meal: Meal) => {
-    const updatedFilters = activeFilters.filter((filter) => filter !== meal);
-    setActiveFilters(updatedFilters);
-    setMeals?.(updatedFilters);
+  const updateURLParams = (updatedFilters: Meal[]) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (updatedFilters.length) {
+      urlParams.set("meal", updatedFilters.join(","));
+    } else {
+      urlParams.delete("meal");
+    }
+    window.history.replaceState(null, "", "?" + urlParams.toString());
   };
-
-  useEffect(() => {
-    setMealFilters?.(activeFilters);
-    setMeals?.(activeFilters);
-  }, [activeFilters]);
 
   const getSelectedResults = (meal: Meal) => {
-    setActiveFilters((prev) => (prev.includes(meal) ? prev : [...prev, meal]));
+    return mealFilters.includes(meal);
   };
 
   useEffect(() => {
     if (meals) {
-      meals.map((meal) => getSelectedResults(meal));
+      meals.forEach((meal) => getSelectedResults(meal));
     }
-  }, []);
+  }, [meals]);
 
   return (
     <div
@@ -54,8 +56,8 @@ const MealTags = ({
         <FilterTagItem
           key={meal}
           handleFilter={() => handleMealClick(meal as Meal)}
-          closeTag={() => closeFilter(meal as Meal)}
-          isActive={activeFilters.includes(meal as Meal)}
+          closeTag={() => handleMealClick(meal as Meal)}
+          isActive={getSelectedResults(meal as Meal)}
         >
           {meal}
         </FilterTagItem>

@@ -1,6 +1,35 @@
 import { RecipeInterface } from "@/types/types";
 import { toast } from "react-toastify";
 
+export async function getRecipes(page?: number, search: string = "", mealFilter: string = "", sort: string = "alphabetical", filter:string[] = [], limit=12) {
+
+  let url = `/api/recipes`;
+  if (page && limit) {
+    url += `?page=${page}&search=${search}&meal=${mealFilter}&filter=${filter}&sort=${sort}`;
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error fetching recipes");
+    }
+
+    const data = await response.json();
+    return page && limit ? data : data.recipes;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
 export const addRecipe = async (recipe: RecipeInterface) => {
     try {
     const response = await fetch("/api/recipes", {

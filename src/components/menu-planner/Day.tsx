@@ -87,7 +87,6 @@ const Day = ({ dayOfTheWeek }: { dayOfTheWeek: DayOfTheWeek }) => {
         </div>
       </div>
       <RecipeListModal
-        recipes={recipes}
         isModalOpen={isSelectRecipeModalOpen}
         closeModal={closeModal}
         dayOfTheWeek={dayOfTheWeek}

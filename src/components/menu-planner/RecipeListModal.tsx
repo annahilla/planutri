@@ -10,11 +10,14 @@ import {
 } from "@/types/types";
 import { addRecipeToMenu } from "@/services/menuService";
 import { RecipesProvider } from "@/context/RecipesContext";
+import { useEffect, useState } from "react";
+import { getRecipes } from "@/services/recipeService";
+import { FilteredRecipesProvider } from "@/context/FilteredRecipesContext";
+
 interface RecipeListModalProps {
   isModalOpen: boolean;
   dayOfTheWeek: DayOfTheWeek;
   selectedMeal: Meal | null;
-  recipes: RecipeInterface[];
   fullMenu: MenuInterface[];
   setMenu: (menu: MenuInterface[]) => void;
   closeModal: () => void;
@@ -24,11 +27,30 @@ const RecipeListModal = ({
   isModalOpen,
   dayOfTheWeek,
   selectedMeal,
-  recipes,
   fullMenu,
   setMenu,
   closeModal,
 }: RecipeListModalProps) => {
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [currentRecipes, setCurrentRecipes] = useState([]);
+
+  useEffect(() => {
+    const loadRecipes = async () => {
+      try {
+        const { recipes, totalPages } = await getRecipes(page);
+        setCurrentRecipes(recipes);
+        setTotalPages(totalPages);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (isModalOpen) {
+      loadRecipes();
+    }
+  }, [isModalOpen, page]);
+
   const selectRecipe = async (
     recipe: RecipeInterface,
     selectedMeal: Meal,
@@ -59,13 +81,20 @@ const RecipeListModal = ({
       <h3 className="text-lg md:text-xl">
         Choose a recipe for {selectedMeal} on {dayOfTheWeek}
       </h3>
-      <RecipesProvider fetchedRecipes={recipes}>
-        <RecipesList
-          isMenu
-          onSelect={(recipe, servings) =>
-            selectRecipe(recipe, selectedMeal!, servings)
-          }
-        />
+      <RecipesProvider
+        fetchedRecipes={currentRecipes}
+        totalPages={totalPages}
+        page={page}
+        setPage={setPage}
+        isModal
+      >
+        <FilteredRecipesProvider recipes={currentRecipes}>
+          <RecipesList
+            onSelect={(recipe, servings) =>
+              selectRecipe(recipe, selectedMeal!, servings)
+            }
+          />
+        </FilteredRecipesProvider>
       </RecipesProvider>
     </Modal>
   );

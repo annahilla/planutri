@@ -1,50 +1,65 @@
-import { useEffect, useState } from "react";
 import FilterTagItem from "./FilterTagItem";
+import { useSearchParams } from "next/navigation";
 
-const FilterTags = ({
-  setTypeFilters,
-}: {
-  setTypeFilters: (filters: string[]) => void;
-}) => {
-  const [activeFilters, setActiveFilters] = useState<string[]>([]);
+const FilterTags = () => {
+  const searchParams = useSearchParams();
+  const filters = (searchParams.get("filter")?.split(",") as string[]) || [];
 
-  const toggleFilter = (filter: string) => {
-    setActiveFilters((prevFilters) => {
-      let updatedFilters = [...prevFilters];
+  const handleFilterClick = (filter: string) => {
+    let updatedFilters = [...filters];
 
-      if (filter === "public") {
-        updatedFilters = updatedFilters.filter((f) => f !== "owned");
-      } else if (filter === "owned") {
-        updatedFilters = updatedFilters.filter((f) => f !== "public");
-      }
+    if (filter === "all") {
+      updatedFilters = [];
+      updateURLParams(updatedFilters, true);
+      return;
+    }
 
-      if (updatedFilters.includes(filter)) {
-        updatedFilters = updatedFilters.filter((f) => f !== filter);
-      } else {
-        updatedFilters.push(filter);
-      }
+    if (filter === "public") {
+      updatedFilters = updatedFilters.filter((f) => f !== "owned");
+    } else if (filter === "owned") {
+      updatedFilters = updatedFilters.filter((f) => f !== "public");
+    }
 
-      return updatedFilters;
-    });
+    if (updatedFilters.includes(filter)) {
+      updatedFilters = updatedFilters.filter((f) => f !== filter);
+    } else {
+      updatedFilters.push(filter);
+    }
+
+    updateURLParams(updatedFilters);
   };
 
-  const closeFilter = (filter: string) => {
-    const updatedFilters = activeFilters.filter((filt) => filt !== filter);
-    setActiveFilters(updatedFilters);
+  const updateURLParams = (updatedFilters: string[], clearSearch = false) => {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (updatedFilters.length) {
+      urlParams.set("filter", updatedFilters.join(","));
+    } else {
+      urlParams.delete("filter");
+    }
+
+    if (clearSearch) {
+      urlParams.delete("search");
+    }
+
+    window.history.replaceState(null, "", "?" + urlParams.toString());
   };
 
-  useEffect(() => {
-    setTypeFilters(activeFilters);
-  }, [activeFilters]);
+  const getSelectedResults = (filter: string) => {
+    if (filter === "all" && filters.length === 0) {
+      return true;
+    }
+    return filters.includes(filter);
+  };
 
   return (
     <div className="flex gap-2 items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide">
-      {["public", "owned", "favorites"].map((filter) => (
+      {["all", "public", "owned", "favorites"].map((filter) => (
         <FilterTagItem
           key={filter}
-          handleFilter={() => toggleFilter(filter)}
-          closeTag={() => closeFilter(filter)}
-          isActive={activeFilters.includes(filter)}
+          handleFilter={() => handleFilterClick(filter)}
+          closeTag={() => handleFilterClick(filter)}
+          isActive={getSelectedResults(filter)}
         >
           {filter.charAt(0).toUpperCase() + filter.slice(1)}
         </FilterTagItem>

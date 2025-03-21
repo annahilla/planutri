@@ -15,7 +15,8 @@ const IconButton = ({
     return (
       <button
         onClick={onClick}
-        className="hover:bg-neutral-100 rounded-full p-1 text-xs"
+        className="hover:bg-neutral-100 rounded-full p-1 text-xs disabled:text-neutral-400 disabled:hover:bg-transparent"
+        disabled={disabled}
       >
         {icon}
       </button>

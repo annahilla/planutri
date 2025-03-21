@@ -2,13 +2,17 @@ import connect from "@/database/db";
 import { NextRequest, NextResponse } from "next/server";
 import Menu from "@/database/models/menu";
 import { getUserId } from "../auth/auth";
-import ShoppingList from "@/database/models/shopping-list";
 
 export const GET = async (req: NextRequest) => {
     try {
         const userId = await getUserId();
+
+        if (!userId) {
+            throw new Error("User not found");
+        }
         await connect();
         const menus = await Menu.find({ userId: userId });
+
         return new NextResponse(JSON.stringify(menus), { status: 200 });
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch(error: any) {

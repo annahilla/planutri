@@ -1,78 +1,38 @@
 import OverflowContainer from "@/components/ui/OverflowContainer";
 import SortingButton from "./SortingButton";
 import { useRecipes } from "@/context/RecipesContext";
-import { useEffect, useState } from "react";
-import { getFavoriteRecipes } from "@/services/favoriteRecipeService";
+import { useEffect } from "react";
 import FilterTags from "./FilterTags";
 import MealTags from "./MealTags";
-import { useFilteredRecipes } from "@/context/FilteredRecipesContext";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Toolbar = () => {
-  const [mealFilters, setMealFilters] = useState<string[]>([]);
-  const [typeFilters, setTypeFilters] = useState<string[]>([]);
+  const searchParams = useSearchParams();
+  const mealFilters = searchParams.get("meal")?.split(",") || [];
+  const filterTags = searchParams.get("filter")?.split(",") || [];
+
+  const router = useRouter();
   const { recipes } = useRecipes();
-  const { filteredRecipes, setFilteredRecipes } = useFilteredRecipes();
-  const [favoriteRecipeIds, setFavoriteRecipeIds] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchFavoriteRecipes = async () => {
-      const favoriteIds = await getFavoriteRecipes();
-      setFavoriteRecipeIds(favoriteIds);
-    };
+    const urlParams = new URLSearchParams(searchParams);
+    if (mealFilters.length) urlParams.append("meal", mealFilters.join(","));
+    if (filterTags.length) urlParams.set("filter", filterTags.join(","));
 
-    fetchFavoriteRecipes();
-  }, [recipes]);
-
-  useEffect(() => {
-    const fetchFavoriteRecipes = async () => {
-      const favoriteIds = await getFavoriteRecipes();
-      setFavoriteRecipeIds(favoriteIds);
-    };
-
-    fetchFavoriteRecipes();
-  }, [recipes]);
-
-  const filterRecipes = () => {
-    let filtered = [...recipes];
-
-    if (typeFilters.includes("public")) {
-      filtered = filtered.filter((recipe) => recipe.isPublic);
-    } else if (typeFilters.includes("owned")) {
-      filtered = filtered.filter((recipe) => !recipe.isPublic);
-    }
-
-    if (typeFilters.includes("favorites")) {
-      filtered = filtered.filter(
-        (recipe) => recipe._id && favoriteRecipeIds.includes(recipe._id)
-      );
-    }
-
-    if (mealFilters.length > 0) {
-      filtered = filtered.filter((recipe) =>
-        recipe.meals?.some((meal) => mealFilters.includes(meal))
-      );
-    }
-
-    setFilteredRecipes(filtered);
-  };
-
-  useEffect(() => {
-    filterRecipes();
-  }, [mealFilters, typeFilters, recipes, favoriteRecipeIds]);
+    router.push(`?${urlParams.toString()}`);
+  }, [mealFilters, filterTags]);
 
   return (
     <div className="flex flex-col gap-5 xl:flex-row xl:gap-2">
       <OverflowContainer>
         <div className="flex gap-2">
-          <FilterTags setTypeFilters={setTypeFilters} />
-          <MealTags setMealFilters={setMealFilters} />
+          <FilterTags />
+          <MealTags />
         </div>
       </OverflowContainer>
       <div className="flex items-center gap-4 w-full justify-end">
-        <div className="text-neutral-500 text-sm">
-          {filteredRecipes.length} results
-        </div>
-        <SortingButton recipes={recipes} />
+        <div className="text-neutral-500 text-sm">{recipes.length} results</div>
+        <SortingButton />
       </div>
     </div>
   );

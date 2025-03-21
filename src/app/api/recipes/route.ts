@@ -3,20 +3,61 @@ import Recipe from "@/database/models/recipes";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserId } from "../auth/auth";
 import { ImageService } from "./ImageService";
+import { RecipeService } from "./RecipeService";
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
     try {
+        const { searchParams } = new URL(req.url);
+
+        const page = searchParams.get("page") ? parseInt(searchParams.get("page") || "1", 10) : 1;
+        const limit = searchParams.get("limit") ? parseInt(searchParams.get("limit") || "12", 10) : 12;
+        const skip = (page - 1) * limit;
+        const searchQuery = searchParams.get("search") || "";
+        const mealFilter = searchParams.get("meal") || "";
+        const filters = (searchParams.get("filter")?.split(",") as string[]) || [];
+        const sort = searchParams.get("sort") || "";
+
         const userId = await getUserId();
+        if (!userId) {
+            return new NextResponse(
+                JSON.stringify({ message: "User not found" }),
+                { status: 401 }
+            );
+        }
+
         await connect();
-        const recipes = await Recipe.find({$or: [{ userId: userId }, { isPublic: true }]});
-        return new NextResponse(JSON.stringify(recipes), { status: 200 });
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch(error: any) {
-        return new NextResponse("Error fetching ingredients" + error.message, {
-            status: 500,
-        })
+        const recipeService = new RecipeService();
+
+        const recipes = await recipeService.getRecipesFromDB({
+            search: searchQuery,
+            meal: mealFilter,
+            filters,
+            skip,
+            sort,
+            limit,
+            userId,
+        });
+
+        const query: any = { userId };
+
+        if (searchQuery) {
+            query.name = { $regex: searchQuery, $options: "i" };
+        }
+        if (mealFilter) {
+            query.meals = { $in: [mealFilter] };
+        }
+
+        const totalRecipes = await Recipe.countDocuments(query);
+        const totalPages = Math.ceil(totalRecipes / limit);
+
+        return new NextResponse(JSON.stringify({ recipes, totalPages }), { status: 200 });
+    } catch (error: any) {
+        return new NextResponse(
+            JSON.stringify({ message: "Error fetching recipes: " + error.message }),
+            { status: 500 }
+        );
     }
-}
+};
 
 export const POST = async (req: NextRequest) => { 
     try {
