@@ -35,7 +35,6 @@ export const FilteredRecipesProvider = ({
 
   useEffect(() => {
     setFilteredRecipes(filteredRecipes);
-    console.log("filtered", filteredRecipes);
   }, [filteredRecipes]);
 
   return (

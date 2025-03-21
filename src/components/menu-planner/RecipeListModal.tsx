@@ -10,6 +10,7 @@ import {
 } from "@/types/types";
 import { addRecipeToMenu } from "@/services/menuService";
 import { RecipesProvider } from "@/context/RecipesContext";
+import { FilteredRecipesProvider } from "@/context/FilteredRecipesContext";
 interface RecipeListModalProps {
   isModalOpen: boolean;
   dayOfTheWeek: DayOfTheWeek;
@@ -60,12 +61,14 @@ const RecipeListModal = ({
         Choose a recipe for {selectedMeal} on {dayOfTheWeek}
       </h3>
       <RecipesProvider fetchedRecipes={recipes}>
-        <RecipesList
-          isMenu
-          onSelect={(recipe, servings) =>
-            selectRecipe(recipe, selectedMeal!, servings)
-          }
-        />
+        <FilteredRecipesProvider recipes={recipes}>
+          <RecipesList
+            isMenu
+            onSelect={(recipe, servings) =>
+              selectRecipe(recipe, selectedMeal!, servings)
+            }
+          />
+        </FilteredRecipesProvider>
       </RecipesProvider>
     </Modal>
   );
